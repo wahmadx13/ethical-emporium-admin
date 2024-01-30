@@ -1,26 +1,4 @@
 'use client';
-/* eslint-disable */
-/*!
-  _   _  ___  ____  ___ ________  _   _   _   _ ___   
- | | | |/ _ \|  _ \|_ _|__  / _ \| \ | | | | | |_ _| 
- | |_| | | | | |_) || |  / / | | |  \| | | | | || | 
- |  _  | |_| |  _ < | | / /| |_| | |\  | | |_| || |
- |_| |_|\___/|_| \_\___/____\___/|_| \_|  \___/|___|
-                                                                                                                                                                                                                                                                                                                                       
-=========================================================
-* Horizon UI - v1.1.0
-=========================================================
-
-* Product Page: https://www.horizon-ui.com/
-* Copyright 2022 Horizon UI (https://www.horizon-ui.com/)
-
-* Designed and Coded by Simmmple
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 
 import React from 'react';
 // Chakra imports
@@ -40,11 +18,9 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 // Custom components
-import { HSeparator } from 'components/separator/Separator';
 import DefaultAuthLayout from 'layouts/auth/Default';
 // Assets
 import Link from 'next/link';
-import { FcGoogle } from 'react-icons/fc';
 import { MdOutlineRemoveRedEye } from 'react-icons/md';
 import { RiEyeCloseLine } from 'react-icons/ri';
 
@@ -52,23 +28,12 @@ export default function SignIn() {
   // Chakra color mode
   const textColor = useColorModeValue('navy.700', 'white');
   const textColorSecondary = 'gray.400';
-  const textColorDetails = useColorModeValue('navy.700', 'secondaryGray.600');
   const textColorBrand = useColorModeValue('brand.500', 'white');
   const brandStars = useColorModeValue('brand.500', 'brand.400');
-  const googleBg = useColorModeValue('secondaryGray.300', 'whiteAlpha.200');
-  const googleText = useColorModeValue('navy.700', 'white');
-  const googleHover = useColorModeValue(
-    { bg: 'gray.200' },
-    { bg: 'whiteAlpha.300' },
-  );
-  const googleActive = useColorModeValue(
-    { bg: 'secondaryGray.300' },
-    { bg: 'whiteAlpha.200' },
-  );
   const [show, setShow] = React.useState(false);
   const handleClick = () => setShow(!show);
   return (
-    <DefaultAuthLayout illustrationBackground={'/img/auth/auth.png'}>
+    <DefaultAuthLayout illustrationBackground={'/img/auth/ethical-emporium.jpg'}>
       <Flex
         maxW={{ base: '100%', md: 'max-content' }}
         w="100%"
@@ -107,30 +72,6 @@ export default function SignIn() {
           me="auto"
           mb={{ base: '20px', md: 'auto' }}
         >
-          <Button
-            fontSize="sm"
-            me="0px"
-            mb="26px"
-            py="15px"
-            h="50px"
-            borderRadius="16px"
-            bgColor={googleBg}
-            color={googleText}
-            fontWeight="500"
-            _hover={googleHover}
-            _active={googleActive}
-            _focus={googleActive}
-          >
-            <Icon as={FcGoogle} w="20px" h="20px" me="10px" />
-            Sign in with Google
-          </Button>
-          <Flex align="center" mb="25px">
-            <HSeparator />
-            <Text color="gray.400" mx="14px">
-              or
-            </Text>
-            <HSeparator />
-          </Flex>
           <FormControl>
             <FormLabel
               display="flex"
@@ -227,19 +168,6 @@ export default function SignIn() {
             maxW="100%"
             mt="0px"
           >
-            <Link href="/auth/sign-up">
-              <Text color={textColorDetails} fontWeight="400" fontSize="14px">
-                Not registered yet?
-                <Text
-                  color={textColorBrand}
-                  as="span"
-                  ms="5px"
-                  fontWeight="500"
-                >
-                  Create an Account
-                </Text>
-              </Text>
-            </Link>
           </Flex>
         </Flex>
       </Flex>

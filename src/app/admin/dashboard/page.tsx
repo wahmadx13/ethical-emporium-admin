@@ -1,25 +1,4 @@
 'use client';
-/*!
-  _   _  ___  ____  ___ ________  _   _   _   _ ___   
- | | | |/ _ \|  _ \|_ _|__  / _ \| \ | | | | | |_ _| 
- | |_| | | | | |_) || |  / / | | |  \| | | | | || | 
- |  _  | |_| |  _ < | | / /| |_| | |\  | | |_| || |
- |_| |_|\___/|_| \_\___/____\___/|_| \_|  \___/|___|
-                                                                                                                                                                                                                                                                                                                                       
-=========================================================
-* Horizon UI - v1.1.0
-=========================================================
-
-* Product Page: https://www.horizon-ui.com/
-* Copyright 2022 Horizon UI (https://www.horizon-ui.com/)
-
-* Designed and Coded by Simmmple
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 
 import {
   Box,
@@ -41,19 +20,19 @@ import {
   MdBarChart,
   MdFileCopy,
 } from 'react-icons/md';
-import CheckTable from 'views/admin/default/components/CheckTable';
-import ComplexTable from 'views/admin/default/components/ComplexTable';
-import DailyTraffic from 'views/admin/default/components/DailyTraffic';
-import PieCard from 'views/admin/default/components/PieCard';
-import Tasks from 'views/admin/default/components/Tasks';
-import TotalSpent from 'views/admin/default/components/TotalSpent';
-import WeeklyRevenue from 'views/admin/default/components/WeeklyRevenue';
-import tableDataCheck from 'views/admin/default/variables/tableDataCheck';
-import tableDataComplex from 'views/admin/default/variables/tableDataComplex';
+import CheckTable from 'views/admin/dashboard/components/CheckTable';
+import ComplexTable from 'views/admin/dashboard/components/ComplexTable';
+import DailyTraffic from 'views/admin/dashboard/components/DailyTraffic';
+import PieCard from 'views/admin/dashboard/components/PieCard';
+import Tasks from 'views/admin/dashboard/components/Tasks';
+import TotalSpent from 'views/admin/dashboard/components/TotalSpent';
+import WeeklyRevenue from 'views/admin/dashboard/components/WeeklyRevenue';
+import tableDataCheck from 'views/admin/dashboard/variables/tableDataCheck';
+import tableDataComplex from 'views/admin/dashboard/variables/tableDataComplex';
 // Assets
 import Usa from 'img/dashboards/usa.png';
 
-export default function Default() {
+export default function Dashboard() {
   // Chakra Color Mode
 
   const brandColor = useColorModeValue('brand.500', 'white');

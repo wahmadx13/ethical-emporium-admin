@@ -39,15 +39,15 @@ export default function Footer(props: { [x: string]: any }) {
         {' '}
         &copy; {new Date().getFullYear()}
         <Text as="span" fontWeight="500" ms="4px">
-          Horizon UI. All Rights Reserved. Made with love by
+          Ethical Emporium. All Rights Reserved. Made with love by
           <Link
             mx="3px"
             color={textColor}
-            href="https://www.simmmple.com"
+            href="https://www.github.com/wahmadx13"
             target="_blank"
             fontWeight="700"
           >
-            Simmmple!
+            Sahibzada Waseem Ahmad
           </Link>
         </Text>
       </Text>
@@ -61,7 +61,7 @@ export default function Footer(props: { [x: string]: any }) {
           <Link
             fontWeight="500"
             color={linkColor}
-            href="mailto:hello@simmmple.com"
+            href="mailto:wnahmadx12@gmail.com"
           >
             Support
           </Link>
@@ -75,7 +75,7 @@ export default function Footer(props: { [x: string]: any }) {
           <Link
             fontWeight="500"
             color={linkColor}
-            href="https://www.simmmple.com/licenses"
+            href="https://www.github.com/wahmadx13"
           >
             License
           </Link>
@@ -89,7 +89,7 @@ export default function Footer(props: { [x: string]: any }) {
           <Link
             fontWeight="500"
             color={linkColor}
-            href="https://simmmple.com/terms-of-service"
+            href="https://www.github.com/wahmadx13"
           >
             Terms of Use
           </Link>
@@ -98,7 +98,7 @@ export default function Footer(props: { [x: string]: any }) {
           <Link
             fontWeight="500"
             color={linkColor}
-            href="https://www.blog.simmmple.com/"
+            href="https://www.github.com/wahmadx13"
           >
             Blog
           </Link>
