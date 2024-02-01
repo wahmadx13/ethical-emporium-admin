@@ -86,37 +86,33 @@ export function SidebarResponsive (props: SidebarResponsiveProps) {
   //  BRAND
 
   return (
-    <Flex display={{ sm: 'flex', xl: 'none' }} alignItems='center'>
-      <Flex ref={btnRef} w='max-content' h='max-content' onClick={onOpen}>
+    <Flex display={{ sm: 'flex', xl: 'none' }} alignItems="center">
+      <Flex ref={btnRef} w="max-content" h="max-content" onClick={onOpen}>
         <Icon
           as={IoMenuOutline}
           color={menuColor}
-          my='auto'
-          w='20px'
-          h='20px'
-          me='10px'
+          my="auto"
+          w="20px"
+          h="20px"
+          me="10px"
           _hover={{ cursor: 'pointer' }}
         />
       </Flex>
       <Drawer
         isOpen={isOpen}
         onClose={onClose}
-        placement={
-          isWindowAvailable() && window.document.documentElement.dir === 'rtl'
-            ? 'right'
-            : 'left'
-        }
         finalFocusRef={btnRef}
+        placement="left"
       >
         <DrawerOverlay />
-        <DrawerContent w='285px' maxW='285px' bg={sidebarBackgroundColor}>
+        <DrawerContent w="285px" maxW="285px" bg={sidebarBackgroundColor}>
           <DrawerCloseButton
-            zIndex='3'
+            zIndex="3"
             onClick={onClose}
             _focus={{ boxShadow: 'none' }}
             _hover={{ boxShadow: 'none' }}
           />
-          <DrawerBody maxW='285px' px='0rem' pb='0'>
+          <DrawerBody maxW="285px" px="0rem" pb="0">
             <Scrollbars
               autoHide
               renderTrackVertical={renderTrack}
@@ -129,7 +125,7 @@ export function SidebarResponsive (props: SidebarResponsiveProps) {
         </DrawerContent>
       </Drawer>
     </Flex>
-  )
+  );
 }
 // PROPS
 

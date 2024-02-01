@@ -1,8 +1,23 @@
 {
     "cSpell.words": [
+        "apexcharts",
+        "bcategory",
+        "Brandfolder",
+        "chakra",
         "fbcdn",
         "fotp",
+        "predeploy",
+        "Sahibzada",
         "scontent",
-        "unoptimized"
-    ]
+        "scrollbars",
+        "tanstack",
+        "unoptimized",
+        "Waseem"
+    ],
+    "[typescript]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
 }

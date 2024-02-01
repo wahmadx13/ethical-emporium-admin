@@ -32,10 +32,6 @@ export default function AdminLayout(props: DashboardLayoutProps) {
   // functions for changing the states from components
   const { onOpen } = useDisclosure();
 
-  useEffect(() => {
-    window.document.documentElement.dir = 'ltr';
-  });
-
   const bg = useColorModeValue('secondaryGray.300', 'navy.900');
 
   return (

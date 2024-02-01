@@ -214,7 +214,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
                 color={textColor}
                 bg="transparent"
               >
-                Try Horizon Free
+                Ethical Emporium
               </Button>
             </Link>
           </Flex>
