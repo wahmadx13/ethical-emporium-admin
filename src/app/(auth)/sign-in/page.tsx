@@ -26,6 +26,8 @@ import Link from 'next/link';
 import { MdOutlineRemoveRedEye } from 'react-icons/md';
 import { RiEyeCloseLine } from 'react-icons/ri';
 import { ILoginProps } from 'types/signin';
+import { useAppDispatch } from '../../../redux/hooks';
+import { login } from '../../../redux/features/auth';
 
 export default function SignIn() {
   // Chakra color mode
@@ -35,6 +37,8 @@ export default function SignIn() {
   const brandStars = useColorModeValue('brand.500', 'brand.400');
   const [show, setShow] = React.useState(false);
   const handleClick = () => setShow(!show);
+
+  const dispatch = useAppDispatch();
 
   const schema = yup.object().shape({
     email: yup
@@ -51,7 +55,7 @@ export default function SignIn() {
     },
     validationSchema: schema,
     onSubmit: (values: ILoginProps) => {
-      console.log('values', values);
+      dispatch(login(values));
     },
   });
 
