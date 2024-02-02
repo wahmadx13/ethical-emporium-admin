@@ -17,12 +17,15 @@ import {
   Text,
   useColorModeValue,
 } from '@chakra-ui/react';
+import { useFormik } from 'formik';
+import * as yup from 'yup';
 // Custom components
 import DefaultAuthLayout from 'layouts/auth/Default';
 // Assets
 import Link from 'next/link';
 import { MdOutlineRemoveRedEye } from 'react-icons/md';
 import { RiEyeCloseLine } from 'react-icons/ri';
+import { ILoginProps } from 'types/signin';
 
 export default function SignIn() {
   // Chakra color mode
@@ -32,8 +35,30 @@ export default function SignIn() {
   const brandStars = useColorModeValue('brand.500', 'brand.400');
   const [show, setShow] = React.useState(false);
   const handleClick = () => setShow(!show);
+
+  const schema = yup.object().shape({
+    email: yup
+      .string()
+      .email('Email should be valid')
+      .required('Email is Required'),
+    password: yup.string().required('Password is Required'),
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+      password: '',
+    },
+    validationSchema: schema,
+    onSubmit: (values: ILoginProps) => {
+      console.log('values', values);
+    },
+  });
+
   return (
-    <DefaultAuthLayout illustrationBackground={'/img/auth/ethical-emporium.jpg'}>
+    <DefaultAuthLayout
+      illustrationBackground={'/img/auth/ethical-emporium.jpg'}
+    >
       <Flex
         maxW={{ base: '100%', md: 'max-content' }}
         w="100%"
@@ -72,56 +97,74 @@ export default function SignIn() {
           me="auto"
           mb={{ base: '20px', md: 'auto' }}
         >
-          <FormControl>
-            <FormLabel
-              display="flex"
-              ms="4px"
-              fontSize="sm"
-              fontWeight="500"
-              color={textColor}
-              mb="8px"
-            >
-              Email<Text color={brandStars}>*</Text>
-            </FormLabel>
-            <Input
-              isRequired={true}
-              variant="auth"
-              fontSize="sm"
-              ms={{ base: '0px', md: '0px' }}
-              type="email"
-              placeholder="mail@simmmple.com"
-              mb="24px"
-              fontWeight="500"
-              size="lg"
-            />
-            <FormLabel
-              ms="4px"
-              fontSize="sm"
-              fontWeight="500"
-              color={textColor}
-              display="flex"
-            >
-              Password<Text color={brandStars}>*</Text>
-            </FormLabel>
-            <InputGroup size="md">
-              <Input
-                isRequired={true}
+          <form onSubmit={formik.handleSubmit}>
+            <FormControl>
+              <FormLabel
+                display="flex"
+                ms="4px"
                 fontSize="sm"
-                placeholder="Min. 8 characters"
-                mb="24px"
-                size="lg"
-                type={show ? 'text' : 'password'}
+                fontWeight="500"
+                color={textColor}
+                mb="8px"
+              >
+                Email<Text color={brandStars}>*</Text>
+              </FormLabel>
+              <Input
+                name="email"
+                onChange={formik.handleChange('email')}
+                onBlur={formik.handleBlur('email')}
+                value={formik.values.email}
+                isRequired={true}
                 variant="auth"
+                fontSize="sm"
+                ms={{ base: '0px', md: '0px' }}
+                type="email"
+                placeholder="test@example.com"
+                mb="15px"
+                fontWeight="500"
+                size="lg"
               />
-              <InputRightElement display="flex" alignItems="center" mt="4px">
-                <Icon
-                  color={textColorSecondary}
-                  _hover={{ cursor: 'pointer' }}
-                  as={show ? RiEyeCloseLine : MdOutlineRemoveRedEye}
-                  onClick={handleClick}
+              <Text mb="10px" color="red.500" fontSize="1rem">
+                {formik.touched.email && formik.errors.email}
+              </Text>
+            </FormControl>
+            <FormControl>
+              <FormLabel
+                ms="4px"
+                fontSize="sm"
+                fontWeight="500"
+                color={textColor}
+                display="flex"
+              >
+                Password<Text color={brandStars}>*</Text>
+              </FormLabel>
+              <InputGroup size="md">
+                <Input
+                  name="password"
+                  onChange={formik.handleChange('password')}
+                  onBlur={formik.handleBlur('password')}
+                  value={formik.values.password}
+                  isRequired={true}
+                  fontSize="sm"
+                  placeholder="Enter Your Password"
+                  mb="15"
+                  size="lg"
+                  type={show ? 'text' : 'password'}
+                  variant="auth"
                 />
-              </InputRightElement>
-            </InputGroup>
+                <InputRightElement display="flex" alignItems="center" mt="4px">
+                  <Icon
+                    color={textColorSecondary}
+                    _hover={{ cursor: 'pointer' }}
+                    as={show ? RiEyeCloseLine : MdOutlineRemoveRedEye}
+                    onClick={handleClick}
+                  />
+                </InputRightElement>
+              </InputGroup>
+              <Text mb="10px" color="red.500" fontSize="1rem">
+                {formik.touched.password && formik.errors.password}
+              </Text>
+            </FormControl>
             <Flex justifyContent="space-between" align="center" mb="24px">
               <FormControl display="flex" alignItems="center">
                 <Checkbox
@@ -157,18 +200,18 @@ export default function SignIn() {
               w="100%"
               h="50"
               mb="24px"
+              type="submit"
             >
               Sign In
             </Button>
-          </FormControl>
+          </form>
           <Flex
             flexDirection="column"
             justifyContent="center"
             alignItems="start"
             maxW="100%"
             mt="0px"
-          >
-          </Flex>
+          ></Flex>
         </Flex>
       </Flex>
     </DefaultAuthLayout>
