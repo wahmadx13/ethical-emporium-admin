@@ -13,6 +13,10 @@ const nextConfig = {
     // Make ENV
     unoptimized: true,
   },
+  env: {
+    NEXT_BACKEND_BASE_URL: process.env.NEXT_BACKEND_BASE_URL,
+    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+  },
 };
 
 // module.exports = withTM(nextConfig);

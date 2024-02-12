@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 // Chakra imports
 import {
   Box,
@@ -17,6 +17,7 @@ import {
   Text,
   useColorModeValue,
 } from '@chakra-ui/react';
+import { useRouter } from 'next/navigation';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 // Custom components
@@ -26,8 +27,8 @@ import Link from 'next/link';
 import { MdOutlineRemoveRedEye } from 'react-icons/md';
 import { RiEyeCloseLine } from 'react-icons/ri';
 import { ILoginProps } from '../../../types/signin';
-import { useAppDispatch } from '../../../redux/hooks';
-import { login } from '../../../redux/features/auth/services';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { login } from '../../../redux/features/authSlice';
 
 export default function SignIn() {
   // Chakra color mode
@@ -38,7 +39,13 @@ export default function SignIn() {
   const [show, setShow] = React.useState(false);
   const handleClick = () => setShow(!show);
 
+  const router = useRouter();
+
   const dispatch = useAppDispatch();
+
+  const { isLoading, isSuccess, user } = useAppSelector(
+    (state) => state.authReducer,
+  );
 
   const schema = yup.object().shape({
     email: yup
@@ -58,6 +65,13 @@ export default function SignIn() {
       dispatch(login(values));
     },
   });
+
+  useEffect(() => {
+    console.log('userrrrrrrrr', user);
+    if (isSuccess || user) {
+      router.push('/admin/dashboard');
+    }
+  }, [isSuccess, router, user]);
 
   return (
     <DefaultAuthLayout
@@ -198,6 +212,8 @@ export default function SignIn() {
               </Link>
             </Flex>
             <Button
+              isLoading={isLoading}
+              isDisabled={isLoading}
               fontSize="sm"
               variant="brand"
               fontWeight="500"

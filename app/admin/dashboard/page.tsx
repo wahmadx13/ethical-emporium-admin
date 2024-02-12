@@ -1,5 +1,5 @@
 'use client';
-
+import { useEffect } from 'react';
 import {
   Box,
   Flex,
@@ -10,6 +10,7 @@ import {
   SimpleGrid,
   useColorModeValue,
 } from '@chakra-ui/react';
+
 // Custom components
 // import MiniCalendar from 'components/calendar/MiniCalendar';
 import MiniStatistics from '../../../components/card/MiniStatistics';
@@ -31,12 +32,19 @@ import tableDataCheck from '../../../views/admin/dashboard/variables/tableDataCh
 import tableDataComplex from '../../../views/admin/dashboard/variables/tableDataComplex';
 // Assets
 import Usa from '../../../img/dashboards/usa.png';
+import { useAppSelector } from '../../../redux/hooks';
 
 export default function Dashboard() {
   // Chakra Color Mode
 
   const brandColor = useColorModeValue('brand.500', 'white');
   const boxBg = useColorModeValue('secondaryGray.300', 'whiteAlpha.100');
+
+  const { user } = useAppSelector((state) => state.authReducer);
+
+  useEffect(() => {
+    console.log('userInDashBoard%%%%%%%%', user);
+  }, [user]);
 
   return (
     <Box pt={{ base: '130px', md: '80px', xl: '80px' }}>
