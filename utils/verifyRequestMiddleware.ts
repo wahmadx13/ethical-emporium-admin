@@ -1,25 +1,36 @@
 import { NextRequest } from 'next/server';
-import { CognitoAccessTokenPayload } from "aws-jwt-verify/jwt-model"
+import { CognitoIdTokenPayload } from "aws-jwt-verify/jwt-model"
+import { CognitoJwtVerifier } from 'aws-jwt-verify';
 
+const verifier = CognitoJwtVerifier.create({
+    userPoolId: process.env.NEXT_USER_POOL_ID,
+    tokenUse: "access",
+    clientId: process.env.NEXT_USER_POOL_CLIENT_ID,
+})
+
+const verifierIdToken = CognitoJwtVerifier.create({
+    userPoolId: process.env.NEXT_USER_POOL_ID,
+    tokenUse: "id",
+    clientId: process.env.NEXT_USER_POOL_CLIENT_ID,
+})
 
 export const verifyRequestInMiddleware = async (
     request: NextRequest
-): Promise<{ data: CognitoAccessTokenPayload, jwtToken: string }> => {
+): Promise<{ data: CognitoIdTokenPayload; jwtToken: string }> => {
     try {
-        const response = await fetch(`${process.env.NEXT_BACKEND_BASE_URL}/auth/current-user`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            },
-            credentials: 'include'
-        });
+        const userId = request.cookies.get(`CognitoIdentityServiceProvider.${process.env.NEXT_USER_POOL_CLIENT_ID}.LastAuthUser`)?.value;
 
-        if (response.ok) {
-            const resp = await response.json();
+        const accessToken = request.cookies.get(`CognitoIdentityServiceProvider.${process.env.NEXT_USER_POOL_CLIENT_ID}.${userId}.accessToken`)?.value;
 
-            return { data: resp.accessToken.payload, jwtToken: resp.refreshToken }
+        const idToken = request.cookies.get(`CognitoIdentityServiceProvider.${process.env.NEXT_USER_POOL_CLIENT_ID}.${userId}.idToken`)?.value;
+
+        if (!accessToken || !idToken) {
+            throw new Error("Tokens not present");
         }
+
+        await verifier.verify(accessToken);
+        const decoded = await verifierIdToken.verify(idToken);
+        return { data: decoded, jwtToken: idToken }
     } catch (err) {
         console.log('Error in verifyRequestInMiddleware', err);
         console.log('Error in verifyRequestInMiddleware', err);
