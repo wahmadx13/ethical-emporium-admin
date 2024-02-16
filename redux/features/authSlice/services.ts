@@ -1,37 +1,19 @@
 import { ILoginProps } from '../../../types/signin';
+import { signIn, type SignInInput } from 'aws-amplify/auth'
+import { ICognitoSignInResult } from '../../../types/signin';
 
-interface ISigninResponse {
-    status: number;
-    message: string;
-    name: string;
-    phoneNumber: string;
-    refreshToken: string;
-}
-
-const loginAdmin = async (adminCredentials: ILoginProps): Promise<ISigninResponse | string> => {
+const loginAdmin = async (adminCredentials: ILoginProps): Promise<ICognitoSignInResult | string> => {
     const { email, password } = adminCredentials
-    const body = JSON.stringify({ email, password });
-
     try {
-        const response = await fetch(`${process.env.NEXT_BACKEND_BASE_URL}/auth/login-admin`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            },
-            body,
-            credentials: 'include'
-        });
+        const { isSignedIn, nextStep } = await signIn({ username: email, password });
+        console.log('isSignedIn', isSignedIn)
+        console.log('nextStep', nextStep)
+        return { isSignedIn, nextStep }
+        if (isSignedIn) {
 
-        if (response.ok) {
-            const resp = await response.json();
-            return resp;
-        } else {
-            console.error('Failed to login:', response.statusText);
-            return `$Failed to login: ${response.statusText}`
         }
     } catch (err) {
-        return `Signin error: ${err}`
+        return `The following error occurred during the process: ${err}`
     }
 
 }

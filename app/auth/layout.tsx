@@ -1,7 +1,5 @@
 'use client';
-import { PropsWithChildren, useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAppSelector } from '../../redux/hooks';
+import { PropsWithChildren, useState } from 'react';
 
 // Chakra imports
 import { Box, useColorModeValue } from '@chakra-ui/react';
@@ -17,17 +15,6 @@ export default function AuthLayout({ children }: AuthProps) {
   // states and functions
   const [toggleSidebar, setToggleSidebar] = useState(false);
   const authBg = useColorModeValue('white', 'navy.900');
-
-  //Redux State
-  const { user, isSuccess } = useAppSelector((state) => state.authReducer);
-
-  const router = useRouter();
-
-  useEffect(() => {
-    if (user || isSuccess) {
-      router.push('/admin/dashboard');
-    }
-  }, [isSuccess, router, user]);
 
   return (
     <Box>
