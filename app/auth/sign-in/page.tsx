@@ -68,10 +68,9 @@ export default function SignIn() {
 
   useEffect(() => {
     console.log('userrrrrrrrr', user);
-    console.log('isSuccessSigninPage', isSuccess);
     if (isSuccess || user) {
       console.log('Redirecting');
-      router.push('/admin/dashboard');
+      router.replace('/admin/dashboard');
     }
   }, [isSuccess, router, user]);
 

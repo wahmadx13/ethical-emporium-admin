@@ -2,6 +2,11 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { getCurrentUser } from 'aws-amplify/auth';
+import dynamic from 'next/dynamic';
+
+const ScreenLoader = dynamic(() => import('../../components/Loader'), {
+  ssr: false,
+});
 
 export default function RefreshAuth() {
   const router = useRouter();
@@ -26,13 +31,13 @@ export default function RefreshAuth() {
         //Clear cognito related cookies
         document.cookie = `CognitoIdentityServiceProvider.${process.env.NEXT_USER_POOL_CLIENT_ID}.LastAuthUser =; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
 
-        document.cookie = `CognitoIdentityServiceProvider.${process.env.NEXT_USER_POOL_CLIENT_ID}.idToken =; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+        document.cookie = `CognitoIdentityServiceProvider.${process.env.NEXT_USER_POOL_CLIENT_ID}.${userId}.idToken =; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
 
-        document.cookie = `CognitoIdentityServiceProvider.${process.env.NEXT_USER_POOL_CLIENT_ID}.accessToken =; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+        document.cookie = `CognitoIdentityServiceProvider.${process.env.NEXT_USER_POOL_CLIENT_ID}.${userId}.accessToken =; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
 
-        document.cookie = `CognitoIdentityServiceProvider.${process.env.NEXT_USER_POOL_CLIENT_ID}.refreshToken =; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+        document.cookie = `CognitoIdentityServiceProvider.${process.env.NEXT_USER_POOL_CLIENT_ID}.${userId}.refreshToken =; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
 
-        document.cookie = `CognitoIdentityServiceProvider.${process.env.NEXT_USER_POOL_CLIENT_ID}.userData =; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+        document.cookie = `CognitoIdentityServiceProvider.${process.env.NEXT_USER_POOL_CLIENT_ID}.${userId}.userData =; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
         console.log('redirecting to signin');
         router.replace('/auth/sign-in');
       }
@@ -40,5 +45,5 @@ export default function RefreshAuth() {
     console.log('In Refresh Auth');
     checkAuth();
   }, [router]);
-  return <div>Loading...</div>;
+  return <ScreenLoader />;
 }

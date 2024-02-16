@@ -1,17 +1,10 @@
-import { ILoginProps } from '../../../types/signin';
 import { signIn, type SignInInput } from 'aws-amplify/auth'
 import { ICognitoSignInResult } from '../../../types/signin';
 
-const loginAdmin = async (adminCredentials: ILoginProps): Promise<ICognitoSignInResult | string> => {
-    const { email, password } = adminCredentials
+const loginAdmin = async ({ username, password }: SignInInput): Promise<ICognitoSignInResult | string> => {
     try {
-        const { isSignedIn, nextStep } = await signIn({ username: email, password });
-        console.log('isSignedIn', isSignedIn)
-        console.log('nextStep', nextStep)
-        return { isSignedIn, nextStep }
-        if (isSignedIn) {
-
-        }
+        const { isSignedIn } = await signIn({ username, password });
+        return { isSignedIn }
     } catch (err) {
         return `The following error occurred during the process: ${err}`
     }

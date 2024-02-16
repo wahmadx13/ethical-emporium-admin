@@ -1,5 +1,6 @@
 import { headers, cookies } from "next/headers";
 import { CognitoJwtVerifier } from "aws-jwt-verify";
+import { redirect } from 'next/navigation';
 
 const verifier = CognitoJwtVerifier.create({
     userPoolId: process.env.NEXT_USER_POOL_ID,
@@ -14,6 +15,7 @@ const verifierIdToken = CognitoJwtVerifier.create({
 })
 
 export const verifyRequest = async (): Promise<object> => {
+
     const userData = headers().get('USER-DATA');
     const jwtToken = headers().get('JWT-TOKEN');
 
@@ -27,11 +29,15 @@ export const verifyRequest = async (): Promise<object> => {
         const idToken = cookies().get(`CognitoIdentityServiceProvider.${process.env.NEXT_USER_POOL_CLIENT_ID}.${userId}.idToken`)?.value
 
         if (!accessToken || idToken) {
-            throw new Error('Token not Present');
+            console.log('Token not present')
+            redirect('/auth/sign-in')
         }
 
-        await verifier.verify(accessToken);
-        const decoded = await verifierIdToken.verify(idToken);
-        return { data: decoded, jwtToken: idToken }
+        if (accessToken && idToken) {
+            await verifier.verify(accessToken);
+            const decoded = await verifierIdToken.verify(idToken);
+            return { data: decoded, jwtToken: idToken }
+        }
+        return { data: {}, jwtToken: '' }
     }
 }

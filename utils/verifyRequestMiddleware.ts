@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { CognitoIdTokenPayload } from "aws-jwt-verify/jwt-model"
 import { CognitoJwtVerifier } from 'aws-jwt-verify';
+import { redirect } from 'next/navigation';
 
 const verifier = CognitoJwtVerifier.create({
     userPoolId: process.env.NEXT_USER_POOL_ID,
@@ -25,7 +26,8 @@ export const verifyRequestInMiddleware = async (
         const idToken = request.cookies.get(`CognitoIdentityServiceProvider.${process.env.NEXT_USER_POOL_CLIENT_ID}.${userId}.idToken`)?.value;
 
         if (!accessToken || !idToken) {
-            throw new Error("Tokens not present");
+            console.log("Tokens not present VerifyRequestMiddleware");
+            redirect('/auth-sign-in')
         }
 
         await verifier.verify(accessToken);

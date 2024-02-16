@@ -4,7 +4,4 @@ export interface ILoginProps {
 }
 export interface ICognitoSignInResult {
     isSignedIn: boolean;
-    nextStep: {
-        signInStep: string;
-    };
 }
