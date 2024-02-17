@@ -27,14 +27,17 @@ export const verifyRequestInMiddleware = async (
 
         if (!accessToken || !idToken) {
             console.log("Tokens not present VerifyRequestMiddleware");
-            redirect('/auth-sign-in')
+            redirect('/auth/sign-in')
         }
 
-        await verifier.verify(accessToken);
-        const decoded = await verifierIdToken.verify(idToken);
-        return { data: decoded, jwtToken: idToken }
+        if (accessToken && idToken) {
+            await verifier.verify(accessToken);
+            const decoded = await verifierIdToken.verify(idToken);
+            return { data: decoded, jwtToken: idToken }
+        }
+        return { data: null, jwtToken: '' }
+
     } catch (err) {
-        console.log('Error in verifyRequestInMiddleware', err);
         console.log('Error in verifyRequestInMiddleware', err);
         throw new Error('Error in verifyRequestInMiddleware: ' + err);
     }

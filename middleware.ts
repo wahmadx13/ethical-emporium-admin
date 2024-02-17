@@ -7,6 +7,9 @@ export default async function middleware(request: NextRequest) {
 
         const data = await verifyRequestInMiddleware(request);
         console.log('\nMiddleware after verification');
+        if (!data?.data) {
+            return NextResponse.redirect(new URL(`${process.env.NEXTAUTH_URL}/auth/sign-in`, request.url));
+        }
 
         if (request.url.includes('/auth')) {
             return NextResponse.redirect(new URL(`${process.env.NEXTAUTH_URL}/admin/dashboard`, request.url));
