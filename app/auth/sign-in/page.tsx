@@ -69,7 +69,8 @@ export default function SignIn() {
   useEffect(() => {
     console.log('userrrrrrrrr', user);
     if (isSuccess || user) {
-      router.push('/admin/dashboard');
+      console.log('Redirecting');
+      router.replace('/admin/dashboard');
     }
   }, [isSuccess, router, user]);
 

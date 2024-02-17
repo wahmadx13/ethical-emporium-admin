@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import authServices from "./services";
 import { ILoginProps } from "../../../types/signin";
+import { CognitoIdTokenPayload } from "aws-jwt-verify/jwt-model";
 
 
 interface IAuthInitialState {
@@ -28,8 +29,9 @@ const initialState: IAuthInitialState = {
 
 
 export const login = createAsyncThunk("auth/admin-login", async (user: ILoginProps, thunkApi) => {
+    const { email: username, password } = user
     try {
-        return await authServices.loginAdmin(user)
+        return await authServices.loginAdmin({ username, password })
     } catch (err) {
         thunkApi.rejectWithValue(err)
     }
@@ -39,7 +41,7 @@ export const authSlice = createSlice({
     name: "auth",
     initialState,
     reducers: {
-        setUser: (state, action: PayloadAction<any>) => {
+        setUser: (state, action: PayloadAction<CognitoIdTokenPayload | null>) => {
             state.user = action.payload;
         },
         setJwtToken: (state, action: PayloadAction<string>) => {
@@ -53,11 +55,9 @@ export const authSlice = createSlice({
                 state.firstLogin = true;
             })
             .addCase(login.fulfilled, (state, action: PayloadAction<any>) => {
-                console.log('payload', action.payload)
-                state.isSuccess = true;
+                state.isSuccess = action.payload;
                 state.isLoading = false;
                 state.isError = false;
-                state.user = action.payload;
             })
             .addCase(login.rejected, (state, action) => {
                 state.isSuccess = false;
@@ -68,6 +68,7 @@ export const authSlice = createSlice({
             })
     }
 })
+
 
 export const { setUser, setJwtToken } = authSlice.actions;
 
