@@ -6,7 +6,6 @@ import {
   Center,
   Flex,
   Icon,
-  Link,
   Menu,
   MenuButton,
   MenuItem,
@@ -15,17 +14,19 @@ import {
   useColorMode,
   useColorModeValue,
 } from '@chakra-ui/react';
+import { useRouter } from 'next/navigation';
+import { signOut } from 'aws-amplify/auth';
 // Custom Components
-import { Image } from '../../components/image/Image';
-import { ItemContent } from '../../components/menu/ItemContent';
 import { SearchBar } from '../../components/navbar/searchBar/SearchBar';
 import { SidebarResponsive } from '../../components/sidebar/Sidebar';
+import { useAppSelector, useAppDispatch } from '../../redux/hooks';
 // Assets
-import navImage from '/public/img/layout/Navbar.png';
-import { FaEthereum } from 'react-icons/fa';
 import { IoMdMoon, IoMdSunny } from 'react-icons/io';
-import { MdInfoOutline, MdNotificationsNone } from 'react-icons/md';
+import { MdLock } from 'react-icons/md';
+import { BsPersonGear } from 'react-icons/bs';
 import routes from '../../routes';
+import { setUser, setJwtToken } from '../../redux/features/authSlice';
+
 export default function HeaderLinks(props: { secondary: boolean }) {
   const { secondary } = props;
   const { colorMode, toggleColorMode } = useColorMode();
@@ -33,16 +34,49 @@ export default function HeaderLinks(props: { secondary: boolean }) {
   const navbarIcon = useColorModeValue('gray.400', 'white');
   let menuBg = useColorModeValue('white', 'navy.800');
   const textColor = useColorModeValue('secondaryGray.900', 'white');
-  const textColorBrand = useColorModeValue('brand.700', 'brand.400');
-  const ethColor = useColorModeValue('gray.700', 'white');
   const borderColor = useColorModeValue('#E6ECFA', 'rgba(135, 140, 189, 0.3)');
-  const ethBg = useColorModeValue('secondaryGray.300', 'navy.900');
-  const ethBox = useColorModeValue('white', 'navy.800');
   const shadow = useColorModeValue(
     '14px 17px 40px 4px rgba(112, 144, 176, 0.18)',
     '14px 17px 40px 4px rgba(112, 144, 176, 0.06)',
   );
-  const borderButton = useColorModeValue('secondaryGray.500', 'whiteAlpha.200');
+
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+
+  const { user } = useAppSelector((state) => state.authReducer);
+
+  const handleLogOut = async () => {
+    try {
+      //Clear Cookies
+      document.cookie.split(';').forEach((c) => {
+        document.cookie = c
+          .replace(/^ +/, '')
+          .replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
+      });
+
+      //Clear localStorage
+      localStorage.clear();
+
+      //Clear SessionStorage
+      sessionStorage.clear();
+      //Sign out from amplify
+
+      //Reset User and JwtToken to it's initial state
+      await signOut();
+      dispatch(setUser(null));
+      dispatch(setJwtToken(''));
+
+      //Redirect to sig-in page
+      router.push('/auth/sign-in');
+    } catch (err: unknown) {
+      console.log('err in logout', (err as { message: string }).message);
+    }
+  };
+
+  //Extracting initials from name
+  const nameArray = user?.name.split(' ');
+  const initials = nameArray?.map((name: string) => name.charAt(0));
+  const combinedInitials = initials?.join('');
 
   return (
     <Flex
@@ -65,161 +99,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
         me="10px"
         borderRadius="30px"
       />
-      <Flex
-        bg={ethBg}
-        display={secondary ? 'flex' : 'none'}
-        borderRadius="30px"
-        ms="auto"
-        p="6px"
-        align="center"
-        me="6px"
-      >
-        <Flex
-          align="center"
-          justify="center"
-          bg={ethBox}
-          h="29px"
-          w="29px"
-          borderRadius="30px"
-          me="7px"
-        >
-          <Icon color={ethColor} w="9px" h="14px" as={FaEthereum} />
-        </Flex>
-        <Text
-          w="max-content"
-          color={ethColor}
-          fontSize="sm"
-          fontWeight="700"
-          me="6px"
-        >
-          1,924
-          <Text as="span" display={{ base: 'none', md: 'unset' }}>
-            {' '}
-            ETH
-          </Text>
-        </Text>
-      </Flex>
       <SidebarResponsive routes={routes} />
-      <Menu>
-        <MenuButton p="0px">
-          <Icon
-            mt="6px"
-            as={MdNotificationsNone}
-            color={navbarIcon}
-            w="18px"
-            h="18px"
-            me="10px"
-          />
-        </MenuButton>
-        <MenuList
-          boxShadow={shadow}
-          p="20px"
-          borderRadius="20px"
-          bg={menuBg}
-          border="none"
-          mt="22px"
-          me={{ base: '30px', md: 'unset' }}
-          minW={{ base: 'unset', md: '400px', xl: '450px' }}
-          maxW={{ base: '360px', md: 'unset' }}
-        >
-          <Flex w="100%" mb="20px">
-            <Text fontSize="md" fontWeight="600" color={textColor}>
-              Notifications
-            </Text>
-            <Text
-              fontSize="sm"
-              fontWeight="500"
-              color={textColorBrand}
-              ms="auto"
-              cursor="pointer"
-            >
-              Mark all read
-            </Text>
-          </Flex>
-          <Flex flexDirection="column">
-            <MenuItem
-              _hover={{ bg: 'none' }}
-              _focus={{ bg: 'none' }}
-              px="0"
-              borderRadius="8px"
-              mb="10px"
-            >
-              <ItemContent info="Horizon UI Dashboard PRO" />
-            </MenuItem>
-            <MenuItem
-              _hover={{ bg: 'none' }}
-              _focus={{ bg: 'none' }}
-              px="0"
-              borderRadius="8px"
-              mb="10px"
-            >
-              <ItemContent info="Horizon Design System Free" />
-            </MenuItem>
-          </Flex>
-        </MenuList>
-      </Menu>
-
-      <Menu>
-        <MenuButton p="0px">
-          <Icon
-            mt="6px"
-            as={MdInfoOutline}
-            color={navbarIcon}
-            w="18px"
-            h="18px"
-            me="10px"
-          />
-        </MenuButton>
-        <MenuList
-          boxShadow={shadow}
-          p="20px"
-          me={{ base: '30px', md: 'unset' }}
-          borderRadius="20px"
-          bg={menuBg}
-          border="none"
-          mt="22px"
-          minW={{ base: 'unset' }}
-          maxW={{ base: '360px', md: 'unset' }}
-        >
-          <Image src={navImage} borderRadius="16px" mb="28px" alt="" />
-          <Flex flexDirection="column">
-            <Link w="100%" href="https://horizon-ui.com/pro">
-              <Button w="100%" h="44px" mb="10px" variant="brand">
-                Buy Horizon UI PRO
-              </Button>
-            </Link>
-            <Link
-              w="100%"
-              href="https://horizon-ui.com/documentation/docs/introduction"
-            >
-              <Button
-                w="100%"
-                h="44px"
-                mb="10px"
-                border="1px solid"
-                bg="transparent"
-                borderColor={borderButton}
-              >
-                See Documentation
-              </Button>
-            </Link>
-            <Link
-              w="100%"
-              href="https://github.com/horizon-ui/horizon-ui-chakra-nextjs"
-            >
-              <Button
-                w="100%"
-                h="44px"
-                variant="no-hover"
-                color={textColor}
-                bg="transparent"
-              >
-                Ethical Emporium
-              </Button>
-            </Link>
-          </Flex>
-        </MenuList>
-      </Menu>
 
       <Button
         variant="no-hover"
@@ -251,7 +131,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
           />
           <Center top={0} left={0} position={'absolute'} w={'100%'} h={'100%'}>
             <Text fontSize={'xs'} fontWeight="bold" color={'white'}>
-              AP
+              {combinedInitials}
             </Text>
           </Center>
         </MenuButton>
@@ -275,7 +155,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
               fontWeight="700"
               color={textColor}
             >
-              👋&nbsp; Hey, Adela
+              👋&nbsp; Hey, {user?.name}
             </Text>
           </Flex>
           <Flex flexDirection="column" p="10px">
@@ -285,15 +165,23 @@ export default function HeaderLinks(props: { secondary: boolean }) {
               borderRadius="8px"
               px="14px"
             >
-              <Text fontSize="sm">Profile Settings</Text>
-            </MenuItem>
-            <MenuItem
-              _hover={{ bg: 'none' }}
-              _focus={{ bg: 'none' }}
-              borderRadius="8px"
-              px="14px"
-            >
-              <Text fontSize="sm">Newsletter Settings</Text>
+              <Button
+                variant="link"
+                bg="transparent"
+                fontSize="md"
+                color="inherit"
+              >
+                {
+                  <Icon
+                    as={BsPersonGear}
+                    width="20px"
+                    height="20px"
+                    color="inherit"
+                    marginRight="0.7rem"
+                  />
+                }{' '}
+                Profile Settings
+              </Button>
             </MenuItem>
             <MenuItem
               _hover={{ bg: 'none' }}
@@ -302,7 +190,24 @@ export default function HeaderLinks(props: { secondary: boolean }) {
               borderRadius="8px"
               px="14px"
             >
-              <Text fontSize="sm">Log out</Text>
+              <Button
+                variant="link"
+                bg="transparent"
+                fontSize="md"
+                color="red.500"
+                onClick={handleLogOut}
+              >
+                {
+                  <Icon
+                    as={MdLock}
+                    width="20px"
+                    height="20px"
+                    color="inherit"
+                    marginRight="0.7rem"
+                  />
+                }{' '}
+                Log out
+              </Button>
             </MenuItem>
           </Flex>
         </MenuList>

@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { Box, Button, Collapse, Icon } from '@chakra-ui/react';
-import { MdLock } from 'react-icons/md';
+import { Box, Collapse } from '@chakra-ui/react';
 import Link from 'next/link';
 import { IRoute } from '../../../types/navigation';
 import SingleRoute from './SingleRoute';
