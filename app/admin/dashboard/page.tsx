@@ -12,7 +12,6 @@ import {
 } from '@chakra-ui/react';
 
 // Custom components
-// import MiniCalendar from 'components/calendar/MiniCalendar';
 import MiniStatistics from '../../../components/card/MiniStatistics';
 import IconBox from '../../../components/icons/IconBox';
 import {
@@ -33,6 +32,7 @@ import tableDataComplex from '../../../views/admin/dashboard/variables/tableData
 // Assets
 import Usa from '../../../img/dashboards/usa.png';
 import { useAppSelector } from '../../../redux/hooks';
+import MiniCalendar from '../../../components/calendar/MiniCalendar';
 
 export default function Dashboard() {
   // Chakra Color Mode
@@ -149,7 +149,7 @@ export default function Dashboard() {
         <ComplexTable tableData={tableDataComplex} />
         <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px">
           <Tasks />
-          {/* <MiniCalendar h="100%" minW="100%" selectRange={false} /> */}
+          <MiniCalendar h="100%" minW="100%" selectRange={false} />
         </SimpleGrid>
       </SimpleGrid>
     </Box>

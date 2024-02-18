@@ -7,6 +7,7 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import Footer from '../../components/footer/FooterAdmin';
+import { usePathname } from 'next/navigation';
 // Layout components
 import Navbar from '../../components/navbar/NavbarAdmin';
 import Sidebar from '../../components/sidebar/Sidebar';
@@ -29,8 +30,20 @@ export default function AdminLayout(props: DashboardLayoutProps) {
   // states and functions
   const [fixed] = useState(false);
   const [toggleSidebar, setToggleSidebar] = useState(false);
-  // functions for changing the states from components
+  const [activeRoute, setActiveRoute] = useState<string>('');
   const { onOpen } = useDisclosure();
+
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const updateRouteName = () => {
+      const activeRouteName = getActiveRoute(routes);
+      setActiveRoute(activeRouteName);
+    };
+
+    updateRouteName();
+    return () => updateRouteName();
+  }, [pathname]);
 
   const bg = useColorModeValue('secondaryGray.300', 'navy.900');
 
@@ -61,8 +74,8 @@ export default function AdminLayout(props: DashboardLayoutProps) {
             <Box>
               <Navbar
                 onOpen={onOpen}
-                logoText={'Horizon UI Dashboard PRO'}
-                brandText={getActiveRoute(routes)}
+                logoText={'Ethical Emporium'}
+                brandText={activeRoute}
                 secondary={getActiveNavbar(routes)}
                 message={getActiveNavbarText(routes)}
                 fixed={fixed}

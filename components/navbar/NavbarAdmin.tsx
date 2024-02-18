@@ -1,4 +1,3 @@
-/* eslint-disable */
 // Chakra Imports
 import {
   Box,
@@ -7,7 +6,6 @@ import {
   BreadcrumbLink,
   Flex,
   Link,
-  Text,
   useColorModeValue,
 } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
@@ -148,11 +146,7 @@ export default function AdminNavbar(props: {
           </Link>
         </Box>
         <Box ms="auto" w={{ sm: '100%', md: 'unset' }}>
-          <AdminNavbarLinks
-            onOpen={props.onOpen}
-            secondary={props.secondary}
-            fixed={props.fixed}
-          />
+          <AdminNavbarLinks secondary={props.secondary} />
         </Box>
       </Flex>
     </Box>
