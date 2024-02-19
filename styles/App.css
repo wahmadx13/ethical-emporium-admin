@@ -7,3 +7,43 @@ body {
 option {
   color: black;
 }
+
+.react-quill > :first-child {
+  border-top-left-radius: 1rem !important;
+  border-top-right-radius: 1rem !important;
+  border-color: inherit;
+}
+
+.react-quill > :last-child {
+  border-top: 0px !important;
+  border-bottom-left-radius: 1rem !important;
+  height: 10rem;
+  border-bottom-right-radius: 1rem !important;
+  border-color: inherit;
+}
+
+.react-quill > :nth-child(2) > .ql-editor.ql-blank::before {
+  font-style: normal !important;
+  color: inherit;
+}
+
+.image-display {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.image-display > :first-child > li {
+  list-style: none;
+
+}
+
+.display-image > div > img {
+  height: 15rem;
+  width: 100%;
+  border-radius: 1rem;
+  margin: 1rem;
+  box-shadow: 10px 10px 19px 2px inherit;
+  -webkit-box-shadow: 10px 10px 19px 2px inherit;
+  -moz-box-shadow: 10px 10px 19px 2px inherit;
+}
