@@ -14,20 +14,17 @@ import {
 
 interface IFormControlProps {
   formLabel?: string;
-  onChange?: (newValue: string, actionMeta: ActionMeta<string>) => void;
-  onBlur?: FocusEventHandler<HTMLInputElement>;
-  multiChange?: (
-    newValue: MultiValue<string>,
-    actionMeta: ActionMeta<string>,
-  ) => void;
-  multiBlur?: FocusEventHandler<HTMLInputElement>;
-  value?: string;
+  onChange?: any;
+  onBlur?: any;
+  multiChange?: any;
+  multiBlur?: any;
+  value?: string[] | string;
   isRequired?: boolean;
   placeholder?: string;
   name?: string;
   type?: string;
   formikTouched?: boolean;
-  formikError?: string;
+  formikError?: string | string[];
   children?: any;
   multipleOpt?: boolean;
   options?: any;
@@ -51,6 +48,7 @@ export default function Select(props: IFormControlProps) {
 
   const textColor = useColorModeValue('navy.700', 'white');
   const brandStars = useColorModeValue('brand.500', 'brand.400');
+  // console.log('value', name);
   return (
     <FormControl marginBottom="2rem">
       <FormLabel

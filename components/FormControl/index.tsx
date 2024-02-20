@@ -15,7 +15,7 @@ interface IFormControlProps {
   formLabel?: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
-  value?: string;
+  value?: string | number;
   isRequired?: boolean;
   placeholder?: string;
   defaultValue?: number;

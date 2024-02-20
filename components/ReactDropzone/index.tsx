@@ -1,3 +1,4 @@
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import {
   Box,
   Card,
@@ -10,7 +11,6 @@ import {
   GridItem,
 } from '@chakra-ui/react';
 import Image from 'next/image';
-import React, { useState } from 'react';
 import Dropzone, { DropEvent, FileRejection } from 'react-dropzone';
 import { MdUpload } from 'react-icons/md';
 
@@ -21,6 +21,7 @@ export default function ReactDropzone(props: {
     fileRejections: FileRejection[],
     event: DropEvent,
   ) => void;
+  setIsProductAdded: Dispatch<SetStateAction<boolean>>;
 }) {
   const [droppedFiles, setDroppedFiles] = useState<File[]>([]);
   const [droppedBlobs, setDroppedBlobs] = useState<string[]>([]);
@@ -41,6 +42,7 @@ export default function ReactDropzone(props: {
     console.log('Dropped files:', droppedFiles);
     setDroppedFiles([]);
     setDroppedBlobs([]);
+    props.setIsProductAdded(false);
   };
 
   const handleImageRemove = (blob: string, index: number) => {
@@ -110,7 +112,9 @@ export default function ReactDropzone(props: {
                     fontWeight="500"
                     color="secondaryGray.500"
                   >
-                    PNG, JPG and GIF files are allowed
+                    Upload Your product images so customers would have a better
+                    idea of what you are selling (PNG, JPG and JPEG files are
+                    allowed)
                   </Text>
                 </Card>
               )}
@@ -118,7 +122,12 @@ export default function ReactDropzone(props: {
           </section>
         )}
       </Dropzone>
-      <Button onClick={handleUploadFiles} variant="brand" fontWeight="500">
+      <Button
+        isDisabled={!droppedFiles.length}
+        onClick={handleUploadFiles}
+        variant="brand"
+        fontWeight="500"
+      >
         Publish now
       </Button>
     </Box>
