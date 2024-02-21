@@ -1,4 +1,3 @@
-import { ChangeEvent, FocusEventHandler } from 'react';
 import {
   FormControl,
   FormLabel,
@@ -6,28 +5,20 @@ import {
   Text,
 } from '@chakra-ui/react';
 
-import {
-  Select as ChakraSelect,
-  MultiValue,
-  ActionMeta,
-} from 'chakra-react-select';
+import { SingleSelect, MultipleSelect } from 'react-select-material-ui';
 
 interface IFormControlProps {
-  formLabel?: string;
-  onChange?: any;
-  onBlur?: any;
-  multiChange?: any;
-  multiBlur?: any;
-  value?: string[] | string;
-  isRequired?: boolean;
-  placeholder?: string;
-  name?: string;
-  type?: string;
-  formikTouched?: boolean;
-  formikError?: string | string[];
-  children?: any;
-  multipleOpt?: boolean;
-  options?: any;
+  formLabel: string;
+  onChange: any;
+  onBlur: any;
+  value: string[] | string;
+  name: string;
+  placeholder: string;
+  formikTouched: boolean;
+  formikError: string | string[];
+  multipleOpt: boolean;
+  options: string[];
+  noOptionMessage?: string;
 }
 
 export default function Select(props: IFormControlProps) {
@@ -42,8 +33,7 @@ export default function Select(props: IFormControlProps) {
     formikError,
     multipleOpt,
     options,
-    multiChange,
-    multiBlur,
+    noOptionMessage,
   } = props;
 
   const textColor = useColorModeValue('navy.700', 'white');
@@ -62,30 +52,27 @@ export default function Select(props: IFormControlProps) {
         {formLabel}
         <Text color={brandStars}>*</Text>
       </FormLabel>
-      {multipleOpt ? (
-        <ChakraSelect
-          variant="auth"
-          isMulti
+
+      {!multipleOpt ? (
+        <SingleSelect
           name={name}
-          options={options}
-          placeholder={placeholder}
-          onChange={multiChange}
-          onBlur={multiBlur}
-          closeMenuOnSelect={false}
-          size="lg"
           value={value}
-        />
-      ) : (
-        <ChakraSelect
-          variant="auth"
           placeholder={placeholder}
-          name={name}
+          options={options}
           onChange={onChange}
           onBlur={onBlur}
+        />
+      ) : (
+        <MultipleSelect
+          name={name}
           value={value}
-          size="lg"
+          placeholder={placeholder}
           options={options}
-          selectedOptionStyle="check"
+          onChange={onChange}
+          onBlur={onBlur}
+          SelectProps={{
+            msgNoOptionsAvailable: noOptionMessage,
+          }}
         />
       )}
       <Text mb="10px" color="red.500" fontSize="1rem">

@@ -3,7 +3,7 @@ export interface IAddProduct {
     description: string;
     price: number;
     brand: string;
-    category: string[];
+    category: string;
     color: string[];
     quantity: number;
     tags: string[];
