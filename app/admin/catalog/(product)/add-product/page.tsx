@@ -134,7 +134,6 @@ export default function AddProduct() {
             <FormControl
               formLabel="Product Title"
               name="title"
-              isRequired={true}
               type="text"
               placeholder="Enter Product Title"
               onChange={formik.handleChange('title')}
@@ -158,9 +157,8 @@ export default function AddProduct() {
             <FormControl
               formLabel="Enter Product Price"
               name="price"
-              isRequired={true}
               type="number"
-              defaultValue={0.0}
+              placeholder="0.00"
               value={formik.values.price}
               onChange={formik.handleChange('price')}
               onBlur={formik.handleBlur('price')}
@@ -170,9 +168,8 @@ export default function AddProduct() {
             <FormControl
               formLabel="Enter Product Quantity"
               name="quantity"
-              isRequired={true}
               type="number"
-              defaultValue={0.0}
+              placeholder="0.00"
               onChange={formik.handleChange('quantity')}
               onBlur={formik.handleBlur('quantity')}
               value={formik.values.quantity}

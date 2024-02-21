@@ -4,24 +4,10 @@ import {
   useColorModeValue,
   Text,
 } from '@chakra-ui/react';
-
 import { SingleSelect, MultipleSelect } from 'react-select-material-ui';
+import { IFormControlSelectProps } from '../../types/addProduct';
 
-interface IFormControlProps {
-  formLabel: string;
-  onChange: any;
-  onBlur: any;
-  value: string[] | string;
-  name: string;
-  placeholder: string;
-  formikTouched: boolean;
-  formikError: string | string[];
-  multipleOpt: boolean;
-  options: string[];
-  noOptionMessage?: string;
-}
-
-export default function Select(props: IFormControlProps) {
+export default function Select(props: IFormControlSelectProps) {
   const {
     formLabel,
     onChange,

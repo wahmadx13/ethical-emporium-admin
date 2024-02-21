@@ -5,16 +5,7 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { Editor } from '@tinymce/tinymce-react';
-
-interface IRichTextEditor {
-  onChange: any;
-  onBlur: any;
-  formLabel: string;
-  placeholder: string;
-  value: string;
-  formikTouched: boolean;
-  formikError: string;
-}
+import { IRichTextEditor } from '../../types/addProduct';
 
 export default function RichTextEditor(props: IRichTextEditor) {
   const {

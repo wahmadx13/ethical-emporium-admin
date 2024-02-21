@@ -10,20 +10,7 @@ import {
   Text,
   useColorModeValue,
 } from '@chakra-ui/react';
-
-interface IFormControlProps {
-  formLabel?: string;
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
-  value?: string | number;
-  isRequired?: boolean;
-  placeholder?: string;
-  defaultValue?: number;
-  name?: string;
-  type?: string;
-  formikTouched?: boolean;
-  formikError?: string;
-}
+import { IFormControlProps } from '../../types/addProduct';
 
 export default function FormControl(props: IFormControlProps) {
   const {
@@ -36,7 +23,6 @@ export default function FormControl(props: IFormControlProps) {
     type,
     formikTouched,
     formikError,
-    defaultValue,
   } = props;
   const textColor = useColorModeValue('navy.700', 'white');
   const textColorSecondary = 'gray.400';
@@ -57,7 +43,7 @@ export default function FormControl(props: IFormControlProps) {
       </FormLabel>
       {type === 'number' ? (
         <NumberInput
-          defaultValue={defaultValue}
+          placeholder={placeholder}
           variant="auth"
           fontWeight="500"
           color="inherit"
