@@ -20,7 +20,7 @@ export default function RichTextEditor(props: IRichTextEditor) {
   const textColor = useColorModeValue('navy.700', 'white');
   const brandStars = useColorModeValue('brand.500', 'brand.400');
   return (
-    <FormControl marginBottom="2rem">
+    <FormControl marginBottom="2rem" className="rich-editor">
       <FormLabel
         display="flex"
         ms="4px"

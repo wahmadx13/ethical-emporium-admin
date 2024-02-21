@@ -41,6 +41,7 @@ export default function Select(props: IFormControlSelectProps) {
 
       {!multipleOpt ? (
         <SingleSelect
+          className="select"
           name={name}
           value={value}
           placeholder={placeholder}
@@ -50,6 +51,7 @@ export default function Select(props: IFormControlSelectProps) {
         />
       ) : (
         <MultipleSelect
+          className="select"
           name={name}
           value={value}
           placeholder={placeholder}

@@ -75,10 +75,6 @@ export default function AddProduct() {
       .required('Pick at least one tag'),
   });
 
-  const handleUploadProduct = () => {
-    setIsProductAdded(true);
-  };
-
   const handleColorSelect = (values: string[]) => {
     setColors(values);
   };
@@ -101,6 +97,7 @@ export default function AddProduct() {
     validationSchema: schema,
     onSubmit: (values: IAddProduct) => {
       console.log('ProductValues', values);
+      setIsProductAdded(true);
     },
   });
 
@@ -228,7 +225,6 @@ export default function AddProduct() {
             />
             <Button
               isDisabled={hasErrors}
-              onClick={handleUploadProduct}
               variant="brand"
               fontWeight="500"
               type="submit"
