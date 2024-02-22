@@ -16,7 +16,20 @@ export const findCurrentRoute = (routes: IRoute[]): IRoute => {
 
 export const getActiveRoute = (routes: IRoute[]): string => {
   const route = findCurrentRoute(routes);
-  return route?.name || "Default Brand Text";
+  if (route?.name) {
+    return route.name;
+  } else {
+    const subRoute = routes.find((route) => route?.subRoutes)?.subRoutes.find(
+      (subRoute) => {
+        return (
+          isWindowAvailable() &&
+          window.location.href.indexOf(subRoute?.path) !== -1 &&
+          subRoute?.name || "Ethical Emporium"
+        )
+      }
+    );
+    return subRoute?.name || "Ethical Emporium";
+  }
 };
 
 export const getActiveNavbar = (routes: IRoute[]): boolean => {
