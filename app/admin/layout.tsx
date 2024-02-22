@@ -88,7 +88,7 @@ export default function AdminLayout(props: DashboardLayoutProps) {
             mx="auto"
             p={{ base: '20px', md: '30px' }}
             pe="20px"
-            minH="100vh"
+            minH="94vh"
             pt="50px"
           >
             {children}
