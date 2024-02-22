@@ -5,8 +5,15 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import FormControl from '../../../../../components/FormControl';
 import { IAddBrand } from '../../../../../types/brand';
+import { useAppSelector, useAppDispatch } from '../../../../../redux/hooks';
+import { createBrand } from '../../../../../redux/features/brandSlice';
 
 export default function AddBrand() {
+  const dispatch = useAppDispatch();
+
+  const { jwtToken } = useAppSelector((state) => state.authReducer);
+  const { isLoading } = useAppSelector((state) => state.brandReducer);
+
   const schema = yup.object().shape({
     title: yup.string().required('Brand Name is Required'),
   });
@@ -18,10 +25,13 @@ export default function AddBrand() {
     validationSchema: schema,
     onSubmit: (values: IAddBrand) => {
       console.log('brandValues', values);
+      dispatch(createBrand({ brandData: values, jwtToken }));
+      formik.resetForm();
     },
   });
 
   const hasErrors = Object.keys(formik.errors).length > 0;
+
   useEffect(() => {
     console.log('formikValues', formik.values);
   }, [formik.values]);
@@ -50,6 +60,7 @@ export default function AddBrand() {
           />
           <Button
             isDisabled={hasErrors}
+            isLoading={isLoading}
             variant="brand"
             fontWeight="500"
             type="submit"
