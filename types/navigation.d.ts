@@ -12,3 +12,10 @@ export interface IRoute {
     path?: string;
   }[];
 }
+
+export interface IRoutes {
+  name?: string;
+  icon?: ReactComponentElement | string;
+  path?: string
+  secondary?: boolean
+}
