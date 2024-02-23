@@ -1,4 +1,14 @@
-
+const getBrands = async () => {
+    try {
+        const response = await fetch(`${process.env.NEXT_BACKEND_BASE_URL}/brand`, {
+            method: 'GET'
+        });
+        const data = response.json()
+        return data;
+    } catch (err) {
+        console.log('Error in getting all brands', err)
+    }
+}
 
 const createBrand = async (brand: { title: string }, jwtToken: string) => {
     try {
@@ -20,5 +30,5 @@ const createBrand = async (brand: { title: string }, jwtToken: string) => {
     }
 };
 
-const brandServices = { createBrand }
+const brandServices = { getBrands, createBrand }
 export default brandServices 

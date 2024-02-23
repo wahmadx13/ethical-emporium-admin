@@ -16,10 +16,22 @@ interface IBrandResponse {
 
 interface IBrandSlice {
     addedBrandData: IBrandResponse;
+    allBrands: IBrandResponse[];
     isLoading: boolean;
     isSuccess: boolean;
     isError: boolean;
 }
+
+export const getAllBrands = createAsyncThunk(
+    'brand/get-all-brands',
+    async (_, thunkApi) => {
+        try {
+            return await brandServices.getBrands()
+        } catch (err) {
+            thunkApi.rejectWithValue(err)
+        }
+    }
+)
 
 export const createBrand = createAsyncThunk(
     'brand/create-brand',
@@ -34,6 +46,7 @@ export const createBrand = createAsyncThunk(
 
 const initialState: IBrandSlice = {
     addedBrandData: null,
+    allBrands: [],
     isLoading: false,
     isSuccess: false,
     isError: false,
@@ -45,6 +58,22 @@ export const brandSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
+            //Cases for getting all brands
+            .addCase(getAllBrands.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(getAllBrands.fulfilled, (state, action: PayloadAction<IBrandSlice | any>) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.allBrands = action.payload;
+            })
+            .addCase(getAllBrands.rejected, (state, action: PayloadAction<IBrandSlice | any>) => {
+                state.isLoading = false;
+                state.isSuccess = false;
+                state.isError = true;
+                state.allBrands = action.payload
+            })
+            //Cases for adding a brand
             .addCase(createBrand.pending, (state) => {
                 state.isLoading = true;
             })
