@@ -5,19 +5,20 @@ interface IBrandData {
     title: string;
 }
 
-interface IBrand {
+interface IBrandResponse {
     _id: Object;
     title: string,
-    createdAt: Date
-    updatedAt: Date
+    createdAt: Date,
+    updatedAt: Date,
+    statusCode: number;
+    message: string;
 }
 
 interface IBrandSlice {
-    brands: IBrand[];
+    addedBrandData: IBrandResponse;
     isLoading: boolean;
     isSuccess: boolean;
-    isError: boolean,
-    message: any;
+    isError: boolean;
 }
 
 export const createBrand = createAsyncThunk(
@@ -32,11 +33,10 @@ export const createBrand = createAsyncThunk(
 )
 
 const initialState: IBrandSlice = {
-    brands: [],
+    addedBrandData: null,
     isLoading: false,
     isSuccess: false,
     isError: false,
-    message: ""
 }
 
 export const brandSlice = createSlice({
@@ -50,12 +50,13 @@ export const brandSlice = createSlice({
             })
             .addCase(createBrand.fulfilled, (state, action: PayloadAction<IBrandSlice | any>) => {
                 state.isLoading = false;
-                state.brands = action.payload;
+                state.isSuccess
+                state.addedBrandData = action.payload;
             })
             .addCase(createBrand.rejected, (state, action: PayloadAction<any>) => {
                 state.isLoading = false;
                 state.isSuccess = false;
-                state.message = action.payload
+                state.addedBrandData = action.payload
             })
     }
 })

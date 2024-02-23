@@ -1,8 +1,9 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Box, Button, SimpleGrid } from '@chakra-ui/react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
+import { toast } from 'react-toastify';
 import FormControl from '../../../../../components/FormControl';
 import { IAddBrand } from '../../../../../types/brand';
 import { useAppSelector, useAppDispatch } from '../../../../../redux/hooks';
@@ -14,6 +15,14 @@ export default function AddBrand() {
   const { jwtToken } = useAppSelector((state) => state.authReducer);
   const { isLoading } = useAppSelector((state) => state.brandReducer);
 
+  const toastNotification = useCallback((status: number, message: string) => {
+    if (status === 304) {
+      toast.warning(message, { toastId: 'brand-adding-warning' });
+    } else if (status === 200) {
+      toast.success(message, { toastId: 'brand-adding-success' });
+    }
+  }, []);
+
   const schema = yup.object().shape({
     title: yup.string().required('Brand Name is Required'),
   });
@@ -23,18 +32,26 @@ export default function AddBrand() {
       title: '',
     },
     validationSchema: schema,
-    onSubmit: (values: IAddBrand) => {
+    onSubmit: async (values: IAddBrand) => {
       console.log('brandValues', values);
-      dispatch(createBrand({ brandData: values, jwtToken }));
+      const response = await dispatch(
+        createBrand({ brandData: values, jwtToken }),
+      );
+      try {
+        toastNotification(
+          response.payload.statusCode,
+          response.payload.message,
+        );
+      } catch (err) {
+        toast.error('Something went wrong!', {
+          toastId: 'brand-adding-error',
+        });
+      }
       formik.resetForm();
     },
   });
 
   const hasErrors = Object.keys(formik.errors).length > 0;
-
-  useEffect(() => {
-    console.log('formikValues', formik.values);
-  }, [formik.values]);
 
   return (
     <Box pt={{ base: '130px', md: '80px', xl: '80px' }} width="100%">
