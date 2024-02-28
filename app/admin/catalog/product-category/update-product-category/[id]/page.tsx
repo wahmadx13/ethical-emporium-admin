@@ -8,63 +8,71 @@ import * as yup from 'yup';
 import { toast } from 'react-toastify';
 import { MdKeyboardArrowLeft } from 'react-icons/md';
 import FormControl from '../../../../../../components/FormControl';
-import { IAddBrand } from '../../../../../../types/brand';
+import { IAddProductCategory } from '../../../../../../types/productCategory';
 import { useAppSelector, useAppDispatch } from '../../../../../../redux/hooks';
 import {
-  getABrand,
-  updateABrand,
+  getAProductCategory,
+  updateAProductCategory,
   resetState,
-} from '../../../../../../redux/features/brandSlice';
+} from '../../../../../../redux/features/productCategorySlice';
 
-export default function UpdateBrand(props: { params: { id: string } }) {
+export default function UpdateProductCategory(props: {
+  params: { id: string };
+}) {
   const { id } = props.params;
-  const [brandTitle, setBrandTitle] = useState<string>(null);
+  const [productCategoryTitle, setProductCategoryTitle] =
+    useState<string>(null);
   const dispatch = useAppDispatch();
   const router = useRouter();
 
   const { jwtToken } = useAppSelector((state) => state.authReducer);
-  const { brand, isLoading } = useAppSelector((state) => state.brandReducer);
+  const { productCategory, isLoading } = useAppSelector(
+    (state) => state.productCategoryReducer,
+  );
 
   const { colorMode } = useColorMode();
 
   const toastNotification = useCallback((status: number, message: string) => {
     if (message === 'DuplicateKey') {
-      toast.warning(`Brand already exist. Please try adding new one`, {
-        toastId: 'brand-updating-warning',
-      });
+      toast.warning(
+        `Product category already exist. Please try adding new one`,
+        { toastId: 'product-category-updating-warning' },
+      );
     }
     if (status === 200) {
       toast.success(message, {
-        toastId: 'brand-updating-success',
+        toastId: 'product-category-updating-success',
       });
     }
   }, []);
 
   const schema = yup.object().shape({
-    title: yup.string().required('Brand Name is Required'),
+    title: yup.string().required('Product Category Name is Required'),
   });
 
-  const getBrand = useCallback(() => {
-    dispatch(getABrand(id));
+  const getProductCategory = useCallback(() => {
+    dispatch(getAProductCategory(id));
   }, [dispatch, id]);
 
   useEffect(() => {
-    getBrand();
-    setBrandTitle(brand?.title);
-  }, [brand?.title, getBrand]);
+    getProductCategory();
+    setProductCategoryTitle(productCategory?.title);
+  }, [productCategory?.title, getProductCategory]);
 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      title: brandTitle,
+      title: productCategoryTitle,
     },
     validationSchema: schema,
-    onSubmit: async (values: IAddBrand) => {
-      const brandData = {
+    onSubmit: async (values: IAddProductCategory) => {
+      const productCategoryData = {
         ...values,
         id,
       };
-      const response = await dispatch(updateABrand({ brandData, jwtToken }));
+      const response = await dispatch(
+        updateAProductCategory({ productCategoryData, jwtToken }),
+      );
       try {
         toastNotification(
           response.payload.statusCode,
@@ -72,11 +80,11 @@ export default function UpdateBrand(props: { params: { id: string } }) {
         );
         if (response.payload.statusCode === 200) {
           dispatch(resetState());
-          router.push('/admin/catalog/brand/brand-list');
+          router.push('/admin/catalog/product-category/product-category-list');
         }
       } catch (err) {
         toast.error('Something went wrong!', {
-          toastId: 'brand-updating-error',
+          toastId: 'product-category-updating-error',
         });
       }
     },
@@ -96,10 +104,10 @@ export default function UpdateBrand(props: { params: { id: string } }) {
       >
         <form action="" onSubmit={formik.handleSubmit}>
           <FormControl
-            formLabel="Brand Title"
+            formLabel="Product Category Title"
             name="title"
             type="text"
-            placeholder="Enter Brand Name"
+            placeholder="Enter Product Category Name"
             onChange={formik.handleChange('title')}
             onBlur={formik.handleBlur('title')}
             value={formik.values.title}
@@ -107,7 +115,7 @@ export default function UpdateBrand(props: { params: { id: string } }) {
             formikError={formik.errors.title}
           />
           <Box display="flex" alignContent="center" width="fit-content">
-            <Link href="/admin/catalog/brand/brand-list">
+            <Link href="/admin/catalog/product-category/product-category-list">
               <Box
                 display="flex"
                 alignItems="center"
@@ -122,7 +130,7 @@ export default function UpdateBrand(props: { params: { id: string } }) {
                   height="20px"
                   color="inherit"
                 />{' '}
-                Back to brands?
+                Back to product categories?
               </Box>
             </Link>
             <Button
@@ -133,7 +141,7 @@ export default function UpdateBrand(props: { params: { id: string } }) {
               type="submit"
               marginLeft="0.5rem"
             >
-              Edit Brand
+              Edit Product Category
             </Button>
           </Box>
         </form>
