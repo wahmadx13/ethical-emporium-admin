@@ -25,7 +25,7 @@ export const findCurrentRoute = (routes: IRoute[]): IRoute | IRoutes => {
 
 export const getActiveRoute = (routes: IRoute[]): string => {
   const route = findCurrentRoute(routes);
-  return route?.name || "Default Brand Text";
+  return route?.name || "Ethical Emporium Update Document";
 };
 
 export const getActiveNavbar = (routes: IRoute[]): boolean => {

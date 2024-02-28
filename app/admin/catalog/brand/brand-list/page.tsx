@@ -1,5 +1,6 @@
 'use client';
 import { useCallback, useEffect, useState } from 'react';
+import Link from 'next/link';
 import { Box, Icon, SimpleGrid, Td, Tr, useDisclosure } from '@chakra-ui/react';
 import { toast } from 'react-toastify';
 import { FiEdit } from 'react-icons/fi';
@@ -10,6 +11,7 @@ import Modal from '../../../../../components/Modal';
 import {
   getAllBrands,
   deleteABrand,
+  resetState,
 } from '../../../../../redux/features/brandSlice';
 
 const columns = [
@@ -41,6 +43,7 @@ export default function AddBrand() {
   }, []);
 
   useEffect(() => {
+    dispatch(resetState());
     dispatch(getAllBrands());
   }, [dispatch]);
 
@@ -88,13 +91,17 @@ export default function AddBrand() {
                 <Td>{i + 1}</Td>
                 <Td>{title}</Td>
                 <Td>
-                  <Icon
-                    as={FiEdit}
-                    width="20px"
-                    height="20px"
-                    color="inherit"
-                    style={{ cursor: 'pointer' }}
-                  />
+                  <Link
+                    href={`/admin/catalog/brand/update-brand/${_id.toString()}`}
+                  >
+                    <Icon
+                      as={FiEdit}
+                      width="20px"
+                      height="20px"
+                      color="inherit"
+                      style={{ cursor: 'pointer' }}
+                    />
+                  </Link>
                   <Icon
                     as={CiTrash}
                     width="20px"

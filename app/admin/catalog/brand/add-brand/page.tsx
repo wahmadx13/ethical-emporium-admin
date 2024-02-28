@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import { Box, Button, SimpleGrid } from '@chakra-ui/react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -7,7 +7,10 @@ import { toast } from 'react-toastify';
 import FormControl from '../../../../../components/FormControl';
 import { IAddBrand } from '../../../../../types/brand';
 import { useAppSelector, useAppDispatch } from '../../../../../redux/hooks';
-import { createBrand } from '../../../../../redux/features/brandSlice';
+import {
+  createBrand,
+  resetState,
+} from '../../../../../redux/features/brandSlice';
 
 export default function AddBrand() {
   const dispatch = useAppDispatch();
@@ -46,6 +49,9 @@ export default function AddBrand() {
           toastId: 'brand-adding-error',
         });
       }
+      setTimeout(() => {
+        dispatch(resetState());
+      }, 300);
       formik.resetForm();
     },
   });
