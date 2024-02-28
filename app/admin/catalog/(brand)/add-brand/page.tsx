@@ -33,7 +33,6 @@ export default function AddBrand() {
     },
     validationSchema: schema,
     onSubmit: async (values: IAddBrand) => {
-      console.log('brandValues', values);
       const response = await dispatch(
         createBrand({ brandData: values, jwtToken }),
       );

@@ -22,24 +22,38 @@ interface IBrandSlice {
     isError: boolean;
 }
 
+//Getting All Brands
 export const getAllBrands = createAsyncThunk(
     'brand/get-all-brands',
     async (_, thunkApi) => {
         try {
             return await brandServices.getBrands()
         } catch (err) {
-            thunkApi.rejectWithValue(err)
+            thunkApi.rejectWithValue(err);
         }
     }
 )
 
+//Creating A Brand 
 export const createBrand = createAsyncThunk(
     'brand/create-brand',
     async ({ brandData, jwtToken }: { brandData: IBrandData, jwtToken: string }, thunkApi) => {
         try {
-            return await brandServices.createBrand(brandData, jwtToken)
+            return await brandServices.createBrand(brandData, jwtToken);
         } catch (err) {
-            thunkApi.rejectWithValue(err)
+            thunkApi.rejectWithValue(err);
+        }
+    }
+)
+
+//Deleting A Brand
+export const deleteABrand = createAsyncThunk(
+    'brand/delete-brand',
+    async ({ brand, jwtToken }: { brand: { id: Object }, jwtToken: string }, thunkApi) => {
+        try {
+            return await brandServices.deleteBrand(brand, jwtToken);
+        } catch (err) {
+            thunkApi.rejectWithValue(err);
         }
     }
 )
@@ -71,7 +85,7 @@ export const brandSlice = createSlice({
                 state.isLoading = false;
                 state.isSuccess = false;
                 state.isError = true;
-                state.allBrands = action.payload
+                state.allBrands = action.payload;
             })
             //Cases for adding a brand
             .addCase(createBrand.pending, (state) => {
@@ -85,7 +99,20 @@ export const brandSlice = createSlice({
             .addCase(createBrand.rejected, (state, action: PayloadAction<any>) => {
                 state.isLoading = false;
                 state.isSuccess = false;
-                state.addedBrandData = action.payload
+                state.addedBrandData = action.payload;
+            })
+            //Cases for brand deletion
+            .addCase(deleteABrand.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(deleteABrand.fulfilled, (state, action: PayloadAction<any>) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+            })
+            .addCase(deleteABrand.rejected, (state, action: PayloadAction<any>) => {
+                state.isLoading = false;
+                state.isSuccess = false;
+                state.isError = true;
             })
     }
 })
