@@ -3,8 +3,10 @@ import React, { ReactNode, useEffect } from 'react';
 import '../styles/App.css';
 import '../styles/Contact.css';
 import '../styles/MiniCalendar.css';
-import { ChakraProvider } from '@chakra-ui/react';
+import { ChakraProvider, background, useColorMode } from '@chakra-ui/react';
 import { CacheProvider } from '@chakra-ui/next-js';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import theme from '../theme/theme';
 import { amplifyInit } from '../utils/amplifyInit';
 import { CognitoIdTokenPayload } from 'aws-jwt-verify/jwt-model';
@@ -22,6 +24,7 @@ export default function AppWrappers({
 }) {
   amplifyInit();
   const dispatch = useAppDispatch();
+  const { colorMode } = useColorMode();
 
   useEffect(() => {
     dispatch(setUser(data));
@@ -29,7 +32,19 @@ export default function AppWrappers({
   }, [data, dispatch, jwtToken]);
   return (
     <CacheProvider>
-      <ChakraProvider theme={theme}>{children}</ChakraProvider>{' '}
+      <ChakraProvider theme={theme}>
+        {children}
+        <ToastContainer
+          position="top-right"
+          hideProgressBar={false}
+          newestOnTop={true}
+          closeOnClick
+          rtl={false}
+          pauseOnHover
+          draggable
+          theme={colorMode === 'dark' ? 'dark' : 'light'}
+        />
+      </ChakraProvider>{' '}
     </CacheProvider>
   );
 }

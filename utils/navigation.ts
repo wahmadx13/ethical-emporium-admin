@@ -1,35 +1,31 @@
-import { IRoute } from "../types/navigation";
+import { IRoute, IRoutes } from "../types/navigation";
 
 // NextJS Requirement
 export const isWindowAvailable = () => typeof window !== "undefined";
 
-export const findCurrentRoute = (routes: IRoute[]): IRoute => {
-  const foundRoute: IRoute = routes.find(
-    (route) =>
-      isWindowAvailable() &&
-      window.location.href.indexOf(route.layout + route.path) !== -1 &&
-      route
-  );
+export const findCurrentRoute = (routes: IRoute[]): IRoute | IRoutes => {
 
-  return foundRoute;
+  const foundRoute: IRoutes[] = routes.map((route) => {
+    if (route.path) {
+      return isWindowAvailable() && window.location.href.indexOf(route.layout + route.path) !== -1 && route
+    } else if (route?.subRoutes) {
+      const { subRoutes } = route;
+      const resultedRoute = subRoutes.find((subRoute) => {
+        if (isWindowAvailable() && window.location.href.indexOf(route.layout + subRoute.path) !== -1) {
+          return subRoute
+        }
+      })
+      return resultedRoute
+    }
+  }
+  )
+  const resArr = foundRoute.filter(Boolean)
+  return resArr[0];
 };
 
 export const getActiveRoute = (routes: IRoute[]): string => {
   const route = findCurrentRoute(routes);
-  if (route?.name) {
-    return route.name;
-  } else {
-    const subRoute = routes.find((route) => route?.subRoutes)?.subRoutes.find(
-      (subRoute) => {
-        return (
-          isWindowAvailable() &&
-          window.location.href.indexOf(subRoute?.path) !== -1 &&
-          subRoute?.name || "Ethical Emporium"
-        )
-      }
-    );
-    return subRoute?.name || "Ethical Emporium";
-  }
+  return route?.name || "Ethical Emporium Update Document";
 };
 
 export const getActiveNavbar = (routes: IRoute[]): boolean => {

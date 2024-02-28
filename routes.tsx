@@ -71,7 +71,7 @@ const routes: IRoute[] = [
             color="inherit"
           />
         ),
-        path: '/add-product',
+        path: '/product/add-product',
       },
       {
         name: 'Product List',
@@ -83,7 +83,7 @@ const routes: IRoute[] = [
             color="inherit"
           />
         ),
-        path: '/product-list',
+        path: '/product/product-list',
       },
       {
         name: 'Add Product Category',
@@ -95,7 +95,7 @@ const routes: IRoute[] = [
             color="inherit"
           />
         ),
-        path: '/add-prodcategory',
+        path: '/product-category/add-prodcategory',
       },
       {
         name: 'Product Category List',
@@ -107,26 +107,26 @@ const routes: IRoute[] = [
             color="inherit"
           />
         ),
-        path: '/product-category-list',
+        path: '/product-category/product-category-list',
       },
       {
         name: 'Add Brand',
         icon: (
           <Icon as={SiBrandfolder} width="20px" height="20px" color="inherit" />
         ),
-        path: '/add-brand',
+        path: '/brand/add-brand',
       },
       {
         name: 'Brand List',
         icon: <Icon as={CgList} width="20px" height="20px" color="inherit" />,
-        path: '/brand-list',
+        path: '/brand/brand-list',
       },
       {
         name: 'Add Color',
         icon: (
           <Icon as={CgColorBucket} width="20px" height="20px" color="inherit" />
         ),
-        path: '/add-color',
+        path: '/color/add-color',
       },
       {
         name: 'Color List',
@@ -138,7 +138,7 @@ const routes: IRoute[] = [
             color="inherit"
           />
         ),
-        path: '/color-list',
+        path: '/color/color-list',
       },
     ],
   },
@@ -192,7 +192,7 @@ const routes: IRoute[] = [
       {
         name: 'Add Blog',
         icon: <Icon as={ImBlog} width="20px" height="20px" color="inherit" />,
-        path: '/add-blog',
+        path: '/blog/add-blog',
       },
       {
         name: 'Blog List',
@@ -204,7 +204,7 @@ const routes: IRoute[] = [
             color="inherit"
           />
         ),
-        path: '/blog-list',
+        path: '/blog/blog-list',
       },
       {
         name: 'Add Blog Category',
@@ -216,7 +216,7 @@ const routes: IRoute[] = [
             color="inherit"
           />
         ),
-        path: '/add-bcategory',
+        path: '/blog-category/add-bcategory',
       },
       {
         name: 'Blog Category List',
@@ -228,7 +228,7 @@ const routes: IRoute[] = [
             color="inherit"
           />
         ),
-        path: '/blog-category-list',
+        path: '/blog-category/blog-category-list',
       },
     ],
   },

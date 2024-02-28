@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 // chakra imports
-import { IRoute } from 'types/navigation';
+import { IRoute } from '../../../types/navigation';
 import SingleLink from './Link';
 interface SidebarLinksProps {
   routes: IRoute[];
