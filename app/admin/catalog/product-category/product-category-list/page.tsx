@@ -28,7 +28,7 @@ const columns = [
     dataIndex: 'actions',
   },
 ];
-export default function AddProductCategory() {
+export default function ProductCategoryList() {
   const [productCategoryId, setProductCategoryId] = useState<Object>(null);
   const [productCategoryTitle, setProductTitle] = useState<string>(null);
   const dispatch = useAppDispatch();
