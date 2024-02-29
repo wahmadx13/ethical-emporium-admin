@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Box, Button, SimpleGrid, Text } from '@chakra-ui/react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -7,64 +7,23 @@ import FormControl from '../../../../../components/FormControl';
 import RichTextEditor from '../../../../../components/RichTextEditor';
 import Select from '../../../../../components/Select';
 import ReactDropzone from '../../../../../components/ReactDropzone';
+import {
+  capitalizeFirstLetter,
+  transformStringToLowerCase,
+} from '../../../../../utils/helper';
 import { IAddProduct } from '../../../../../types/addProduct';
-
-//RAW DATA
-
-export interface ISelectProps {
-  value: string;
-  label: string;
-}
-
-export interface ISelectColorProps {
-  value: string;
-  label: string;
-  colorScheme: string;
-}
-
-//Brand Select
-export const brandOptions = [
-  { value: 'apple', label: 'Apple' },
-  { value: 'samsung', label: 'Samsung' },
-  { value: 'lg', label: 'LG' },
-  { value: 'lenovo', label: 'Lenovo' },
-  { value: 'dell', label: 'Dell' },
-  { value: 'hp', label: 'HP' },
-];
-
-//Color Data
-export const colorOptions = [
-  { value: 'blue', label: 'Blue' },
-  { value: 'purple', label: 'Purple' },
-  { value: 'red', label: 'Red' },
-  { value: 'orange', label: 'Orange' },
-  { value: 'yellow', label: 'Yellow' },
-  { value: 'green', label: 'Green' },
-];
-const mappedColorOptions = colorOptions.map((option) => ({
-  ...option,
-  colorScheme: option.value,
-}));
-
-//Category Select
-export const categoryOptions = [
-  { value: 'laptop', label: 'Laptop' },
-  { value: 'smart-watch', label: 'Smart Watch' },
-  { value: 'mobile-phone', label: 'Mobile Phone' },
-  { value: 'pc', label: 'PC' },
-  { value: 'camera', label: 'Camera' },
-  { value: 'headset', label: 'Headset' },
-];
-
-//Tags Select
-export const tagsOptions = [
-  { value: 'tech', label: 'Tech' },
-  { value: 'laptop', label: 'Laptop' },
-  { value: 'finance', label: 'Finance' },
-  { value: 'smart-watch', label: 'Smart Watch' },
-  { value: 'mobile-phone', label: 'Mobile Phone' },
-  { value: 'Education', label: 'Education' },
-];
+import { useAppSelector, useAppDispatch } from '../../../../../redux/hooks';
+import {
+  getAllBrands,
+  resetState,
+} from '../../../../../redux/features/brandSlice';
+import { getAllProductCategories } from '../../../../../redux/features/productCategorySlice';
+import { getAllColors } from '../../../../../redux/features/colorSlice';
+import { tagSelect } from '../../../../../utils/constants';
+import {
+  ISelectProps,
+  ISelectColorProps,
+} from '../../../../../types/addProduct';
 
 export default function AddProduct() {
   //React States
@@ -75,6 +34,53 @@ export default function AddProduct() {
   const [colors, setColors] = useState<string[]>([]);
   const [selectTags, setSelectTags] = useState<string[]>([]);
 
+  //Dispatch
+  const dispatch = useAppDispatch();
+
+  //Getting all the required values
+  const getValuesForSelection = useCallback(() => {
+    dispatch(resetState());
+    dispatch(getAllBrands());
+    dispatch(getAllProductCategories());
+    dispatch(getAllColors());
+  }, [dispatch]);
+
+  //Use Effect
+  useEffect(() => {
+    getValuesForSelection();
+  }, [getValuesForSelection]);
+
+  //States from redux
+  const { allBrands } = useAppSelector((state) => state.brandReducer);
+  const { allProductCategories } = useAppSelector(
+    (state) => state.productCategoryReducer,
+  );
+  const { allColors } = useAppSelector((state) => state.colorReducer);
+
+  //Options for brand select
+  const brandOptions = allBrands?.map((option) => ({
+    value: transformStringToLowerCase(option.title),
+    label: capitalizeFirstLetter(option.title),
+  }));
+
+  //Option for category select
+  const categoryOptions = allProductCategories?.map((option) => ({
+    value: option.title,
+    label: capitalizeFirstLetter(option.title),
+  }));
+
+  //Option for category select
+  const colorOptions = allColors?.map((option) => ({
+    value: option.title.toLowerCase(),
+    label: capitalizeFirstLetter(option.title),
+  }));
+
+  const mappedColorOptions = colorOptions.map((option) => ({
+    ...option,
+    colorScheme: option.value,
+  }));
+
+  //Formik validation
   const schema = yup.object().shape({
     title: yup.string().required("Product's Title is Required"),
     description: yup.string().required("Product's description is Required"),
@@ -92,6 +98,7 @@ export default function AddProduct() {
       .required('Pick at least one tag'),
   });
 
+  //Various onChange handlers for selection
   const handleBrandSelect = (value: ISelectProps) => {
     setBrand(value);
   };
@@ -110,6 +117,7 @@ export default function AddProduct() {
     setSelectTags(tagValues);
   };
 
+  //Formik form submission
   const formik = useFormik({
     initialValues: {
       title: '',
@@ -128,7 +136,10 @@ export default function AddProduct() {
     },
   });
 
+  //Checking for any potential formik validation errors
   const hasErrors = Object.keys(formik.errors).length > 0;
+
+  //Assigning values form select component to formik subsequent values
   useEffect(() => {
     formik.values.description = productDescription ? productDescription : '';
     formik.values.brand = brand ? brand?.value : null;
@@ -147,6 +158,7 @@ export default function AddProduct() {
     selectTags,
   ]);
 
+  //Rendering the component
   return (
     <Box pt={{ base: '130px', md: '80px', xl: '80px' }} width="100%">
       <SimpleGrid
@@ -244,7 +256,7 @@ export default function AddProduct() {
               multipleOpt={true}
               name="tags"
               placeholder="Select at least on tag from the options"
-              options={tagsOptions}
+              options={tagSelect}
               onChange={(values: ISelectProps[]) => handleTagsSelect(values)}
               onBlur={formik.handleBlur('tags')}
               formikTouched={formik.touched.tags}

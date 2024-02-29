@@ -42,3 +42,14 @@ export interface IFormControlProps {
     formikTouched: boolean;
     formikError: string;
 }
+
+export interface ISelectProps {
+    value: string;
+    label: string;
+}
+
+export interface ISelectColorProps {
+    value: string;
+    label: string;
+    colorScheme: string;
+}
