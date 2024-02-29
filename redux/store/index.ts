@@ -3,6 +3,7 @@ import authReducer from '../features/authSlice';
 import brandReducer from '../features/brandSlice';
 import productCategoryReducer from '../features/productCategorySlice';
 import colorReducer from '../features/colorSlice';
+import blogCategoryReducer from '../features/blogCategorySlice';
 
 export const makeStore = () => {
     return configureStore({
@@ -11,6 +12,7 @@ export const makeStore = () => {
             brandReducer,
             productCategoryReducer,
             colorReducer,
+            blogCategoryReducer
         },
     })
 }
