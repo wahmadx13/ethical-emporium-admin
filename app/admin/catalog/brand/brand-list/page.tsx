@@ -28,7 +28,7 @@ const columns = [
     dataIndex: 'actions',
   },
 ];
-export default function AddBrand() {
+export default function BrandList() {
   const [brandId, setBrandId] = useState<Object>(null);
   const [brandTitle, setBrandTitle] = useState<string>(null);
   const dispatch = useAppDispatch();
