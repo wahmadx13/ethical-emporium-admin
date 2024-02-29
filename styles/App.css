@@ -12,52 +12,6 @@ option {
   margin: auto;
 }
 
-.select {
-  padding-inline-start: 1rem;
-  border: 1px solid;
-  border-radius: 1rem;
-}
-
-.select > :first-child > :nth-child(4) {
-  /* background-color: inherit; */
-  border-radius: 1rem;
-  background-color: #334155;
-}
-
-.select #react-select-2-listbox > div, .select #react-select-3-listbox > div {
-  border-radius: 2rem;
-  color: #9ca3af
-}
-
-.select #react-select-2-listbox > div:active {
-  color: #6b7280
-}
-
-.select > :first-child > :nth-child(3) > :first-child {
-  display: flex;
-}
-
-.select > :first-child > :nth-child(3) {
-  border-bottom-style: none;
-  border-bottom-width: 0;
-  border-color: none;
-  margin-bottom: 8px;
-}
-
-.select > :first-child > :nth-child(3) > :nth-child(2) > span {
-  display: none;
-}
-
-.select > :first-child > :nth-child(3) > :first-child > div {
-  border-radius: 1rem;
-  padding: 0.2rem;
-}
-
-.select > :first-child > :nth-child(3) > :first-child > div > :nth-child(2) {
-  border-radius: 50%;
-}
-
-
 .image-display {
   display: flex;
   flex-direction: row;

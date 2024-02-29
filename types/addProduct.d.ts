@@ -21,16 +21,14 @@ export interface IRichTextEditor {
 
 export interface IFormControlSelectProps {
     formLabel: string;
-    onChange: any;
-    onBlur: any;
-    value: string[] | string;
+    onChange?: any;
+    onBlur?: any;
     name: string;
     placeholder: string;
     formikTouched: boolean;
     formikError: string | string[];
     multipleOpt: boolean;
-    options: string[];
-    noOptionMessage?: string;
+    options: any;
 }
 
 export interface IFormControlProps {

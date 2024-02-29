@@ -11,50 +11,67 @@ import { IAddProduct } from '../../../../../types/addProduct';
 
 //RAW DATA
 
-//Color Data
-const colorOptions: string[] = [
-  'Red',
-  'Violet',
-  'Blue',
-  'Indigo',
-  'White',
-  'Black',
-  'Pink',
-  'Other',
-];
+export interface ISelectProps {
+  value: string;
+  label: string;
+}
+
+export interface ISelectColorProps {
+  value: string;
+  label: string;
+  colorScheme: string;
+}
 
 //Brand Select
-const brandOptions: string[] = ['Apple', 'Samsung', 'Dell', 'HP'];
+export const brandOptions = [
+  { value: 'apple', label: 'Apple' },
+  { value: 'samsung', label: 'Samsung' },
+  { value: 'lg', label: 'LG' },
+  { value: 'lenovo', label: 'Lenovo' },
+  { value: 'dell', label: 'Dell' },
+  { value: 'hp', label: 'HP' },
+];
+
+//Color Data
+export const colorOptions = [
+  { value: 'blue', label: 'Blue' },
+  { value: 'purple', label: 'Purple' },
+  { value: 'red', label: 'Red' },
+  { value: 'orange', label: 'Orange' },
+  { value: 'yellow', label: 'Yellow' },
+  { value: 'green', label: 'Green' },
+];
+const mappedColorOptions = colorOptions.map((option) => ({
+  ...option,
+  colorScheme: option.value,
+}));
+
+//Category Select
+export const categoryOptions = [
+  { value: 'laptop', label: 'Laptop' },
+  { value: 'smart-watch', label: 'Smart Watch' },
+  { value: 'mobile-phone', label: 'Mobile Phone' },
+  { value: 'pc', label: 'PC' },
+  { value: 'camera', label: 'Camera' },
+  { value: 'headset', label: 'Headset' },
+];
 
 //Tags Select
 export const tagsOptions = [
-  { value: 'apple', label: 'Apple', brand: 'apple' },
-  { value: 'samsung', label: 'Samsung', brand: 'samsung' },
-  { value: 'huawei', label: 'Huawei', brand: 'huawei' },
-  { value: 'dell', label: 'Dell', brand: 'dell' },
-];
-
-export const tagsData = [
-  {
-    label: 'Tags',
-    options: tagsOptions,
-  },
-];
-
-//Category Select
-const categoryOptions: string[] = [
-  'Laptop',
-  'Smart TV',
-  'Smart Watch',
-  'Mobile Phones',
-  'Mobile Accessories',
-  'Laptop Accessories',
+  { value: 'tech', label: 'Tech' },
+  { value: 'laptop', label: 'Laptop' },
+  { value: 'finance', label: 'Finance' },
+  { value: 'smart-watch', label: 'Smart Watch' },
+  { value: 'mobile-phone', label: 'Mobile Phone' },
+  { value: 'Education', label: 'Education' },
 ];
 
 export default function AddProduct() {
   //React States
   const [isProductAdded, setIsProductAdded] = useState<boolean>(false);
-  const [productDescription, setProductDescription] = useState<string>('');
+  const [productDescription, setProductDescription] = useState<string>(null);
+  const [brand, setBrand] = useState<ISelectProps>(null);
+  const [category, setCategory] = useState<ISelectProps>(null);
   const [colors, setColors] = useState<string[]>([]);
   const [selectTags, setSelectTags] = useState<string[]>([]);
 
@@ -75,12 +92,22 @@ export default function AddProduct() {
       .required('Pick at least one tag'),
   });
 
-  const handleColorSelect = (values: string[]) => {
-    setColors(values);
+  const handleBrandSelect = (value: ISelectProps) => {
+    setBrand(value);
   };
 
-  const handleTagsSelect = (values: string[]) => {
-    setSelectTags(values);
+  const handleCategorySelect = (value: ISelectProps) => {
+    setCategory(value);
+  };
+
+  const handleColorSelect = (values: ISelectColorProps[]) => {
+    const colorValues = values.map((color) => color.value);
+    setColors(colorValues);
+  };
+
+  const handleTagsSelect = (values: ISelectProps[]) => {
+    const tagValues = values.map((tag) => tag.value);
+    setSelectTags(tagValues);
   };
 
   const formik = useFormik({
@@ -104,10 +131,14 @@ export default function AddProduct() {
   const hasErrors = Object.keys(formik.errors).length > 0;
   useEffect(() => {
     formik.values.description = productDescription ? productDescription : '';
+    formik.values.brand = brand ? brand?.value : null;
+    formik.values.category = category ? category?.value : null;
     formik.values.color = colors ? colors : [];
     formik.values.tags = selectTags ? selectTags : [];
     console.log('formikValues', formik.values);
   }, [
+    brand,
+    category,
     colors,
     formik.errors,
     formik.touched,
@@ -178,9 +209,8 @@ export default function AddProduct() {
               multipleOpt={false}
               name="brand"
               placeholder="Select a brand From the options"
-              value={formik.values.brand}
               options={brandOptions}
-              onChange={formik.handleChange('brand')}
+              onChange={(value: ISelectProps) => handleBrandSelect(value)}
               onBlur={formik.handleBlur('brand')}
               formikTouched={formik.touched.brand}
               formikError={formik.errors.brand}
@@ -190,9 +220,8 @@ export default function AddProduct() {
               multipleOpt={false}
               name="category"
               placeholder="Select a product category from options"
-              value={formik.values.category}
               options={categoryOptions}
-              onChange={formik.handleChange('category')}
+              onChange={(value: ISelectProps) => handleCategorySelect(value)}
               onBlur={formik.handleBlur('category')}
               formikTouched={formik.touched.category}
               formikError={formik.errors.category}
@@ -202,26 +231,24 @@ export default function AddProduct() {
               multipleOpt={true}
               name="color"
               placeholder="Select at least on color from the options"
-              value={formik.values.category}
-              options={colorOptions}
-              onChange={(values: string[]) => handleColorSelect(values)}
+              options={mappedColorOptions}
+              onChange={(values: ISelectColorProps[]) =>
+                handleColorSelect(values)
+              }
               onBlur={formik.handleBlur('color')}
               formikTouched={formik.touched.color}
               formikError={formik.errors.color}
-              noOptionMessage="All available color options are selected"
             />
             <Select
               formLabel="Select Tags"
               multipleOpt={true}
               name="tags"
               placeholder="Select at least on tag from the options"
-              value={formik.values.category}
-              options={colorOptions}
-              onChange={(values: string[]) => handleTagsSelect(values)}
+              options={tagsOptions}
+              onChange={(values: ISelectProps[]) => handleTagsSelect(values)}
               onBlur={formik.handleBlur('tags')}
               formikTouched={formik.touched.tags}
               formikError={formik.errors.tags}
-              noOptionMessage="All available tags options are selected"
             />
             <Button
               isDisabled={hasErrors}

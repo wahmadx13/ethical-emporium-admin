@@ -4,7 +4,7 @@ import {
   useColorModeValue,
   Text,
 } from '@chakra-ui/react';
-import { SingleSelect, MultipleSelect } from 'react-select-material-ui';
+import { CreatableSelect, Select as ChakraSelect } from 'chakra-react-select';
 import { IFormControlSelectProps } from '../../types/addProduct';
 
 export default function Select(props: IFormControlSelectProps) {
@@ -12,19 +12,16 @@ export default function Select(props: IFormControlSelectProps) {
     formLabel,
     onChange,
     onBlur,
-    value,
     name,
     placeholder,
     formikTouched,
     formikError,
     multipleOpt,
     options,
-    noOptionMessage,
   } = props;
 
   const textColor = useColorModeValue('navy.700', 'white');
   const brandStars = useColorModeValue('brand.500', 'brand.400');
-  // console.log('value', name);
   return (
     <FormControl marginBottom="2rem">
       <FormLabel
@@ -40,27 +37,37 @@ export default function Select(props: IFormControlSelectProps) {
       </FormLabel>
 
       {!multipleOpt ? (
-        <SingleSelect
-          className="select"
+        <ChakraSelect
           name={name}
-          value={value}
           placeholder={placeholder}
-          options={options}
           onChange={onChange}
           onBlur={onBlur}
+          options={options}
+          closeMenuOnSelect={true}
+          selectedOptionStyle="check"
+          size="lg"
+        />
+      ) : name === 'tags' ? (
+        <CreatableSelect
+          isMulti
+          name={name}
+          onChange={onChange}
+          onBlur={onBlur}
+          placeholder={placeholder}
+          closeMenuOnSelect={false}
+          options={options}
+          size="lg"
         />
       ) : (
-        <MultipleSelect
-          className="select"
+        <ChakraSelect
+          isMulti
           name={name}
-          value={value}
-          placeholder={placeholder}
-          options={options}
           onChange={onChange}
           onBlur={onBlur}
-          SelectProps={{
-            msgNoOptionsAvailable: noOptionMessage,
-          }}
+          options={options}
+          placeholder={placeholder}
+          closeMenuOnSelect={false}
+          size="lg"
         />
       )}
       <Text mb="10px" color="red.500" fontSize="1rem">
