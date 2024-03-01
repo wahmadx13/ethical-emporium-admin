@@ -1,5 +1,6 @@
-export interface IAddProduct {
+export interface IProduct {
     title: string;
+    slug?: string;
     description: string;
     price: number;
     brand: string;

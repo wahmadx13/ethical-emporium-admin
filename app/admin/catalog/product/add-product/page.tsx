@@ -1,6 +1,8 @@
 'use client';
 import { useCallback, useEffect, useState } from 'react';
 import { Box, Button, SimpleGrid, Text } from '@chakra-ui/react';
+import slugify from 'slugify';
+import { toast } from 'react-toastify';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import FormControl from '../../../../../components/FormControl';
@@ -11,7 +13,7 @@ import {
   capitalizeFirstLetter,
   transformStringToLowerCase,
 } from '../../../../../utils/helper';
-import { IAddProduct } from '../../../../../types/addProduct';
+import { IProduct } from '../../../../../types/addProduct';
 import { useAppSelector, useAppDispatch } from '../../../../../redux/hooks';
 import {
   getAllBrands,
@@ -19,6 +21,7 @@ import {
 } from '../../../../../redux/features/brandSlice';
 import { getAllProductCategories } from '../../../../../redux/features/productCategorySlice';
 import { getAllColors } from '../../../../../redux/features/colorSlice';
+import { createAProduct } from '../../../../../redux/features/productSlice';
 import { tagSelect } from '../../../../../utils/constants';
 import {
   ISelectProps,
@@ -28,6 +31,7 @@ import {
 export default function AddProduct() {
   //React States
   const [isProductAdded, setIsProductAdded] = useState<boolean>(false);
+  const [createdProductId, setCreatedProductId] = useState<string>(null);
   const [productDescription, setProductDescription] = useState<string>(null);
   const [brand, setBrand] = useState<ISelectProps>(null);
   const [category, setCategory] = useState<ISelectProps>(null);
@@ -45,17 +49,30 @@ export default function AddProduct() {
     dispatch(getAllColors());
   }, [dispatch]);
 
+  //React Toast
+  const toastNotification = useCallback((status: number) => {
+    if (status === 200) {
+      toast.success('Product creating successful', {
+        toastId: 'product-adding-success',
+      });
+    }
+  }, []);
+
   //Use Effect
   useEffect(() => {
     getValuesForSelection();
   }, [getValuesForSelection]);
 
   //States from redux
+  const { jwtToken } = useAppSelector((state) => state.authReducer);
   const { allBrands } = useAppSelector((state) => state.brandReducer);
   const { allProductCategories } = useAppSelector(
     (state) => state.productCategoryReducer,
   );
   const { allColors } = useAppSelector((state) => state.colorReducer);
+  const { isLoading, isSuccess, addedProduct } = useAppSelector(
+    (state) => state.productReducer,
+  );
 
   //Options for brand select
   const brandOptions = allBrands?.map((option) => ({
@@ -130,9 +147,32 @@ export default function AddProduct() {
       tags: [],
     },
     validationSchema: schema,
-    onSubmit: (values: IAddProduct) => {
-      console.log('ProductValues', values);
-      setIsProductAdded(true);
+    onSubmit: async (values: IProduct) => {
+      const slug = slugify(values.title);
+      const product = {
+        ...values,
+        slug,
+      };
+      try {
+        const productResponse = await dispatch(
+          createAProduct({ addProductData: product, jwtToken }),
+        );
+        toastNotification(productResponse.payload.statusCode);
+        console.log('productResponse', productResponse);
+        setCreatedProductId(
+          productResponse.payload?.createNewProduct._id.toSting(),
+        );
+        console.log('productId', createdProductId);
+        setTimeout(() => {
+          dispatch(resetState());
+        }, 3000);
+        formik.resetForm();
+      } catch (err) {
+        toast.error('Something went wrong! or duplicate title', {
+          toastId: 'product-adding-error',
+        });
+        dispatch(resetState());
+      }
     },
   });
 
@@ -264,6 +304,7 @@ export default function AddProduct() {
             />
             <Button
               isDisabled={hasErrors}
+              isLoading={isLoading}
               variant="brand"
               fontWeight="500"
               type="submit"

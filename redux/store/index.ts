@@ -4,6 +4,7 @@ import brandReducer from '../features/brandSlice';
 import productCategoryReducer from '../features/productCategorySlice';
 import colorReducer from '../features/colorSlice';
 import blogCategoryReducer from '../features/blogCategorySlice';
+import productReducer from '../features/productSlice';
 
 export const makeStore = () => {
     return configureStore({
@@ -12,7 +13,8 @@ export const makeStore = () => {
             brandReducer,
             productCategoryReducer,
             colorReducer,
-            blogCategoryReducer
+            blogCategoryReducer,
+            productReducer,
         },
     })
 }
