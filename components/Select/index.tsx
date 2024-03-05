@@ -11,17 +11,26 @@ export default function Select(props: IFormControlSelectProps) {
   const {
     formLabel,
     onChange,
-    onBlur,
     name,
     placeholder,
-    formikTouched,
-    formikError,
     multipleOpt,
     options,
+    value,
+    validationError,
+    setValidationError,
   } = props;
 
   const textColor = useColorModeValue('navy.700', 'white');
   const brandStars = useColorModeValue('brand.500', 'brand.400');
+
+  const onBlur = () => {
+    if (!value?.length || (Array.isArray(value) && !value.length)) {
+      setValidationError(true);
+    } else {
+      setValidationError(false);
+    }
+  };
+
   return (
     <FormControl marginBottom="2rem">
       <FormLabel
@@ -33,7 +42,7 @@ export default function Select(props: IFormControlSelectProps) {
         mb="8px"
       >
         {formLabel}
-        <Text color={brandStars}>*</Text>
+        {name !== 'tags' && <Text color={brandStars}>*</Text>}
       </FormLabel>
 
       {!multipleOpt ? (
@@ -52,7 +61,6 @@ export default function Select(props: IFormControlSelectProps) {
           isMulti
           name={name}
           onChange={onChange}
-          onBlur={onBlur}
           placeholder={placeholder}
           closeMenuOnSelect={false}
           options={options}
@@ -70,9 +78,11 @@ export default function Select(props: IFormControlSelectProps) {
           size="lg"
         />
       )}
-      <Text mb="10px" color="red.500" fontSize="1rem">
-        {formikTouched && formikError}
-      </Text>
+      {validationError && (
+        <Text mb="10px" color="red.500" fontSize="1rem">
+          {`Product's ${name} is required. Please select at least one.`}
+        </Text>
+      )}
     </FormControl>
   );
 }

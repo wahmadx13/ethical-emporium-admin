@@ -1,6 +1,6 @@
 'use client';
 import { useCallback, useEffect, useState } from 'react';
-import { Box, Button, SimpleGrid, Text } from '@chakra-ui/react';
+import { Box, Button, SimpleGrid, Text, color } from '@chakra-ui/react';
 import slugify from 'slugify';
 import { toast } from 'react-toastify';
 import { useFormik } from 'formik';
@@ -15,13 +15,13 @@ import {
 } from '../../../../../utils/helper';
 import { IProduct } from '../../../../../types/addProduct';
 import { useAppSelector, useAppDispatch } from '../../../../../redux/hooks';
-import {
-  getAllBrands,
-  resetState,
-} from '../../../../../redux/features/brandSlice';
+import { getAllBrands } from '../../../../../redux/features/brandSlice';
 import { getAllProductCategories } from '../../../../../redux/features/productCategorySlice';
 import { getAllColors } from '../../../../../redux/features/colorSlice';
-import { createAProduct } from '../../../../../redux/features/productSlice';
+import {
+  createAProduct,
+  resetState,
+} from '../../../../../redux/features/productSlice';
 import { tagSelect } from '../../../../../utils/constants';
 import {
   ISelectProps,
@@ -38,30 +38,24 @@ export default function AddProduct() {
   const [colors, setColors] = useState<string[]>([]);
   const [selectTags, setSelectTags] = useState<string[]>([]);
 
+  //Form Validation errors states
+  const [validateDescription, setValidateDescription] =
+    useState<boolean>(false);
+  const [validateBrand, setValidateBrand] = useState<boolean>(false);
+  const [validateCategory, setValidateCategory] = useState<boolean>(false);
+  const [validateColor, setValidateColor] = useState<boolean>(false);
+  const [validateTag, setValidateTag] = useState<boolean>(false);
+  const [validationErrors, setValidationErrors] = useState<boolean>(false);
+
   //Dispatch
   const dispatch = useAppDispatch();
 
-  //Getting all the required values
-  const getValuesForSelection = useCallback(() => {
-    dispatch(resetState());
-    dispatch(getAllBrands());
-    dispatch(getAllProductCategories());
-    dispatch(getAllColors());
-  }, [dispatch]);
-
   //React Toast
-  const toastNotification = useCallback((status: number) => {
-    if (status === 200) {
-      toast.success('Product creating successful', {
-        toastId: 'product-adding-success',
-      });
-    }
+  const toastNotification = useCallback(() => {
+    toast.success('Product creating successful', {
+      toastId: 'product-adding-success',
+    });
   }, []);
-
-  //Use Effect
-  useEffect(() => {
-    getValuesForSelection();
-  }, [getValuesForSelection]);
 
   //States from redux
   const { jwtToken } = useAppSelector((state) => state.authReducer);
@@ -73,6 +67,13 @@ export default function AddProduct() {
   const { isLoading, isSuccess, addedProduct } = useAppSelector(
     (state) => state.productReducer,
   );
+
+  //Getting all the required values
+  const getValuesForSelection = useCallback(() => {
+    dispatch(getAllBrands());
+    dispatch(getAllProductCategories());
+    dispatch(getAllColors());
+  }, [dispatch]);
 
   //Options for brand select
   const brandOptions = allBrands?.map((option) => ({
@@ -100,39 +101,9 @@ export default function AddProduct() {
   //Formik validation
   const schema = yup.object().shape({
     title: yup.string().required("Product's Title is Required"),
-    description: yup.string().required("Product's description is Required"),
     price: yup.number().required("Product's price is required"),
-    brand: yup.string().required("Product's brand is required"),
-    category: yup.string().required('Pick at least one category'),
-    color: yup
-      .array()
-      .min(1, 'Color must have at least one item')
-      .required('Pick at least one color'),
     quantity: yup.number().required("Product's quantity is required"),
-    tags: yup
-      .array()
-      .min(1, 'Tags must have at least one item')
-      .required('Pick at least one tag'),
   });
-
-  //Various onChange handlers for selection
-  const handleBrandSelect = (value: ISelectProps) => {
-    setBrand(value);
-  };
-
-  const handleCategorySelect = (value: ISelectProps) => {
-    setCategory(value);
-  };
-
-  const handleColorSelect = (values: ISelectColorProps[]) => {
-    const colorValues = values.map((color) => color.value);
-    setColors(colorValues);
-  };
-
-  const handleTagsSelect = (values: ISelectProps[]) => {
-    const tagValues = values.map((tag) => tag.value);
-    setSelectTags(tagValues);
-  };
 
   //Formik form submission
   const formik = useFormik({
@@ -148,55 +119,73 @@ export default function AddProduct() {
     },
     validationSchema: schema,
     onSubmit: async (values: IProduct) => {
-      const slug = slugify(values.title);
+      setValidationErrors(false);
+      const slug = slugify(values.title, { lower: true });
       const product = {
         ...values,
+        brand: brand.value,
+        category: category.value,
+        color: colors,
+        description: productDescription,
+        tags: selectTags,
         slug,
       };
-      try {
-        const productResponse = await dispatch(
+      if (
+        !product.description.length ||
+        !product.brand.length ||
+        !product.category.length ||
+        !product.color.length
+      ) {
+        setValidationErrors(true);
+        return;
+      } else {
+        console.log('product', product);
+        setValidationErrors(false);
+        const response = await dispatch(
           createAProduct({ addProductData: product, jwtToken }),
         );
-        toastNotification(productResponse.payload.statusCode);
-        console.log('productResponse', productResponse);
-        setCreatedProductId(
-          productResponse.payload?.createNewProduct._id.toSting(),
-        );
-        console.log('productId', createdProductId);
-        setTimeout(() => {
-          dispatch(resetState());
-        }, 3000);
-        formik.resetForm();
-      } catch (err) {
-        toast.error('Something went wrong! or duplicate title', {
-          toastId: 'product-adding-error',
-        });
-        dispatch(resetState());
+        console.log('response', response);
+        if (response && response.payload.statusCode === 200) {
+          setCreatedProductId(response.payload?.createNewProduct._id);
+          toast.success('Product creation successful');
+          console.log('createdProductId', createdProductId);
+        } else {
+          toast.error('Something went wrong or duplicate title');
+        }
+        // formik.resetForm();
       }
     },
   });
 
+  const handleDescription = useCallback((content: string) => {
+    setProductDescription(content);
+  }, []);
+
+  const handleBrandSelect = useCallback((value: ISelectProps) => {
+    setBrand(value);
+  }, []);
+
+  const handleCategorySelect = useCallback((value: ISelectProps) => {
+    setCategory(value);
+  }, []);
+
+  const handleColorSelect = useCallback((values: ISelectColorProps[]) => {
+    const colorValues = values.map((color) => color.value);
+    setColors(colorValues);
+  }, []);
+
+  const handleTagsSelect = useCallback((values: ISelectProps[]) => {
+    const tagValues = values.map((tag) => tag.value);
+    setSelectTags(tagValues);
+  }, []);
+
   //Checking for any potential formik validation errors
   const hasErrors = Object.keys(formik.errors).length > 0;
 
-  //Assigning values form select component to formik subsequent values
+  //Use Effect
   useEffect(() => {
-    formik.values.description = productDescription ? productDescription : '';
-    formik.values.brand = brand ? brand?.value : null;
-    formik.values.category = category ? category?.value : null;
-    formik.values.color = colors ? colors : [];
-    formik.values.tags = selectTags ? selectTags : [];
-    console.log('formikValues', formik.values);
-  }, [
-    brand,
-    category,
-    colors,
-    formik.errors,
-    formik.touched,
-    formik.values,
-    productDescription,
-    selectTags,
-  ]);
+    getValuesForSelection();
+  }, [getValuesForSelection]);
 
   //Rendering the component
   return (
@@ -209,7 +198,7 @@ export default function AddProduct() {
         justifyContent="center"
         flexDirection="column"
       >
-        {!isProductAdded ? (
+        {!createdProductId ? (
           <form action="" onSubmit={formik.handleSubmit}>
             <FormControl
               formLabel="Product Title"
@@ -225,14 +214,11 @@ export default function AddProduct() {
             <RichTextEditor
               formLabel="Product Description"
               placeholder="Enter Product Description"
-              onChange={(content: string) => {
-                formik.setFieldValue('description', content);
-                setProductDescription(content);
-              }}
-              onBlur={formik.handleBlur('description')}
-              value={formik.values.description}
-              formikTouched={formik.touched.description}
-              formikError={formik.errors.description}
+              onChange={(content: string) => handleDescription(content)}
+              setProductDescription={setProductDescription}
+              value={productDescription}
+              validationError={validateDescription}
+              setValidationError={setValidateDescription}
             />
             <FormControl
               formLabel="Enter Product Price"
@@ -262,10 +248,10 @@ export default function AddProduct() {
               name="brand"
               placeholder="Select a brand From the options"
               options={brandOptions}
+              value={brand?.value}
+              validationError={validateBrand}
+              setValidationError={setValidateBrand}
               onChange={(value: ISelectProps) => handleBrandSelect(value)}
-              onBlur={formik.handleBlur('brand')}
-              formikTouched={formik.touched.brand}
-              formikError={formik.errors.brand}
             />
             <Select
               formLabel="Select Product Category"
@@ -273,10 +259,10 @@ export default function AddProduct() {
               name="category"
               placeholder="Select a product category from options"
               options={categoryOptions}
+              value={category?.value}
+              validationError={validateCategory}
+              setValidationError={setValidateCategory}
               onChange={(value: ISelectProps) => handleCategorySelect(value)}
-              onBlur={formik.handleBlur('category')}
-              formikTouched={formik.touched.category}
-              formikError={formik.errors.category}
             />
             <Select
               formLabel="Select Colors"
@@ -284,12 +270,12 @@ export default function AddProduct() {
               name="color"
               placeholder="Select at least on color from the options"
               options={mappedColorOptions}
+              value={colors}
+              validationError={validateColor}
+              setValidationError={setValidateColor}
               onChange={(values: ISelectColorProps[]) =>
                 handleColorSelect(values)
               }
-              onBlur={formik.handleBlur('color')}
-              formikTouched={formik.touched.color}
-              formikError={formik.errors.color}
             />
             <Select
               formLabel="Select Tags"
@@ -297,11 +283,16 @@ export default function AddProduct() {
               name="tags"
               placeholder="Select at least on tag from the options"
               options={tagSelect}
+              value={selectTags}
+              validationError={validateTag}
+              setValidationError={setValidateTag}
               onChange={(values: ISelectProps[]) => handleTagsSelect(values)}
-              onBlur={formik.handleBlur('tags')}
-              formikTouched={formik.touched.tags}
-              formikError={formik.errors.tags}
             />
+            {validationErrors && (
+              <Text mb="10px" color="red.500" fontSize="1rem">
+                All fields are required.
+              </Text>
+            )}
             <Button
               isDisabled={hasErrors}
               isLoading={isLoading}
@@ -313,7 +304,7 @@ export default function AddProduct() {
             </Button>
           </form>
         ) : (
-          <ReactDropzone setIsProductAdded={setIsProductAdded} />
+          <ReactDropzone resetState={resetState} />
         )}
       </SimpleGrid>
     </Box>

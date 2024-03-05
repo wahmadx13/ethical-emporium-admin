@@ -8,27 +8,28 @@ export interface IProduct {
     color: string[];
     quantity: number;
     tags: string[];
+    [key?: string]: any
 }
 
 export interface IRichTextEditor {
     onChange: any;
-    onBlur: any;
     formLabel: string;
     placeholder: string;
     value: string;
-    formikTouched: boolean;
-    formikError: string;
+    setProductDescription: (text: string) => void;
+    validationError: boolean;
+    setValidationError: Dispatch<SetStateAction<boolean>>;
 }
 
 export interface IFormControlSelectProps {
     formLabel: string;
     onChange?: any;
-    onBlur?: any;
     name: string;
     placeholder: string;
-    formikTouched: boolean;
-    formikError: string | string[];
     multipleOpt: boolean;
+    value: string | string[];
+    validationError: boolean;
+    setValidationError: Dispatch<SetStateAction<boolean>>;
     options: any;
 }
 

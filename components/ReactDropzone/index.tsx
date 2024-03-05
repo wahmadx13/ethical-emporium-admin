@@ -13,6 +13,8 @@ import {
 import Image from 'next/image';
 import Dropzone, { DropEvent, FileRejection } from 'react-dropzone';
 import { MdUpload } from 'react-icons/md';
+import { useAppDispatch } from '../../redux/hooks';
+import { useDispatch } from 'react-redux';
 
 export default function ReactDropzone(props: {
   [x: string]: any;
@@ -21,10 +23,12 @@ export default function ReactDropzone(props: {
     fileRejections: FileRejection[],
     event: DropEvent,
   ) => void;
-  setIsProductAdded: Dispatch<SetStateAction<boolean>>;
+  resetState: any;
 }) {
   const [droppedFiles, setDroppedFiles] = useState<File[]>([]);
   const [droppedBlobs, setDroppedBlobs] = useState<string[]>([]);
+
+  const dispatch = useDispatch();
 
   const bg = useColorModeValue('gray.100', 'navy.700');
   const borderColor = useColorModeValue('secondaryGray.100', 'whiteAlpha.100');
@@ -42,7 +46,7 @@ export default function ReactDropzone(props: {
     console.log('Dropped files:', droppedFiles);
     setDroppedFiles([]);
     setDroppedBlobs([]);
-    props.setIsProductAdded(false);
+    dispatch(props.resetState());
   };
 
   const handleImageRemove = (blob: string, index: number) => {
