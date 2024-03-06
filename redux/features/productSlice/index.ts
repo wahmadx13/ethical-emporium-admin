@@ -26,12 +26,13 @@ export const createAProduct = createAsyncThunk(
     'product/create-product',
     async ({ addProductData, jwtToken }: { addProductData: IProduct, jwtToken: string }, thunkApi) => {
         try {
-            return await productServices.createProduct(addProductData, jwtToken)
+            return await productServices.createProduct(addProductData, jwtToken);
         } catch (err) {
-            thunkApi.rejectWithValue(err)
+            thunkApi.rejectWithValue(err);
         }
     }
 );
+
 
 //Resetting States
 export const resetState = createAction("Reset_all");

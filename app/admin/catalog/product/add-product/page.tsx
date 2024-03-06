@@ -22,6 +22,10 @@ import {
   createAProduct,
   resetState,
 } from '../../../../../redux/features/productSlice';
+import {
+  uploadImages,
+  resetUploadState,
+} from '../../../../../redux/features/uploadSlice';
 import { tagSelect } from '../../../../../utils/constants';
 import {
   ISelectProps,
@@ -30,7 +34,6 @@ import {
 
 export default function AddProduct() {
   //React States
-  const [isProductAdded, setIsProductAdded] = useState<boolean>(false);
   const [createdProductId, setCreatedProductId] = useState<string>(null);
   const [productDescription, setProductDescription] = useState<string>(null);
   const [brand, setBrand] = useState<ISelectProps>(null);
@@ -50,13 +53,6 @@ export default function AddProduct() {
   //Dispatch
   const dispatch = useAppDispatch();
 
-  //React Toast
-  const toastNotification = useCallback(() => {
-    toast.success('Product creating successful', {
-      toastId: 'product-adding-success',
-    });
-  }, []);
-
   //States from redux
   const { jwtToken } = useAppSelector((state) => state.authReducer);
   const { allBrands } = useAppSelector((state) => state.brandReducer);
@@ -64,16 +60,27 @@ export default function AddProduct() {
     (state) => state.productCategoryReducer,
   );
   const { allColors } = useAppSelector((state) => state.colorReducer);
-  const { isLoading, isSuccess, addedProduct } = useAppSelector(
-    (state) => state.productReducer,
-  );
+  const { isLoading } = useAppSelector((state) => state.productReducer);
+  const { uploadLoading } = useAppSelector((state) => state.uploadReducer);
 
   //Getting all the required values
-  const getValuesForSelection = useCallback(() => {
-    dispatch(getAllBrands());
-    dispatch(getAllProductCategories());
-    dispatch(getAllColors());
-  }, [dispatch]);
+  const getAllBrand = useCallback(() => {
+    if (!allBrands.length) {
+      dispatch(getAllBrands());
+    }
+  }, [allBrands.length, dispatch]);
+
+  const getProductCategories = useCallback(() => {
+    if (!allProductCategories.length) {
+      dispatch(getAllProductCategories());
+    }
+  }, [allProductCategories.length, dispatch]);
+
+  const getAllAllColors = useCallback(() => {
+    if (!allColors.length) {
+      dispatch(getAllColors());
+    }
+  }, [allColors.length, dispatch]);
 
   //Options for brand select
   const brandOptions = allBrands?.map((option) => ({
@@ -93,7 +100,7 @@ export default function AddProduct() {
     label: capitalizeFirstLetter(option.title),
   }));
 
-  const mappedColorOptions = colorOptions.map((option) => ({
+  const mappedColorOptions = colorOptions?.map((option) => ({
     ...option,
     colorScheme: option.value,
   }));
@@ -139,20 +146,19 @@ export default function AddProduct() {
         setValidationErrors(true);
         return;
       } else {
-        console.log('product', product);
         setValidationErrors(false);
         const response = await dispatch(
           createAProduct({ addProductData: product, jwtToken }),
         );
-        console.log('response', response);
         if (response && response.payload.statusCode === 200) {
           setCreatedProductId(response.payload?.createNewProduct._id);
           toast.success('Product creation successful');
           console.log('createdProductId', createdProductId);
+          dispatch(resetState());
         } else {
           toast.error('Something went wrong or duplicate title');
         }
-        // formik.resetForm();
+        formik.resetForm();
       }
     },
   });
@@ -184,8 +190,10 @@ export default function AddProduct() {
 
   //Use Effect
   useEffect(() => {
-    getValuesForSelection();
-  }, [getValuesForSelection]);
+    getAllBrand();
+    getProductCategories();
+    getAllAllColors();
+  }, [getAllAllColors, getAllBrand, getProductCategories]);
 
   //Rendering the component
   return (
@@ -304,7 +312,15 @@ export default function AddProduct() {
             </Button>
           </form>
         ) : (
-          <ReactDropzone resetState={resetState} />
+          <ReactDropzone
+            resetState={resetUploadState}
+            uploadImages={uploadImages}
+            jwtToken={jwtToken}
+            targetId={createdProductId}
+            path="product"
+            isLoading={uploadLoading}
+            setTargetId={setCreatedProductId}
+          />
         )}
       </SimpleGrid>
     </Box>

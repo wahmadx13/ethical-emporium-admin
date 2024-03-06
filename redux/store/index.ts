@@ -5,6 +5,7 @@ import productCategoryReducer from '../features/productCategorySlice';
 import colorReducer from '../features/colorSlice';
 import blogCategoryReducer from '../features/blogCategorySlice';
 import productReducer from '../features/productSlice';
+import uploadReducer from '../features/uploadSlice';
 
 export const makeStore = () => {
     return configureStore({
@@ -15,6 +16,7 @@ export const makeStore = () => {
             colorReducer,
             blogCategoryReducer,
             productReducer,
+            uploadReducer,
         },
     })
 }

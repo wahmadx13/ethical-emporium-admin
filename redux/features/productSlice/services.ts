@@ -1,6 +1,7 @@
 import { IProduct } from '../../../types/addProduct'
+
 //Create Product
-const createProduct = async (product: IProduct, jwtToken: string) => {
+const createProduct = async (product: IProduct, jwtToken: string,) => {
     try {
         const requestOptions = {
             method: 'POST',
@@ -12,7 +13,7 @@ const createProduct = async (product: IProduct, jwtToken: string) => {
             body: JSON.stringify(product)
         };
 
-        const response = await fetch(`${process.env.NEXT_BACKEND_BASE_URL}/product`, requestOptions);
+        const response = await fetch(`${process.env.NEXT_BACKEND_BASE_URL}/product/`, requestOptions);
         const data = await response.json();
         return data
     } catch (err) {

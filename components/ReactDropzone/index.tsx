@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import {
   Box,
   Card,
@@ -11,24 +11,40 @@ import {
   GridItem,
 } from '@chakra-ui/react';
 import Image from 'next/image';
-import Dropzone, { DropEvent, FileRejection } from 'react-dropzone';
+import Dropzone from 'react-dropzone';
 import { MdUpload } from 'react-icons/md';
+import { toast } from 'react-toastify';
+import { ActionCreatorWithoutPayload, AsyncThunk } from '@reduxjs/toolkit';
+import { AsyncThunkConfig } from '@reduxjs/toolkit/dist/createAsyncThunk';
 import { useAppDispatch } from '../../redux/hooks';
-import { useDispatch } from 'react-redux';
 
 export default function ReactDropzone(props: {
-  [x: string]: any;
-  onDrop?: <T extends File>(
-    acceptedFiles: T[],
-    fileRejections: FileRejection[],
-    event: DropEvent,
-  ) => void;
-  resetState: any;
+  resetState: ActionCreatorWithoutPayload<'Reset_all'>;
+  targetId: string;
+  uploadImages: AsyncThunk<
+    any,
+    { imageData: File[]; jwtToken: string; targetId: string; path: string },
+    AsyncThunkConfig
+  >;
+  jwtToken: string;
+  path: string;
+  isLoading: boolean;
+  setTargetId: Dispatch<SetStateAction<string>>;
 }) {
+  const {
+    resetState,
+    uploadImages,
+    jwtToken,
+    targetId,
+    path,
+    isLoading,
+    setTargetId,
+  } = props;
+  console.log('targetId', targetId);
   const [droppedFiles, setDroppedFiles] = useState<File[]>([]);
   const [droppedBlobs, setDroppedBlobs] = useState<string[]>([]);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const bg = useColorModeValue('gray.100', 'navy.700');
   const borderColor = useColorModeValue('secondaryGray.100', 'whiteAlpha.100');
@@ -42,11 +58,20 @@ export default function ReactDropzone(props: {
     setDroppedBlobs(blobUrls);
   };
 
-  const handleUploadFiles = () => {
+  const handleUploadFiles = async () => {
     console.log('Dropped files:', droppedFiles);
-    setDroppedFiles([]);
-    setDroppedBlobs([]);
-    dispatch(props.resetState());
+    const response = await dispatch(
+      uploadImages({ imageData: droppedFiles, jwtToken, targetId, path }),
+    );
+    if (response && response.payload.statusCode === 200) {
+      toast.success('Images uploaded successfully!');
+      setDroppedFiles([]);
+      setDroppedBlobs([]);
+      dispatch(resetState());
+      setTargetId(null);
+    } else {
+      toast.error('Something went wrong. Please try again!');
+    }
   };
 
   const handleImageRemove = (blob: string, index: number) => {
@@ -128,6 +153,7 @@ export default function ReactDropzone(props: {
       </Dropzone>
       <Button
         isDisabled={!droppedFiles.length}
+        isLoading={isLoading}
         onClick={handleUploadFiles}
         variant="brand"
         fontWeight="500"
