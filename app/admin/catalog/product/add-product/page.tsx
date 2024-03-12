@@ -9,10 +9,7 @@ import FormControl from '../../../../../components/FormControl';
 import RichTextEditor from '../../../../../components/RichTextEditor';
 import Select from '../../../../../components/Select';
 import ReactDropzone from '../../../../../components/ReactDropzone';
-import {
-  capitalizeFirstLetter,
-  transformStringToLowerCase,
-} from '../../../../../utils/helper';
+import { capitalizeFirstLetter } from '../../../../../utils/helper';
 import { IProduct } from '../../../../../types/addProduct';
 import { useAppSelector, useAppDispatch } from '../../../../../redux/hooks';
 import { getAllBrands } from '../../../../../redux/features/brandSlice';
@@ -20,7 +17,7 @@ import { getAllProductCategories } from '../../../../../redux/features/productCa
 import { getAllColors } from '../../../../../redux/features/colorSlice';
 import {
   createAProduct,
-  resetState,
+  resetProductState,
 } from '../../../../../redux/features/productSlice';
 import {
   uploadImages,
@@ -84,7 +81,7 @@ export default function AddProduct() {
 
   //Options for brand select
   const brandOptions = allBrands?.map((option) => ({
-    value: transformStringToLowerCase(option.title),
+    value: option.title.toLowerCase().replace(/[\s_-]/g, ''),
     label: capitalizeFirstLetter(option.title),
   }));
 
@@ -154,7 +151,7 @@ export default function AddProduct() {
           setCreatedProductId(response.payload?.createNewProduct._id);
           toast.success('Product creation successful');
           console.log('createdProductId', createdProductId);
-          dispatch(resetState());
+          dispatch(resetProductState());
         } else {
           toast.error('Something went wrong or duplicate title');
         }

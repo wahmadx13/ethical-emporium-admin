@@ -1,5 +1,18 @@
 import { IProduct } from '../../../types/addProduct'
 
+//Get All Products
+const getProducts = async () => {
+    try {
+        const response = await fetch(`${process.env.NEXT_BACKEND_BASE_URL}/product`, {
+            method: 'GET'
+        });
+        const data = response.json()
+        return data;
+    } catch (err) {
+        console.log('Error in getting all Products', err)
+    }
+}
+
 //Create Product
 const createProduct = async (product: IProduct, jwtToken: string,) => {
     try {
@@ -21,5 +34,25 @@ const createProduct = async (product: IProduct, jwtToken: string,) => {
     }
 };
 
-const productServices = { createProduct };
+//Delete A Product
+const deleteAProduct = async (product: { id: Object, imageIds: string[] }, jwtToken: string) => {
+    const { id } = product
+    try {
+        const requestOptions = {
+            method: 'DELETE',
+            headers: {
+                Authorization: `Bearer ${jwtToken}`,
+                Accept: "application/json",
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(product)
+        }
+
+        const response = await fetch(`${process.env.NEXT_BACKEND_BASE_URL}/product/${id}`, requestOptions)
+    } catch (err) {
+        console.log('error in deleting product: ', err)
+    }
+}
+
+const productServices = { createProduct, getProducts, deleteAProduct };
 export default productServices;

@@ -24,16 +24,3 @@ export function capitalizeFirstLetter(str: string) {
 
     return result;
 }
-
-export function transformStringToLowerCase(str: string) {
-    // Convert the entire string to lowercase
-    str = str.toLowerCase();
-
-    // Remove any "-", "_", or spaces
-    str = str.replace(/[_-\s]/g, '');
-
-    // Make the first letter lowercase
-    str = str.charAt(0).toLowerCase() + str.slice(1);
-
-    return str;
-}
