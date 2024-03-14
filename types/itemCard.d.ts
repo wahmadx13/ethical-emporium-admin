@@ -12,4 +12,5 @@ export interface IItemCardProps {
     brand: string;
     isProduct: boolean;
     totalRating?: number;
+    url: string;
 }

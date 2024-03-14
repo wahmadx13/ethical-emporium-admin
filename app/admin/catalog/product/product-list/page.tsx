@@ -1,6 +1,5 @@
 'use client';
 import { useCallback, useEffect, useState } from 'react';
-import Link from 'next/link';
 import { Box, useDisclosure, Grid, GridItem } from '@chakra-ui/react';
 import { toast } from 'react-toastify';
 import { useAppSelector, useAppDispatch } from '../../../../../redux/hooks';
@@ -76,6 +75,7 @@ export default function ProductList() {
                   brand={product.brand}
                   isProduct={true}
                   totalRating={product.totalRating}
+                  url={`/admin/catalog/product/product-details/${product._id.toString()}`}
                 />
               </GridItem>
             ))

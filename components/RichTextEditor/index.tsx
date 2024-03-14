@@ -14,7 +14,7 @@ export default function RichTextEditor(props: IRichTextEditor) {
     formLabel,
     placeholder,
     value,
-    setProductDescription,
+    setDescription,
     validationError,
     setValidationError,
   } = props;
@@ -30,8 +30,11 @@ export default function RichTextEditor(props: IRichTextEditor) {
   };
 
   const handleDescription = (newValue: string, editor: any) => {
-    setProductDescription(newValue);
-    setValidationError(false);
+    setDescription((prevState: any) => ({
+      ...prevState,
+      productDescription: newValue,
+    }));
+    setValidationError && setValidationError(false);
   };
 
   return (

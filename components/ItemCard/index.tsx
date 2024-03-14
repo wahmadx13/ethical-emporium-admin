@@ -1,12 +1,12 @@
 // Chakra imports
 import Image from 'next/image';
+import Link from 'next/link';
 import {
   AvatarGroup,
   Box,
   Button,
   Flex,
   Icon,
-  Link,
   Text,
   useColorModeValue,
   AspectRatio,
@@ -32,6 +32,7 @@ export default function ItemCard(props: IItemCardProps) {
     totalRating,
     images,
     handleModelOpen,
+    url,
   } = props;
   const [like, setLike] = useState(false);
   const textColor = useColorModeValue('navy.700', 'white');
@@ -109,9 +110,7 @@ export default function ItemCard(props: IItemCardProps) {
                 borderRadius="50%"
                 minW="36px"
                 h="36px"
-                // onClick={() => {
-                //   setLike(!like);
-                // }}
+                onClick={() => handleModelOpen(id, name, imagePublicIds)}
               >
                 <Icon
                   transition="0.2s linear"
@@ -212,25 +211,12 @@ export default function ItemCard(props: IItemCardProps) {
             }}
             justify="space-between"
             direction={{
-              base: 'row',
-              md: 'column',
-              lg: 'row',
-              xl: 'column',
-              '2xl': 'row',
+              xl: 'row',
             }}
             mt="25px"
           >
             {isProduct && <RatingStars value={totalRating} isEdit={false} />}
-            <Link
-              href="#"
-              mt={{
-                base: '0px',
-                md: '10px',
-                lg: '0px',
-                xl: '10px',
-                '2xl': '0px',
-              }}
-            >
+            <Link href={url}>
               <Button
                 variant="darkBrand"
                 color="white"
@@ -240,7 +226,7 @@ export default function ItemCard(props: IItemCardProps) {
                 px="24px"
                 py="5px"
               >
-                More
+                Details
               </Button>
             </Link>
           </Flex>

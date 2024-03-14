@@ -16,9 +16,9 @@ export interface IRichTextEditor {
     formLabel: string;
     placeholder: string;
     value: string;
-    setProductDescription: (text: string) => void;
-    validationError: boolean;
-    setValidationError: Dispatch<SetStateAction<boolean>>;
+    setDescription: any;
+    validationError?: boolean;
+    setValidationError?: Dispatch<SetStateAction<boolean>>;
 }
 
 export interface IFormControlSelectProps {
@@ -28,21 +28,22 @@ export interface IFormControlSelectProps {
     placeholder: string;
     multipleOpt: boolean;
     value: string | string[];
-    validationError: boolean;
-    setValidationError: Dispatch<SetStateAction<boolean>>;
+    validationError?: boolean;
+    setValidationError?: Dispatch<SetStateAction<boolean>>;
     options: any;
 }
 
 export interface IFormControlProps {
     formLabel: string;
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    onBlur: (event: React.FocusEvent<HTMLInputElement>) => void;
+    onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
     value: string | number;
     placeholder: string;
     name: string;
     type: string;
-    formikTouched: boolean;
-    formikError: string;
+    formikTouched?: boolean;
+    formikError?: string;
+    defaultValue?: number
 }
 
 export interface ISelectProps {

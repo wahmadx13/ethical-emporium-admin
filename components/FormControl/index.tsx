@@ -23,6 +23,7 @@ export default function FormControl(props: IFormControlProps) {
     type,
     formikTouched,
     formikError,
+    defaultValue,
   } = props;
   const textColor = useColorModeValue('navy.700', 'white');
   const textColorSecondary = 'gray.400';
@@ -50,7 +51,7 @@ export default function FormControl(props: IFormControlProps) {
           mb="15px"
           size="lg"
           ms={{ base: '0px', md: '0px' }}
-          isRequired={true}
+          defaultValue={defaultValue}
           min={0}
         >
           <NumberInputField

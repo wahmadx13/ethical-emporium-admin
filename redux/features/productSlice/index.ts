@@ -11,7 +11,7 @@ interface IAddProduct extends IProduct {
     }[];
     ratings: any;
     totalRating?: number;
-    sold?: number;
+    sold: number;
     statusCode: number;
     message: string;
 };
@@ -38,6 +38,18 @@ export const getAllProducts = createAsyncThunk(
             return await productServices.getProducts()
         } catch (err) {
             thunkApi.rejectWithValue(err);
+        }
+    }
+);
+
+//Getting A Single Product
+export const getAProduct = createAsyncThunk(
+    'product/get-product',
+    async (id: string, thunkApi) => {
+        try {
+            return await productServices.getProduct(id)
+        } catch (err) {
+            thunkApi.rejectWithValue(err)
         }
     }
 );
@@ -102,6 +114,24 @@ export const productSlice = createSlice({
                 state.isSuccess = false;
                 state.isError = true;
                 state.allProducts = action.payload;
+            })
+            //Cases for getting a single product
+            .addCase(getAProduct.pending, (state) => {
+                state.isLoading = true;
+                state.isError = false;
+                state.isSuccess = false;
+            })
+            .addCase(getAProduct.fulfilled, (state, action: PayloadAction<IProductSlice | any>) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.isError = false;
+                state.product = action.payload;
+            })
+            .addCase(getAProduct.rejected, (state, action: PayloadAction<any>) => {
+                state.isLoading = false;
+                state.isSuccess = false;
+                state.isError = true;
+                state.product = action.payload;
             })
             //Cases for adding product
             .addCase(createAProduct.pending, (state) => {

@@ -27,7 +27,7 @@ export default function Select(props: IFormControlSelectProps) {
     if (!value?.length || (Array.isArray(value) && !value.length)) {
       setValidationError(true);
     } else {
-      setValidationError(false);
+      setValidationError && setValidationError(false);
     }
   };
 

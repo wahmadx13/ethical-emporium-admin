@@ -14,23 +14,10 @@ import Image from 'next/image';
 import Dropzone from 'react-dropzone';
 import { MdUpload } from 'react-icons/md';
 import { toast } from 'react-toastify';
-import { ActionCreatorWithoutPayload, AsyncThunk } from '@reduxjs/toolkit';
-import { AsyncThunkConfig } from '@reduxjs/toolkit/dist/createAsyncThunk';
 import { useAppDispatch } from '../../redux/hooks';
+import { IReactDropzoneProps } from '../../types/reactDropzone';
 
-export default function ReactDropzone(props: {
-  resetState: ActionCreatorWithoutPayload<'Reset_all'>;
-  targetId: string;
-  uploadImages: AsyncThunk<
-    any,
-    { imageData: File[]; jwtToken: string; targetId: string; path: string },
-    AsyncThunkConfig
-  >;
-  jwtToken: string;
-  path: string;
-  isLoading: boolean;
-  setTargetId: Dispatch<SetStateAction<string>>;
-}) {
+export default function ReactDropzone(props: IReactDropzoneProps) {
   const {
     resetState,
     uploadImages,
@@ -39,6 +26,7 @@ export default function ReactDropzone(props: {
     path,
     isLoading,
     setTargetId,
+    setEditImage,
   } = props;
   console.log('targetId', targetId);
   const [droppedFiles, setDroppedFiles] = useState<File[]>([]);
@@ -67,8 +55,16 @@ export default function ReactDropzone(props: {
       toast.success('Images uploaded successfully!');
       setDroppedFiles([]);
       setDroppedBlobs([]);
-      dispatch(resetState());
-      setTargetId(null);
+      resetState && dispatch(resetState());
+      if (setTargetId) {
+        setTargetId(null);
+      }
+      if (setEditImage) {
+        setEditImage((prevState: any) => ({
+          ...prevState,
+          images: false,
+        }));
+      }
     } else {
       toast.error('Something went wrong. Please try again!');
     }

@@ -91,7 +91,7 @@ export default function AddProduct() {
     label: capitalizeFirstLetter(option.title),
   }));
 
-  //Option for category select
+  //Option for color select
   const colorOptions = allColors?.map((option) => ({
     value: option.title.toLowerCase(),
     label: capitalizeFirstLetter(option.title),
@@ -160,6 +160,7 @@ export default function AddProduct() {
     },
   });
 
+  //Handlers for setting fields states
   const handleDescription = useCallback((content: string) => {
     setProductDescription(content);
   }, []);
@@ -220,7 +221,7 @@ export default function AddProduct() {
               formLabel="Product Description"
               placeholder="Enter Product Description"
               onChange={(content: string) => handleDescription(content)}
-              setProductDescription={setProductDescription}
+              setDescription={setProductDescription}
               value={productDescription}
               validationError={validateDescription}
               setValidationError={setValidateDescription}
