@@ -1,4 +1,5 @@
 import { IProduct } from '../../../types/addProduct'
+import { IUpdateProductFieldTypes } from '../../types/product';
 
 //Get All Products
 const getProducts = async () => {
@@ -47,6 +48,27 @@ const createProduct = async (product: IProduct, jwtToken: string,) => {
     }
 };
 
+const updateProduct = async (product: IUpdateProductFieldTypes, jwtToken: string) => {
+    const { id } = product;
+    try {
+        const requestOptions = {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${jwtToken}`,
+                Accept: "application/json",
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(product)
+        };
+
+        const response = await fetch(`${process.env.NEXT_BACKEND_BASE_URL}/product/${id}`, requestOptions);
+        const data = await response.json();
+        return data
+    } catch (err) {
+        console.log('error in updating product: ', err)
+    }
+};
+
 //Delete A Product
 const deleteAProduct = async (product: { id: Object, imageIds: string[] }, jwtToken: string) => {
     const { id } = product
@@ -67,5 +89,5 @@ const deleteAProduct = async (product: { id: Object, imageIds: string[] }, jwtTo
     }
 }
 
-const productServices = { getProducts, getProduct, createProduct, deleteAProduct };
+const productServices = { getProducts, getProduct, createProduct, updateProduct, deleteAProduct };
 export default productServices;

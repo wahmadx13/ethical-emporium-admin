@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, createAction, PayloadAction } from "@reduxjs/toolkit";
 import productServices from "./services";
 import { IProduct } from '../../../types/addProduct'
+import { IUpdateProductFieldTypes } from "../../types/product";
 
 interface IAddProduct extends IProduct {
     _id: Object;
@@ -16,14 +17,16 @@ interface IAddProduct extends IProduct {
     message: string;
 };
 
-interface IUpdateProduct extends IProduct {
-    id: string;
-};
+interface IUpdateProduct extends Partial<IUpdateProductFieldTypes> {
+    statusCode: number;
+    message: string;
+}
 
 interface IProductSlice extends Partial<IProduct> {
     addedProduct: IAddProduct;
     deletedProduct: any;
     product: IAddProduct;
+    updatedProduct: IUpdateProduct
     allProducts: IAddProduct[];
     isLoading: boolean;
     isSuccess: boolean;
@@ -66,6 +69,18 @@ export const createAProduct = createAsyncThunk(
     }
 );
 
+//Updating a product
+export const updateAProduct = createAsyncThunk(
+    'product/update-product',
+    async ({ productData, jwtToken }: { productData: IUpdateProductFieldTypes, jwtToken: string }, thunkApi) => {
+        try {
+            return await productServices.updateProduct(productData, jwtToken);
+        } catch (err) {
+            thunkApi.rejectWithValue(err);
+        }
+    }
+);
+
 //Deleting A Product
 export const deleteAProduct = createAsyncThunk(
     'product/delete-product',
@@ -86,6 +101,7 @@ const initialState: IProductSlice = {
     addedProduct: null,
     deletedProduct: null,
     product: null,
+    updatedProduct: null,
     allProducts: [],
     isLoading: false,
     isSuccess: false,
@@ -146,6 +162,24 @@ export const productSlice = createSlice({
                 state.isLoading = false;
                 state.isSuccess = false;
                 state.addedProduct = action.payload;
+            })
+            //Cases for updating a product
+            .addCase(updateAProduct.pending, (state) => {
+                state.isLoading = true;
+                state.isSuccess = false;
+                state.isError = false;
+            })
+            .addCase(updateAProduct.fulfilled, (state, action: PayloadAction<IProductSlice | any>) => {
+                state.isSuccess = true;
+                state.isLoading = false;
+                state.isError = false;
+                state.color = action.payload;
+            })
+            .addCase(updateAProduct.rejected, (state, action: PayloadAction<any>) => {
+                state.isLoading = false;
+                state.isSuccess = false;
+                state.isError = true;
+                state.color = action.payload;
             })
             //Cases for deleting a product
             .addCase(deleteAProduct.pending, (state) => {

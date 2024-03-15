@@ -30,7 +30,7 @@ import { getAllBrands } from '../../../../../../redux/features/brandSlice';
 import { getAllProductCategories } from '../../../../../../redux/features/productCategorySlice';
 import { capitalizeFirstLetter } from '../../../../../../utils/helper';
 import {
-  createAProduct,
+  updateAProduct,
   getAProduct,
 } from '../../../../../../redux/features/productSlice';
 import { tagSelect } from '../../../../../../utils/constants';
@@ -187,23 +187,40 @@ export default function UpdateProduct(props: { params: { id: string } }) {
   }, []);
 
   //Handlers for updating the product's fields
-  const handleUpdateTitle = () => {
+  const handleUpdateTitle = async () => {
     if (product && productState.title === product.title) {
       toast.info("Change product's title before updating");
       return;
     }
-    console.log('productUpdatedTitle', productState.title);
+    const slug = slugify(productState.title, { lower: true });
+    try {
+      const response = await dispatch(
+        updateAProduct({
+          productData: { id, title: productState.title, slug },
+          jwtToken,
+        }),
+      );
+      if (response.payload.statusCode === 200) {
+        setEditState((prevState: IEditState) => ({
+          ...prevState,
+          title: false,
+        }));
+        setProductState((prevState: IUpdateProductState) => ({
+          ...prevState,
+          title: response.payload?.updateProduct.title,
+        }));
+        toast.success("Product's title updated successfully");
+      }
+    } catch (err) {
+      toast.error("Something went wrong while updating product's title");
+    }
     setEditState((prevState: IEditState) => ({
       ...prevState,
       title: false,
     }));
-    setProductState((prevState: IUpdateProductState) => ({
-      ...prevState,
-      title: product.title,
-    }));
   };
 
-  const handleUpdateDescription = () => {
+  const handleUpdateDescription = async () => {
     if (
       (product &&
         productState?.productDescription
@@ -215,91 +232,168 @@ export default function UpdateProduct(props: { params: { id: string } }) {
       toast.info("Change product's description before updating");
       return;
     }
-    console.log('productDescription', productState.productDescription);
+    try {
+      const response = await dispatch(
+        updateAProduct({
+          productData: { id, description: productState.productDescription },
+          jwtToken,
+        }),
+      );
+      if (response.payload.statusCode === 200) {
+        setEditState((prevState: IEditState) => ({
+          ...prevState,
+          description: false,
+        }));
+        setProductState((prevState: IUpdateProductState) => ({
+          ...prevState,
+          productDescription: response.payload?.updateProduct.description,
+        }));
+        toast.success("Product's description updated successfully");
+      }
+    } catch (err) {
+      toast.error("Something went wrong while updating product's description");
+    }
     setEditState((prevState: IEditState) => ({
       ...prevState,
       description: false,
     }));
-    setProductState((prevState: IUpdateProductState) => ({
-      ...prevState,
-      productDescription: product.description,
-    }));
   };
 
-  const handleUpdatePrice = () => {
+  const handleUpdatePrice = async () => {
     if (product && productState.price === product.price) {
       toast.info("Change product's price before updating");
       return;
     }
-    console.log('updatedPrice', productState.price);
+    try {
+      const response = await dispatch(
+        updateAProduct({
+          productData: { id, price: productState.price },
+          jwtToken,
+        }),
+      );
+      if (response.payload.statusCode === 200) {
+        setEditState((prevState: IEditState) => ({
+          ...prevState,
+          price: false,
+        }));
+        setProductState((prevState: IUpdateProductState) => ({
+          ...prevState,
+          price: response.payload?.updateProduct.price,
+        }));
+        toast.success("Product's description updated successfully");
+      }
+    } catch (err) {
+      toast.error("Something went wrong while updating product's description");
+    }
     setEditState((prevState: IEditState) => ({
       ...prevState,
       price: false,
     }));
-    setProductState((prevState: IUpdateProductState) => ({
-      ...prevState,
-      price: product.price,
-    }));
   };
 
-  const handleUpdateQuantity = () => {
+  const handleUpdateQuantity = async () => {
     if (product && productState.quantity === product.quantity) {
       toast.info("Change product's quantity before updating");
       return;
     }
-    console.log('updatedQuantity', productState.quantity);
+    try {
+      const response = await dispatch(
+        updateAProduct({
+          productData: { id, price: productState.quantity },
+          jwtToken,
+        }),
+      );
+      if (response.payload.statusCode === 200) {
+        setEditState((prevState: IEditState) => ({
+          ...prevState,
+          quantity: false,
+        }));
+        setProductState((prevState: IUpdateProductState) => ({
+          ...prevState,
+          quantity: response.payload?.updateProduct.quantity,
+        }));
+        toast.success("Product's quantity updated successfully");
+      }
+    } catch (err) {
+      toast.error("Something went wrong while updating product's quantity");
+    }
     setEditState((prevState: IEditState) => ({
       ...prevState,
       quantity: false,
     }));
-    setProductState((prevState: IUpdateProductState) => ({
-      ...prevState,
-      quantity: product.quantity,
-    }));
   };
 
-  const handleUpdateBrand = () => {
+  const handleUpdateBrand = async () => {
     if (product && productState.brand === product.brand) {
       toast.info("Change product's brand before updating");
       return;
     }
-    console.log('updatedBrandValue', productState.brand);
+    try {
+      const response = await dispatch(
+        updateAProduct({
+          productData: { id, price: productState.price },
+          jwtToken,
+        }),
+      );
+      if (response.payload.statusCode === 200) {
+        setEditState((prevState: IEditState) => ({
+          ...prevState,
+          brand: false,
+        }));
+        setProductState((prevState: IUpdateProductState) => ({
+          ...prevState,
+          brand: response.payload?.updateProduct.brand,
+        }));
+        toast.success("Product's brand updated successfully");
+      }
+    } catch (err) {
+      toast.error("Something went wrong while updating product's brand");
+    }
     setEditState((prevState: IEditState) => ({
       ...prevState,
       brand: false,
     }));
-    setProductState((prevState: IUpdateProductState) => ({
-      ...prevState,
-      brand: product.brand,
-    }));
   };
 
-  const handleUpdateCategory = () => {
+  const handleUpdateCategory = async () => {
     if (product && productState.category === product.category) {
       toast.info("Change product's category before updating");
       return;
     }
-    console.log('updatedCategoryValue', productState.category);
+    try {
+      const response = await dispatch(
+        updateAProduct({
+          productData: { id, category: productState.category },
+          jwtToken,
+        }),
+      );
+      if (response.payload.statusCode === 200) {
+        setEditState((prevState: IEditState) => ({
+          ...prevState,
+          category: false,
+        }));
+        setProductState((prevState: IUpdateProductState) => ({
+          ...prevState,
+          category: response.payload?.updateProduct.category,
+        }));
+        toast.success("Product's category updated successfully");
+      }
+    } catch (err) {
+      toast.error("Something went wrong while updating product's category");
+    }
     setEditState((prevState: IEditState) => ({
       ...prevState,
       category: false,
     }));
-    setProductState((prevState: IUpdateProductState) => ({
-      ...prevState,
-      category: product.category,
-    }));
   };
 
-  const handleUpdateColors = () => {
+  const handleUpdateColors = async () => {
     if (!productState.colors || !productState.colors.length) {
       toast.warning("Cannot update product's colors with empty values");
       return;
     }
     const prevColors = product.color.slice().sort();
     const updatedColors = productState.colors.slice().sort();
-    if (product && product.color.length !== productState.colors.length) {
-      console.log('updatedColorsValue', productState.colors);
-    }
     for (let i = 0; i < prevColors.length; i++) {
       if (prevColors[i] === updatedColors[i]) {
         toast.info("Change product's title before updating");
@@ -307,27 +401,40 @@ export default function UpdateProduct(props: { params: { id: string } }) {
       }
       break;
     }
-    console.log('updatedColorsValue', productState.colors);
+    try {
+      const response = await dispatch(
+        updateAProduct({
+          productData: { id, color: productState.colors },
+          jwtToken,
+        }),
+      );
+      if (response.payload.statusCode === 200) {
+        setEditState((prevState: IEditState) => ({
+          ...prevState,
+          colors: false,
+        }));
+        setProductState((prevState: IUpdateProductState) => ({
+          ...prevState,
+          colors: response.payload?.updateProduct.color,
+        }));
+        toast.success("Product's colors updated successfully");
+      }
+    } catch (err) {
+      toast.error("Something went wrong while updating product's colors");
+    }
     setEditState((prevState: IEditState) => ({
       ...prevState,
       colors: false,
     }));
-    setProductState((prevState: IUpdateProductState) => ({
-      ...prevState,
-      colors: product.color,
-    }));
   };
 
-  const handleUpdateTags = () => {
+  const handleUpdateTags = async () => {
     if (!productState.selectTags || !productState.selectTags.length) {
       toast.warning("Cannot update product's tags with empty values");
       return;
     }
     const prevTags = product.tags.slice().sort();
     const updatedTags = productState.selectTags.slice().sort();
-    if (product && product.color.length !== productState.colors.length) {
-      console.log('updatedColorsValue', productState.colors);
-    }
     for (let i = 0; i < prevTags.length; i++) {
       if (prevTags[i] === updatedTags[i]) {
         toast.info("Change product's title before updating");
@@ -335,14 +442,30 @@ export default function UpdateProduct(props: { params: { id: string } }) {
       }
       break;
     }
-    console.log('updatedTagsValue', productState.selectTags);
+    try {
+      const response = await dispatch(
+        updateAProduct({
+          productData: { id, tags: productState.selectTags },
+          jwtToken,
+        }),
+      );
+      if (response.payload.statusCode === 200) {
+        setEditState((prevState: IEditState) => ({
+          ...prevState,
+          tags: false,
+        }));
+        setProductState((prevState: IUpdateProductState) => ({
+          ...prevState,
+          selectTags: response.payload?.updateProduct.tags,
+        }));
+        toast.success("Product's tags updated successfully");
+      }
+    } catch (err) {
+      toast.error("Something went wrong while updating product's tags");
+    }
     setEditState((prevState: IEditState) => ({
       ...prevState,
       tags: false,
-    }));
-    setProductState((prevState: IUpdateProductState) => ({
-      ...prevState,
-      selectTags: product.tags,
     }));
   };
 
@@ -394,6 +517,7 @@ export default function UpdateProduct(props: { params: { id: string } }) {
                       title: false,
                     }))
                   }
+                  isLoading={isLoading}
                   onClickUpdate={handleUpdateTitle}
                 />
               </Flex>
@@ -440,6 +564,7 @@ export default function UpdateProduct(props: { params: { id: string } }) {
                       description: false,
                     }))
                   }
+                  isLoading={isLoading}
                   onClickUpdate={handleUpdateDescription}
                 />
               </Flex>
@@ -499,6 +624,7 @@ export default function UpdateProduct(props: { params: { id: string } }) {
                         price: false,
                       }))
                     }
+                    isLoading={isLoading}
                     onClickUpdate={handleUpdatePrice}
                   />
                 </Flex>
@@ -539,6 +665,7 @@ export default function UpdateProduct(props: { params: { id: string } }) {
                         quantity: false,
                       }))
                     }
+                    isLoading={isLoading}
                     onClickUpdate={handleUpdateQuantity}
                   />
                 </Flex>
@@ -574,6 +701,7 @@ export default function UpdateProduct(props: { params: { id: string } }) {
                         brand: false,
                       }))
                     }
+                    isLoading={isLoading}
                     onClickUpdate={handleUpdateBrand}
                   />
                 </Flex>
@@ -611,6 +739,7 @@ export default function UpdateProduct(props: { params: { id: string } }) {
                         category: false,
                       }))
                     }
+                    isLoading={isLoading}
                     onClickUpdate={handleUpdateCategory}
                   />
                 </Flex>
@@ -648,13 +777,14 @@ export default function UpdateProduct(props: { params: { id: string } }) {
                         colors: false,
                       }))
                     }
+                    isLoading={isLoading}
                     onClickUpdate={handleUpdateColors}
                   />
                 </Flex>
               ) : (
                 <Information
                   boxShadow={cardShadow}
-                  title="Category"
+                  title="Colors"
                   value={product?.color.map(
                     (col, index) =>
                       capitalizeFirstLetter(col) +
@@ -689,6 +819,7 @@ export default function UpdateProduct(props: { params: { id: string } }) {
                         tags: false,
                       }))
                     }
+                    isLoading={isLoading}
                     onClickUpdate={handleUpdateTags}
                   />
                 </Flex>
@@ -699,7 +830,7 @@ export default function UpdateProduct(props: { params: { id: string } }) {
                   value={product?.tags.map(
                     (col, index) =>
                       capitalizeFirstLetter(col) +
-                      (index < product.color.length - 1 ? ', ' : ''),
+                      (index < product.tags.length - 1 ? ', ' : ''),
                   )}
                   edit={() =>
                     setEditState((prevState: IEditState) => ({

@@ -155,12 +155,13 @@ export const colorSlice = createSlice({
             })
             .addCase(updateAColor.fulfilled, (state, action: PayloadAction<IColorSlice | any>) => {
                 state.isLoading = false;
-                state.isSuccess
+                state.isSuccess = true;
                 state.color = action.payload;
             })
             .addCase(updateAColor.rejected, (state, action: PayloadAction<any>) => {
                 state.isLoading = false;
                 state.isSuccess = false;
+                state.isError = true;
                 state.color = action.payload;
             })
             //Cases for color deletion
