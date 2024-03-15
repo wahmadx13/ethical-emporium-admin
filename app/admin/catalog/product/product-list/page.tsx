@@ -59,6 +59,13 @@ export default function ProductList() {
     dispatch(resetProductState());
   };
 
+  const handleCancel = () => {
+    setImageIds(null);
+    setProductId(null);
+    setProductTitle(null);
+    onClose();
+  };
+
   return (
     <Box pt={{ base: '130px', md: '80px', xl: '80px' }} width="100%">
       <Grid templateColumns="repeat(4, 1fr)" gap={6}>
@@ -84,7 +91,7 @@ export default function ProductList() {
           modalTitle="Delete Product?"
           modalBody={`Are you sure you want to delete product title: ${productTitle}`}
           isOpen={isOpen}
-          onClose={onClose}
+          onClose={handleCancel}
           onDelete={handleDeleteProduct}
           isLoading={isLoading}
         />

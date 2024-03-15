@@ -18,10 +18,7 @@ import { getAllColors } from '../../../../../../redux/features/colorSlice';
 import RichTextEditor from '../../../../../../components/RichTextEditor';
 import Select from '../../../../../../components/Select';
 import ReactDropzone from '../../../../../../components/ReactDropzone';
-import {
-  resetUploadState,
-  uploadImages,
-} from '../../../../../../redux/features/uploadSlice';
+import { uploadImages } from '../../../../../../redux/features/uploadSlice';
 import {
   ISelectColorProps,
   ISelectProps,
@@ -60,6 +57,7 @@ export default function UpdateProduct(props: { params: { id: string } }) {
   const { id } = props.params;
   const { colorMode } = useColorMode();
   const bg = useColorModeValue('white', 'navy.700');
+  const textColor = useColorModeValue('secondaryGray.900', 'white');
 
   //States from redux
   const { isLoading, product } = useAppSelector(
@@ -71,7 +69,7 @@ export default function UpdateProduct(props: { params: { id: string } }) {
     (state) => state.productCategoryReducer,
   );
   const { allColors } = useAppSelector((state) => state.colorReducer);
-  const { uploadLoading } = useAppSelector((state) => state.uploadReducer);
+  const { imageLoading } = useAppSelector((state) => state.uploadReducer);
 
   const textColorPrimary = useColorModeValue('secondaryGray.900', 'white');
   const textColorSecondary = 'gray.400';
@@ -214,10 +212,6 @@ export default function UpdateProduct(props: { params: { id: string } }) {
     } catch (err) {
       toast.error("Something went wrong while updating product's title");
     }
-    setEditState((prevState: IEditState) => ({
-      ...prevState,
-      title: false,
-    }));
   };
 
   const handleUpdateDescription = async () => {
@@ -253,10 +247,6 @@ export default function UpdateProduct(props: { params: { id: string } }) {
     } catch (err) {
       toast.error("Something went wrong while updating product's description");
     }
-    setEditState((prevState: IEditState) => ({
-      ...prevState,
-      description: false,
-    }));
   };
 
   const handleUpdatePrice = async () => {
@@ -285,10 +275,6 @@ export default function UpdateProduct(props: { params: { id: string } }) {
     } catch (err) {
       toast.error("Something went wrong while updating product's description");
     }
-    setEditState((prevState: IEditState) => ({
-      ...prevState,
-      price: false,
-    }));
   };
 
   const handleUpdateQuantity = async () => {
@@ -317,10 +303,6 @@ export default function UpdateProduct(props: { params: { id: string } }) {
     } catch (err) {
       toast.error("Something went wrong while updating product's quantity");
     }
-    setEditState((prevState: IEditState) => ({
-      ...prevState,
-      quantity: false,
-    }));
   };
 
   const handleUpdateBrand = async () => {
@@ -349,10 +331,6 @@ export default function UpdateProduct(props: { params: { id: string } }) {
     } catch (err) {
       toast.error("Something went wrong while updating product's brand");
     }
-    setEditState((prevState: IEditState) => ({
-      ...prevState,
-      brand: false,
-    }));
   };
 
   const handleUpdateCategory = async () => {
@@ -381,10 +359,6 @@ export default function UpdateProduct(props: { params: { id: string } }) {
     } catch (err) {
       toast.error("Something went wrong while updating product's category");
     }
-    setEditState((prevState: IEditState) => ({
-      ...prevState,
-      category: false,
-    }));
   };
 
   const handleUpdateColors = async () => {
@@ -422,10 +396,6 @@ export default function UpdateProduct(props: { params: { id: string } }) {
     } catch (err) {
       toast.error("Something went wrong while updating product's colors");
     }
-    setEditState((prevState: IEditState) => ({
-      ...prevState,
-      colors: false,
-    }));
   };
 
   const handleUpdateTags = async () => {
@@ -463,10 +433,6 @@ export default function UpdateProduct(props: { params: { id: string } }) {
     } catch (err) {
       toast.error("Something went wrong while updating product's tags");
     }
-    setEditState((prevState: IEditState) => ({
-      ...prevState,
-      tags: false,
-    }));
   };
 
   //Use Effect
@@ -860,7 +826,7 @@ export default function UpdateProduct(props: { params: { id: string } }) {
                   targetId={product._id.toString()}
                   jwtToken={jwtToken}
                   uploadImages={uploadImages}
-                  isLoading={uploadLoading}
+                  isLoading={imageLoading}
                   setEditImage={setEditState}
                 />
                 <Button
@@ -890,6 +856,8 @@ export default function UpdateProduct(props: { params: { id: string } }) {
                       images: true,
                     }))
                   }
+                  path="product"
+                  targetId={id}
                 />
               </Card>
             )}

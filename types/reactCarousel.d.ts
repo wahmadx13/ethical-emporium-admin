@@ -5,4 +5,6 @@ export interface IReactCarouselProps {
         url: string;
     }[];
     edit: () => void;
+    path: string;
+    targetId: string;
 }

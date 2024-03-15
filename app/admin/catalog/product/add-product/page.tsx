@@ -58,7 +58,7 @@ export default function AddProduct() {
   );
   const { allColors } = useAppSelector((state) => state.colorReducer);
   const { isLoading } = useAppSelector((state) => state.productReducer);
-  const { uploadLoading } = useAppSelector((state) => state.uploadReducer);
+  const { imageLoading } = useAppSelector((state) => state.uploadReducer);
 
   //Getting all the required values
   const getAllBrand = useCallback(() => {
@@ -316,7 +316,7 @@ export default function AddProduct() {
             jwtToken={jwtToken}
             targetId={createdProductId}
             path="product"
-            isLoading={uploadLoading}
+            isLoading={imageLoading}
             setTargetId={setCreatedProductId}
           />
         )}

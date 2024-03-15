@@ -3,17 +3,30 @@ import uploadServices from "./services";
 
 interface IProductSlice {
     imageData: any;
-    uploadLoading: boolean;
-    uploadSuccess: boolean;
-    uploadError: boolean;
+    deletedProductImages: any;
+    imageLoading: boolean;
+    imageSuccess: boolean;
+    imageError: boolean;
 };
 
+//Upload Product Images
 export const uploadImages = createAsyncThunk(
     'upload/upload-images',
     async ({ imageData, jwtToken, targetId, path }: { imageData: File[], jwtToken: string, targetId: string, path: string }, thunkApi) => {
-        console.log('image data in slice', imageData)
         try {
             return await uploadServices.uploadTargetImages(imageData, jwtToken, targetId, path);
+        } catch (err) {
+            thunkApi.rejectWithValue(err);
+        }
+    }
+);
+
+//Delete Product Images
+export const deleteImages = createAsyncThunk(
+    'upload/delete-images',
+    async ({ imageId, jwtToken, targetId, path }: { imageId: string, jwtToken: string, targetId: string, path: string }, thunkApi) => {
+        try {
+            return await uploadServices.deleteTargetImages(imageId, jwtToken, targetId, path);
         } catch (err) {
             thunkApi.rejectWithValue(err);
         }
@@ -26,9 +39,10 @@ export const resetUploadState = createAction("Reset_all");
 //Initial State
 const initialState: IProductSlice = {
     imageData: null,
-    uploadLoading: false,
-    uploadSuccess: false,
-    uploadError: false,
+    deletedProductImages: null,
+    imageLoading: false,
+    imageSuccess: false,
+    imageError: false,
 }
 
 //Product Slice
@@ -41,21 +55,39 @@ export const uploadSlice = createSlice({
         builder
             //Cases for upload product images
             .addCase(uploadImages.pending, (state) => {
-                state.uploadLoading = true;
-                state.uploadError = false;
-                state.uploadSuccess = false;
+                state.imageLoading = true;
+                state.imageError = false;
+                state.imageSuccess = false;
             })
             .addCase(uploadImages.fulfilled, (state, action: PayloadAction<any>) => {
-                state.uploadLoading = false;
-                state.uploadSuccess = true;
-                state.uploadError = false;
+                state.imageLoading = false;
+                state.imageSuccess = true;
+                state.imageError = false;
                 state.imageData = action.payload;
             })
             .addCase(uploadImages.rejected, (state, action: PayloadAction<any>) => {
-                state.uploadLoading = false;
-                state.uploadSuccess = false;
-                state.uploadError = true;
+                state.imageLoading = false;
+                state.imageSuccess = false;
+                state.imageError = true;
                 state.imageData = action.payload;
+            })
+            //Cases for delete product images
+            .addCase(deleteImages.pending, (state) => {
+                state.imageLoading = true;
+                state.imageError = false;
+                state.imageSuccess = false;
+            })
+            .addCase(deleteImages.fulfilled, (state, action: PayloadAction<any>) => {
+                state.imageLoading = false;
+                state.imageSuccess = true;
+                state.imageError = false;
+                state.deletedProductImages = action.payload;
+            })
+            .addCase(deleteImages.rejected, (state, action: PayloadAction<any>) => {
+                state.imageLoading = false;
+                state.imageSuccess = false;
+                state.imageError = true;
+                state.deletedProductImages = action.payload;
             })
     }
 })
