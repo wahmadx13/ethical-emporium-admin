@@ -51,6 +51,7 @@ export default function UpdateColor(props: { params: { id: string } }) {
   useEffect(() => {
     getColor();
     setColorTitle(color?.title);
+    // console.log('colorTitle', colorTitle);
   }, [color?.title, getColor]);
 
   const formik = useFormik({

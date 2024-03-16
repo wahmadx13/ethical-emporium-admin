@@ -1,88 +1,115 @@
 'use client';
-import { useEffect, useState } from 'react';
-import { Box, Button, SimpleGrid, Text } from '@chakra-ui/react';
+import { useCallback, useEffect, useState } from 'react';
+import { Box, Button, SimpleGrid, Text, color } from '@chakra-ui/react';
+import slugify from 'slugify';
+import { toast } from 'react-toastify';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import FormControl from '../../../../../components/FormControl';
 import RichTextEditor from '../../../../../components/RichTextEditor';
 import Select from '../../../../../components/Select';
 import ReactDropzone from '../../../../../components/ReactDropzone';
-import { IAddProduct } from '../../../../../types/addProduct';
-
-//RAW DATA
-
-//Color Data
-const colorOptions: string[] = [
-  'Red',
-  'Violet',
-  'Blue',
-  'Indigo',
-  'White',
-  'Black',
-  'Pink',
-  'Other',
-];
-
-//Brand Select
-const brandOptions: string[] = ['Apple', 'Samsung', 'Dell', 'HP'];
-
-//Tags Select
-export const tagsOptions = [
-  { value: 'apple', label: 'Apple', brand: 'apple' },
-  { value: 'samsung', label: 'Samsung', brand: 'samsung' },
-  { value: 'huawei', label: 'Huawei', brand: 'huawei' },
-  { value: 'dell', label: 'Dell', brand: 'dell' },
-];
-
-export const tagsData = [
-  {
-    label: 'Tags',
-    options: tagsOptions,
-  },
-];
-
-//Category Select
-const categoryOptions: string[] = [
-  'Laptop',
-  'Smart TV',
-  'Smart Watch',
-  'Mobile Phones',
-  'Mobile Accessories',
-  'Laptop Accessories',
-];
+import { capitalizeFirstLetter } from '../../../../../utils/helper';
+import { IProduct } from '../../../../../types/addProduct';
+import { useAppSelector, useAppDispatch } from '../../../../../redux/hooks';
+import { getAllBrands } from '../../../../../redux/features/brandSlice';
+import { getAllProductCategories } from '../../../../../redux/features/productCategorySlice';
+import { getAllColors } from '../../../../../redux/features/colorSlice';
+import {
+  createAProduct,
+  resetProductState,
+} from '../../../../../redux/features/productSlice';
+import {
+  uploadImages,
+  resetUploadState,
+} from '../../../../../redux/features/uploadSlice';
+import { tagSelect } from '../../../../../utils/constants';
+import {
+  ISelectProps,
+  ISelectColorProps,
+} from '../../../../../types/addProduct';
 
 export default function AddProduct() {
   //React States
-  const [isProductAdded, setIsProductAdded] = useState<boolean>(false);
-  const [productDescription, setProductDescription] = useState<string>('');
+  const [createdProductId, setCreatedProductId] = useState<string>(null);
+  const [productDescription, setProductDescription] = useState<string>(null);
+  const [brand, setBrand] = useState<ISelectProps>(null);
+  const [category, setCategory] = useState<ISelectProps>(null);
   const [colors, setColors] = useState<string[]>([]);
   const [selectTags, setSelectTags] = useState<string[]>([]);
 
+  //Form Validation errors states
+  const [validateDescription, setValidateDescription] =
+    useState<boolean>(false);
+  const [validateBrand, setValidateBrand] = useState<boolean>(false);
+  const [validateCategory, setValidateCategory] = useState<boolean>(false);
+  const [validateColor, setValidateColor] = useState<boolean>(false);
+  const [validateTag, setValidateTag] = useState<boolean>(false);
+  const [validationErrors, setValidationErrors] = useState<boolean>(false);
+
+  //Dispatch
+  const dispatch = useAppDispatch();
+
+  //States from redux
+  const { jwtToken } = useAppSelector((state) => state.authReducer);
+  const { allBrands } = useAppSelector((state) => state.brandReducer);
+  const { allProductCategories } = useAppSelector(
+    (state) => state.productCategoryReducer,
+  );
+  const { allColors } = useAppSelector((state) => state.colorReducer);
+  const { isLoading } = useAppSelector((state) => state.productReducer);
+  const { imageLoading } = useAppSelector((state) => state.uploadReducer);
+
+  //Getting all the required values
+  const getAllBrand = useCallback(() => {
+    if (!allBrands.length) {
+      dispatch(getAllBrands());
+    }
+  }, [allBrands.length, dispatch]);
+
+  const getProductCategories = useCallback(() => {
+    if (!allProductCategories.length) {
+      dispatch(getAllProductCategories());
+    }
+  }, [allProductCategories.length, dispatch]);
+
+  const getAllAllColors = useCallback(() => {
+    if (!allColors.length) {
+      dispatch(getAllColors());
+    }
+  }, [allColors.length, dispatch]);
+
+  //Options for brand select
+  const brandOptions = allBrands?.map((option) => ({
+    value: option.title.toLowerCase().replace(/[\s_-]/g, ''),
+    label: capitalizeFirstLetter(option.title),
+  }));
+
+  //Option for category select
+  const categoryOptions = allProductCategories?.map((option) => ({
+    value: option.title,
+    label: capitalizeFirstLetter(option.title),
+  }));
+
+  //Option for color select
+  const colorOptions = allColors?.map((option) => ({
+    value: option.title.toLowerCase(),
+    label: capitalizeFirstLetter(option.title),
+  }));
+
+  const mappedColorOptions = colorOptions?.map((option) => ({
+    ...option,
+    colorScheme: option.value,
+  }));
+
+  //Formik validation
   const schema = yup.object().shape({
     title: yup.string().required("Product's Title is Required"),
-    description: yup.string().required("Product's description is Required"),
     price: yup.number().required("Product's price is required"),
-    brand: yup.string().required("Product's brand is required"),
-    category: yup.string().required('Pick at least one category'),
-    color: yup
-      .array()
-      .min(1, 'Color must have at least one item')
-      .required('Pick at least one color'),
     quantity: yup.number().required("Product's quantity is required"),
-    tags: yup
-      .array()
-      .min(1, 'Tags must have at least one item')
-      .required('Pick at least one tag'),
   });
 
-  const handleColorSelect = (values: string[]) => {
-    setColors(values);
-  };
-
-  const handleTagsSelect = (values: string[]) => {
-    setSelectTags(values);
-  };
-
+  //Formik form submission
   const formik = useFormik({
     initialValues: {
       title: '',
@@ -95,27 +122,78 @@ export default function AddProduct() {
       tags: [],
     },
     validationSchema: schema,
-    onSubmit: (values: IAddProduct) => {
-      console.log('ProductValues', values);
-      setIsProductAdded(true);
+    onSubmit: async (values: IProduct) => {
+      setValidationErrors(false);
+      const slug = slugify(values.title, { lower: true });
+      const product = {
+        ...values,
+        brand: brand.value,
+        category: category.value,
+        color: colors,
+        description: productDescription,
+        tags: selectTags,
+        slug,
+      };
+      if (
+        !product.description.length ||
+        !product.brand.length ||
+        !product.category.length ||
+        !product.color.length
+      ) {
+        setValidationErrors(true);
+        return;
+      } else {
+        setValidationErrors(false);
+        const response = await dispatch(
+          createAProduct({ addProductData: product, jwtToken }),
+        );
+        if (response && response.payload.statusCode === 200) {
+          setCreatedProductId(response.payload?.createNewProduct._id);
+          toast.success('Product creation successful');
+          console.log('createdProductId', createdProductId);
+          dispatch(resetProductState());
+        } else {
+          toast.error('Something went wrong or duplicate title');
+        }
+        formik.resetForm();
+      }
     },
   });
 
-  const hasErrors = Object.keys(formik.errors).length > 0;
-  useEffect(() => {
-    formik.values.description = productDescription ? productDescription : '';
-    formik.values.color = colors ? colors : [];
-    formik.values.tags = selectTags ? selectTags : [];
-    console.log('formikValues', formik.values);
-  }, [
-    colors,
-    formik.errors,
-    formik.touched,
-    formik.values,
-    productDescription,
-    selectTags,
-  ]);
+  //Handlers for setting fields states
+  const handleDescription = useCallback((content: string) => {
+    setProductDescription(content);
+  }, []);
 
+  const handleBrandSelect = useCallback((value: ISelectProps) => {
+    setBrand(value);
+  }, []);
+
+  const handleCategorySelect = useCallback((value: ISelectProps) => {
+    setCategory(value);
+  }, []);
+
+  const handleColorSelect = useCallback((values: ISelectColorProps[]) => {
+    const colorValues = values.map((color) => color.value);
+    setColors(colorValues);
+  }, []);
+
+  const handleTagsSelect = useCallback((values: ISelectProps[]) => {
+    const tagValues = values.map((tag) => tag.value);
+    setSelectTags(tagValues);
+  }, []);
+
+  //Checking for any potential formik validation errors
+  const hasErrors = Object.keys(formik.errors).length > 0;
+
+  //Use Effect
+  useEffect(() => {
+    getAllBrand();
+    getProductCategories();
+    getAllAllColors();
+  }, [getAllAllColors, getAllBrand, getProductCategories]);
+
+  //Rendering the component
   return (
     <Box pt={{ base: '130px', md: '80px', xl: '80px' }} width="100%">
       <SimpleGrid
@@ -126,7 +204,7 @@ export default function AddProduct() {
         justifyContent="center"
         flexDirection="column"
       >
-        {!isProductAdded ? (
+        {!createdProductId ? (
           <form action="" onSubmit={formik.handleSubmit}>
             <FormControl
               formLabel="Product Title"
@@ -142,14 +220,11 @@ export default function AddProduct() {
             <RichTextEditor
               formLabel="Product Description"
               placeholder="Enter Product Description"
-              onChange={(content: string) => {
-                formik.setFieldValue('description', content);
-                setProductDescription(content);
-              }}
-              onBlur={formik.handleBlur('description')}
-              value={formik.values.description}
-              formikTouched={formik.touched.description}
-              formikError={formik.errors.description}
+              onChange={(content: string) => handleDescription(content)}
+              setDescription={setProductDescription}
+              value={productDescription}
+              validationError={validateDescription}
+              setValidationError={setValidateDescription}
             />
             <FormControl
               formLabel="Enter Product Price"
@@ -178,53 +253,55 @@ export default function AddProduct() {
               multipleOpt={false}
               name="brand"
               placeholder="Select a brand From the options"
-              value={formik.values.brand}
               options={brandOptions}
-              onChange={formik.handleChange('brand')}
-              onBlur={formik.handleBlur('brand')}
-              formikTouched={formik.touched.brand}
-              formikError={formik.errors.brand}
+              value={brand?.value}
+              validationError={validateBrand}
+              setValidationError={setValidateBrand}
+              onChange={(value: ISelectProps) => handleBrandSelect(value)}
             />
             <Select
               formLabel="Select Product Category"
               multipleOpt={false}
               name="category"
               placeholder="Select a product category from options"
-              value={formik.values.category}
               options={categoryOptions}
-              onChange={formik.handleChange('category')}
-              onBlur={formik.handleBlur('category')}
-              formikTouched={formik.touched.category}
-              formikError={formik.errors.category}
+              value={category?.value}
+              validationError={validateCategory}
+              setValidationError={setValidateCategory}
+              onChange={(value: ISelectProps) => handleCategorySelect(value)}
             />
             <Select
               formLabel="Select Colors"
               multipleOpt={true}
               name="color"
               placeholder="Select at least on color from the options"
-              value={formik.values.category}
-              options={colorOptions}
-              onChange={(values: string[]) => handleColorSelect(values)}
-              onBlur={formik.handleBlur('color')}
-              formikTouched={formik.touched.color}
-              formikError={formik.errors.color}
-              noOptionMessage="All available color options are selected"
+              options={mappedColorOptions}
+              value={colors}
+              validationError={validateColor}
+              setValidationError={setValidateColor}
+              onChange={(values: ISelectColorProps[]) =>
+                handleColorSelect(values)
+              }
             />
             <Select
               formLabel="Select Tags"
               multipleOpt={true}
               name="tags"
               placeholder="Select at least on tag from the options"
-              value={formik.values.category}
-              options={colorOptions}
-              onChange={(values: string[]) => handleTagsSelect(values)}
-              onBlur={formik.handleBlur('tags')}
-              formikTouched={formik.touched.tags}
-              formikError={formik.errors.tags}
-              noOptionMessage="All available tags options are selected"
+              options={tagSelect}
+              value={selectTags}
+              validationError={validateTag}
+              setValidationError={setValidateTag}
+              onChange={(values: ISelectProps[]) => handleTagsSelect(values)}
             />
+            {validationErrors && (
+              <Text mb="10px" color="red.500" fontSize="1rem">
+                All fields are required.
+              </Text>
+            )}
             <Button
               isDisabled={hasErrors}
+              isLoading={isLoading}
               variant="brand"
               fontWeight="500"
               type="submit"
@@ -233,7 +310,15 @@ export default function AddProduct() {
             </Button>
           </form>
         ) : (
-          <ReactDropzone setIsProductAdded={setIsProductAdded} />
+          <ReactDropzone
+            resetState={resetUploadState}
+            uploadImages={uploadImages}
+            jwtToken={jwtToken}
+            targetId={createdProductId}
+            path="product"
+            isLoading={imageLoading}
+            setTargetId={setCreatedProductId}
+          />
         )}
       </SimpleGrid>
     </Box>

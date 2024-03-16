@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import {
   Box,
   Card,
@@ -11,20 +11,28 @@ import {
   GridItem,
 } from '@chakra-ui/react';
 import Image from 'next/image';
-import Dropzone, { DropEvent, FileRejection } from 'react-dropzone';
+import Dropzone from 'react-dropzone';
 import { MdUpload } from 'react-icons/md';
+import { toast } from 'react-toastify';
+import { useAppDispatch } from '../../redux/hooks';
+import { IReactDropzoneProps } from '../../types/reactDropzone';
 
-export default function ReactDropzone(props: {
-  [x: string]: any;
-  onDrop?: <T extends File>(
-    acceptedFiles: T[],
-    fileRejections: FileRejection[],
-    event: DropEvent,
-  ) => void;
-  setIsProductAdded: Dispatch<SetStateAction<boolean>>;
-}) {
+export default function ReactDropzone(props: IReactDropzoneProps) {
+  const {
+    resetState,
+    uploadImages,
+    jwtToken,
+    targetId,
+    path,
+    isLoading,
+    setTargetId,
+    setEditImage,
+  } = props;
+  console.log('targetId', targetId);
   const [droppedFiles, setDroppedFiles] = useState<File[]>([]);
   const [droppedBlobs, setDroppedBlobs] = useState<string[]>([]);
+
+  const dispatch = useAppDispatch();
 
   const bg = useColorModeValue('gray.100', 'navy.700');
   const borderColor = useColorModeValue('secondaryGray.100', 'whiteAlpha.100');
@@ -38,11 +46,28 @@ export default function ReactDropzone(props: {
     setDroppedBlobs(blobUrls);
   };
 
-  const handleUploadFiles = () => {
+  const handleUploadFiles = async () => {
     console.log('Dropped files:', droppedFiles);
-    setDroppedFiles([]);
-    setDroppedBlobs([]);
-    props.setIsProductAdded(false);
+    const response = await dispatch(
+      uploadImages({ imageData: droppedFiles, jwtToken, targetId, path }),
+    );
+    if (response && response.payload.statusCode === 200) {
+      toast.success('Images uploaded successfully!');
+      setDroppedFiles([]);
+      setDroppedBlobs([]);
+      resetState && dispatch(resetState());
+      if (setTargetId) {
+        setTargetId(null);
+      }
+      if (setEditImage) {
+        setEditImage((prevState: any) => ({
+          ...prevState,
+          images: false,
+        }));
+      }
+    } else {
+      toast.error('Something went wrong. Please try again!');
+    }
   };
 
   const handleImageRemove = (blob: string, index: number) => {
@@ -124,6 +149,7 @@ export default function ReactDropzone(props: {
       </Dropzone>
       <Button
         isDisabled={!droppedFiles.length}
+        isLoading={isLoading}
         onClick={handleUploadFiles}
         variant="brand"
         fontWeight="500"

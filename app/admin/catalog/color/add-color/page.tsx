@@ -36,8 +36,9 @@ export default function AddColor() {
     },
     validationSchema: schema,
     onSubmit: async (values: IAddColor) => {
+      const colorTitle = values.title.toLowerCase().replace(/[\s_-]/g, '');
       const response = await dispatch(
-        createColor({ colorData: values, jwtToken }),
+        createColor({ colorData: { title: colorTitle }, jwtToken }),
       );
       try {
         toastNotification(
