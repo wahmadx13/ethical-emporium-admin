@@ -36,6 +36,7 @@ import UpdateDocumentButtons from '../../../../../../components/UpdateDocumentBu
 import Information from '../../../../../../views/admin/profile/components/Information';
 import { FiEdit } from 'react-icons/fi';
 import ReactCarousel from '../../../../../../components/ReactCarousel';
+import Checkbox from '../../../../../../components/Checkbox';
 import {
   IUpdateProductState,
   IEditState,
@@ -57,7 +58,6 @@ export default function UpdateProduct(props: { params: { id: string } }) {
   const { id } = props.params;
   const { colorMode } = useColorMode();
   const bg = useColorModeValue('white', 'navy.700');
-  const textColor = useColorModeValue('secondaryGray.900', 'white');
 
   //States from redux
   const { isLoading, product } = useAppSelector(
@@ -868,6 +868,52 @@ export default function UpdateProduct(props: { params: { id: string } }) {
               editable={false}
               marginTop="1.5rem"
             />
+            <Card
+              w="100%"
+              mb="20px"
+              display="flex"
+              flexDirection="row"
+              justifyContent="space-between"
+              bg={bg}
+              marginTop="1.5rem"
+            >
+              <Checkbox
+                label="Add To Featured"
+                checked={product.featured}
+                onChange={(e) => {
+                  dispatch(
+                    updateAProduct({
+                      productData: { id, featured: e.target.checked },
+                      jwtToken,
+                    }),
+                  );
+                }}
+              />
+              <Checkbox
+                label="Add To Trending"
+                checked={product.trending}
+                onChange={(e) => {
+                  dispatch(
+                    updateAProduct({
+                      productData: { id, trending: e.target.checked },
+                      jwtToken,
+                    }),
+                  );
+                }}
+              />
+              <Checkbox
+                label="Add To New Arrival"
+                checked={product.newArrival}
+                onChange={(e) => {
+                  dispatch(
+                    updateAProduct({
+                      productData: { id, newArrival: e.target.checked },
+                      jwtToken,
+                    }),
+                  );
+                }}
+              />
+            </Card>
           </Card>
         )}
       </SimpleGrid>

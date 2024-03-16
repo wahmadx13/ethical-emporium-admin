@@ -7,6 +7,9 @@ export interface IUpdateProductFieldTypes {
     quantity?: number,
     brand?: string;
     category?: string;
-    color?: string[],
-    tags?: string[]
+    color?: string[];
+    tags?: string[];
+    featured?: boolean;
+    trending?: boolean;
+    newArrival?: boolean
 }

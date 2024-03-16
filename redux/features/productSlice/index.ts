@@ -13,6 +13,9 @@ interface IAddProduct extends IProduct {
     ratings: any;
     totalRating?: number;
     sold: number;
+    featured: boolean;
+    trending: boolean;
+    newArrival: boolean;
     statusCode: number;
     message: string;
 };
