@@ -32,7 +32,7 @@ import {
 export default function AddProduct() {
   //React States
   const [createdProductId, setCreatedProductId] = useState<string>(null);
-  const [productDescription, setProductDescription] = useState<string>(null);
+  const [description, setDescription] = useState<string>(null);
   const [brand, setBrand] = useState<ISelectProps>(null);
   const [category, setCategory] = useState<ISelectProps>(null);
   const [colors, setColors] = useState<string[]>([]);
@@ -68,10 +68,10 @@ export default function AddProduct() {
   }, [allBrands.length, dispatch]);
 
   const getProductCategories = useCallback(() => {
-    if (!allProductCategories.length) {
+    if (!allProductCategories?.length) {
       dispatch(getAllProductCategories());
     }
-  }, [allProductCategories.length, dispatch]);
+  }, [allProductCategories?.length, dispatch]);
 
   const getAllAllColors = useCallback(() => {
     if (!allColors.length) {
@@ -130,7 +130,7 @@ export default function AddProduct() {
         brand: brand.value,
         category: category.value,
         color: colors,
-        description: productDescription,
+        description: description,
         tags: selectTags,
         slug,
       };
@@ -162,7 +162,7 @@ export default function AddProduct() {
 
   //Handlers for setting fields states
   const handleDescription = useCallback((content: string) => {
-    setProductDescription(content);
+    setDescription(content);
   }, []);
 
   const handleBrandSelect = useCallback((value: ISelectProps) => {
@@ -221,8 +221,8 @@ export default function AddProduct() {
               formLabel="Product Description"
               placeholder="Enter Product Description"
               onChange={(content: string) => handleDescription(content)}
-              setDescription={setProductDescription}
-              value={productDescription}
+              setDescription={setDescription}
+              value={description}
               validationError={validateDescription}
               setValidationError={setValidateDescription}
             />

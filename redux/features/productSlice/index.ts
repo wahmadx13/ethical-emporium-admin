@@ -176,13 +176,13 @@ export const productSlice = createSlice({
                 state.isSuccess = true;
                 state.isLoading = false;
                 state.isError = false;
-                state.color = action.payload;
+                state.updatedProduct = action.payload;
             })
             .addCase(updateAProduct.rejected, (state, action: PayloadAction<any>) => {
                 state.isLoading = false;
                 state.isSuccess = false;
                 state.isError = true;
-                state.color = action.payload;
+                state.updatedProduct = action.payload;
             })
             //Cases for deleting a product
             .addCase(deleteAProduct.pending, (state) => {
