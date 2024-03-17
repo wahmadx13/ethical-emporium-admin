@@ -8,9 +8,11 @@ export interface IItemCardProps {
         url: string;
     }[];
     handleModelOpen: (id: Object, title: string, assetIds: string[]) => void;
-    colors: string[];
-    brand: string;
-    isProduct: boolean;
+    colors?: string[];
+    brand?: string;
     totalRating?: number;
     url: string;
+    author?: string;
+    likes?: [];
+    dislikes?: [];
 }

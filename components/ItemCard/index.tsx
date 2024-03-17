@@ -15,8 +15,7 @@ import {
 import Card from '../card/Card';
 import RatingStars from '../RatingStars';
 // Assets
-import { useState } from 'react';
-import { IoHeart, IoHeartOutline } from 'react-icons/io5';
+import { MdOutlineThumbUp, MdOutlineThumbDown } from 'react-icons/md';
 import { CiTrash } from 'react-icons/ci';
 import { capitalizeFirstLetter } from '../../utils/helper';
 import { IItemCardProps } from '../../types/itemCard';
@@ -28,13 +27,14 @@ export default function ItemCard(props: IItemCardProps) {
     name,
     colors,
     brand,
-    isProduct,
     totalRating,
     images,
     handleModelOpen,
+    author,
+    likes,
+    dislikes,
     url,
   } = props;
-  const [like, setLike] = useState(false);
   const textColor = useColorModeValue('navy.700', 'white');
   const textColorBid = useColorModeValue('brand.500', 'white');
   const imagePublicIds: string[] = images.map((image) => image.public_id);
@@ -51,77 +51,27 @@ export default function ItemCard(props: IItemCardProps) {
               style={{ height: '100%', width: '100%' }}
             />
           </AspectRatio>
-          {isProduct ? (
-            <Button
-              position="absolute"
-              bg="white"
-              transition="0.2s ease-in"
-              _hover={{ backgroundColor: 'red.500', transform: 'scale(1.1)' }}
-              p="0px !important"
-              top="14px"
-              right="14px"
-              borderRadius="50%"
-              minW="36px"
-              h="36px"
-              onClick={() => handleModelOpen(id, name, imagePublicIds)}
-            >
-              <Icon
-                transition="0.2s linear"
-                w="20px"
-                h="20px"
-                as={CiTrash}
-                color="brand.500"
-              />
-            </Button>
-          ) : (
-            <>
-              <Button
-                position="absolute"
-                bg="white"
-                _hover={{ bg: 'whiteAlpha.900', transform: 'scale(1.1)' }}
-                _active={{ bg: 'white' }}
-                _focus={{ bg: 'white' }}
-                p="0px !important"
-                top="14px"
-                right="14px"
-                borderRadius="50%"
-                minW="36px"
-                h="36px"
-                onClick={() => {
-                  setLike(!like);
-                }}
-              >
-                <Icon
-                  transition="0.2s linear"
-                  w="20px"
-                  h="20px"
-                  as={like ? IoHeart : IoHeartOutline}
-                  color="red.400"
-                />
-              </Button>
-              <Button
-                position="absolute"
-                bg="white"
-                transition="0.2s ease-in"
-                _hover={{ backgroundColor: 'red.500', transform: 'scale(1.1)' }}
-                p="0px !important"
-                top="55px"
-                right="14px"
-                borderRadius="50%"
-                minW="36px"
-                h="36px"
-                onClick={() => handleModelOpen(id, name, imagePublicIds)}
-              >
-                <Icon
-                  transition="0.2s linear"
-                  w="20px"
-                  h="20px"
-                  as={CiTrash}
-                  color="red.800"
-                />
-              </Button>
-            </>
-          )}
+          <Button
+            position="absolute"
+            bg="white"
+            transition="0.2s ease-in"
+            _hover={{ backgroundColor: 'red.500', transform: 'scale(1.1)' }}
+            p="0px !important"
+            top="14px"
+            right="14px"
+            borderRadius="50%"
+            minW="36px"
+            h="36px"
+            onClick={() => handleModelOpen(id, name, imagePublicIds)}
+          >
+            <Icon
+              transition="0.2s linear"
+              w="20px"
+              h="20px"
+              as={CiTrash}
+              color="brand.500"
+            />
+          </Button>
         </Box>
         <Flex flexDirection="column" justify="space-between" h="100%">
           <Flex
@@ -160,46 +110,107 @@ export default function ItemCard(props: IItemCardProps) {
                 fontWeight="400"
                 me="14px"
               >
-                {capitalizeFirstLetter(brand)}
+                {brand
+                  ? capitalizeFirstLetter(brand)
+                  : capitalizeFirstLetter(author)}
               </Text>
             </Flex>
-            <AvatarGroup
-              color={textColorBid}
-              size="sm"
-              mt={{
-                base: '0px',
-                md: '10px',
-                lg: '0px',
-                xl: '10px',
-                '2xl': '0px',
-              }}
-              fontSize="12px"
-            >
-              {colors.slice(0, 4).map((color, index) => (
-                <Box
-                  key={`${color}-${index}`}
-                  h={'32px'}
-                  w={'32px'}
-                  backgroundColor={color}
-                  borderRadius="50%"
-                />
-              ))}
-              {colors.length > 4 && (
-                <Box
-                  backgroundColor="#d4d4d8"
-                  h={'32px'}
-                  w={'32px'}
-                  borderRadius="50%"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
+            {colors ? (
+              <AvatarGroup
+                color={textColorBid}
+                size="sm"
+                mt={{
+                  base: '0px',
+                  md: '10px',
+                  lg: '0px',
+                  xl: '10px',
+                  '2xl': '0px',
+                }}
+                fontSize="12px"
+              >
+                {colors.slice(0, 4).map((color, index) => (
+                  <Box
+                    key={`${color}-${index}`}
+                    h={'32px'}
+                    w={'32px'}
+                    backgroundColor={color}
+                    borderRadius="50%"
+                  />
+                ))}
+                {colors.length > 4 && (
+                  <Box
+                    backgroundColor="#d4d4d8"
+                    h={'32px'}
+                    w={'32px'}
+                    borderRadius="50%"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <Text color={textColor} fontWeight="700">
+                      +{colors.length - 4}
+                    </Text>
+                  </Box>
+                )}
+              </AvatarGroup>
+            ) : (
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignContent="center"
+                flexDirection="row"
+                gap="0.2rem"
+              >
+                <Flex
+                  direction="row"
+                  justify="space-between"
+                  alignContent="center"
+                  gap="0.5rem"
                 >
-                  <Text color={textColor} fontWeight="700">
-                    +{colors.length - 4}
+                  <Icon
+                    transition="0.2s linear"
+                    w="20px"
+                    h="20px"
+                    as={MdOutlineThumbUp}
+                    color="brand.500"
+                  />
+                  <Text
+                    color="secondaryGray.600"
+                    fontSize={{
+                      base: 'sm',
+                    }}
+                    fontWeight="400"
+                    me="14px"
+                  >
+                    {likes.length ? likes.length : 0}
                   </Text>
-                </Box>
-              )}
-            </AvatarGroup>
+                </Flex>
+                <Flex
+                  direction="row"
+                  justify="space-between"
+                  alignContent="center"
+                  gap="0.5rem"
+                >
+                  <Icon
+                    transition="0.2s linear"
+                    w="20px"
+                    h="20px"
+                    as={MdOutlineThumbDown}
+                    color="brand.500"
+                  />
+                  <Text
+                    color="secondaryGray.600"
+                    fontSize={{
+                      base: 'sm',
+                    }}
+                    fontWeight="400"
+                    me="14px"
+                  >
+                    {dislikes.length ? dislikes.length : 0}
+                  </Text>
+                </Flex>
+              </Box>
+            )}
           </Flex>
           <Flex
             align={{
@@ -215,7 +226,7 @@ export default function ItemCard(props: IItemCardProps) {
             }}
             mt="25px"
           >
-            {isProduct && <RatingStars value={totalRating} isEdit={false} />}
+            {totalRating && <RatingStars value={totalRating} isEdit={false} />}
             <Link href={url}>
               <Button
                 variant="darkBrand"

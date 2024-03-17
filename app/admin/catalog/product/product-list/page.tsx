@@ -80,7 +80,6 @@ export default function ProductList() {
                   handleModelOpen={handleModalOpen}
                   colors={product.color}
                   brand={product.brand}
-                  isProduct={true}
                   totalRating={product.totalRating}
                   url={`/admin/catalog/product/product-details/${product._id.toString()}`}
                 />

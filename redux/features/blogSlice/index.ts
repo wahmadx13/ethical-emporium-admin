@@ -10,8 +10,8 @@ interface IAddBlog extends IBlog {
         url: string;
     }[];
     numberOfViews: number;
-    likes?: boolean;
-    dislikes: boolean;
+    likes: [];
+    dislikes: [];
     author: string;
     statusCode: number;
     message: string;
