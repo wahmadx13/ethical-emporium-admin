@@ -84,7 +84,7 @@ export const updateABlog = createAsyncThunk(
 //Deleting A Blog
 export const deleteABlog = createAsyncThunk(
     'blog/delete-blog',
-    async ({ blog, jwtToken }: { blog: { id: Object, imageIds: string[] }, jwtToken: string }, thunkApi) => {
+    async ({ blog, jwtToken }: { blog: { id: Object, imageIds?: string[] }, jwtToken: string }, thunkApi) => {
         try {
             return await blogServices.deleteABlog(blog, jwtToken)
         } catch (err) {

@@ -70,7 +70,7 @@ const updateBlog = async (blog: IUpdateBlogFieldTypes, jwtToken: string) => {
 };
 
 //Delete A Blog
-const deleteABlog = async (blog: { id: Object, imageIds: string[] }, jwtToken: string) => {
+const deleteABlog = async (blog: { id: Object, imageIds?: string[] }, jwtToken: string) => {
     const { id } = blog
     try {
         const requestOptions = {

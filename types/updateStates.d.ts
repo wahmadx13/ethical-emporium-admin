@@ -20,3 +20,16 @@ export interface IEditState {
     tags: boolean;
     images: boolean;
 }
+
+export interface IUpdateBlogState {
+    title: string | null;
+    category: string | null;
+    selectTags: string[] | null;
+}
+export interface IBlogEditState {
+    title: boolean;
+    description: boolean;
+    category: boolean;
+    tags: boolean;
+    images: boolean;
+}

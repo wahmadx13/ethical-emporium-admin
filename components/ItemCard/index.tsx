@@ -37,7 +37,7 @@ export default function ItemCard(props: IItemCardProps) {
   } = props;
   const textColor = useColorModeValue('navy.700', 'white');
   const textColorBid = useColorModeValue('brand.500', 'white');
-  const imagePublicIds: string[] = images.map((image) => image.public_id);
+  const imagePublicIds: string[] = images?.map((image) => image.public_id);
   return (
     <Card p="20px">
       <Flex direction={{ base: 'column' }} justify="center">
