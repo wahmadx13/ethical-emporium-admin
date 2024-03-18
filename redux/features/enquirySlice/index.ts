@@ -51,6 +51,18 @@ export const updateAnEnquiry = createAsyncThunk(
     }
 );
 
+//Deleting AN Enquiry
+export const deleteAnEnquiry = createAsyncThunk(
+    'enquiry/delete-enquiry',
+    async ({ enquiry, jwtToken }: { enquiry: { id: Object }, jwtToken: string }, thunkApi) => {
+        try {
+            return await enquiryServices.deleteEnquiry(enquiry, jwtToken);
+        } catch (err) {
+            thunkApi.rejectWithValue(err);
+        }
+    }
+);
+
 //Resetting States
 export const resetEnquiryState = createAction("Reset_all");
 
@@ -71,6 +83,8 @@ export const enquirySlice = createSlice({
             //Cases for getting all enquiries
             .addCase(getAllEnquiries.pending, (state) => {
                 state.isLoading = true;
+                state.isSuccess = false;
+                state.isError = false;
             })
             .addCase(getAllEnquiries.fulfilled, (state, action: PayloadAction<IEnquirySlice | any>) => {
                 state.isLoading = false;
@@ -87,6 +101,8 @@ export const enquirySlice = createSlice({
             //Cases for updating a enquiry
             .addCase(updateAnEnquiry.pending, (state) => {
                 state.isLoading = true;
+                state.isSuccess = false;
+                state.isError = false;
             })
             .addCase(updateAnEnquiry.fulfilled, (state, action: PayloadAction<IEnquirySlice | any>) => {
                 state.isLoading = false;
@@ -98,6 +114,22 @@ export const enquirySlice = createSlice({
                 state.isSuccess = false;
                 state.isError = true;
                 state.allEnquiries = action.payload;
+            })
+            //Cases for color deletion
+            .addCase(deleteAnEnquiry.pending, (state) => {
+                state.isLoading = true;
+                state.isSuccess = false;
+                state.isError = false;
+            })
+            .addCase(deleteAnEnquiry.fulfilled, (state, action: PayloadAction<any>) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.isError = false;
+            })
+            .addCase(deleteAnEnquiry.rejected, (state, action: PayloadAction<any>) => {
+                state.isLoading = false;
+                state.isSuccess = false;
+                state.isError = true;
             })
             //Case for resetting the states
             .addCase(resetEnquiryState, () => initialState);

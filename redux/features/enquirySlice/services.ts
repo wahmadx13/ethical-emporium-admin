@@ -33,5 +33,27 @@ const updateEnquiry = async (enquiry: { id: string, status: string }, jwtToken: 
     }
 };
 
-const enquiryServices = { getEnquiries, updateEnquiry };
+//Delete An Enquiry
+const deleteEnquiry = async (enquiry: { id: Object }, jwtToken: string) => {
+    const { id } = enquiry;
+    try {
+        const requestOptions = {
+            method: 'DELETE',
+            headers: {
+                Authorization: `Bearer ${jwtToken}`,
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(enquiry)
+        };
+
+        const response = await fetch(`${process.env.NEXT_BACKEND_BASE_URL}/enquiry/${id}`, requestOptions);
+        const data = await response.json();
+        return data;
+    } catch (err) {
+        console.log('Error in deleting enquiry: ', err)
+    }
+}
+
+const enquiryServices = { getEnquiries, updateEnquiry, deleteEnquiry };
 export default enquiryServices;

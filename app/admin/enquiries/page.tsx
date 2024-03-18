@@ -16,6 +16,7 @@ import { useAppSelector, useAppDispatch } from '../../../redux/hooks';
 import Table from '../../../components/Table';
 import Select from '../../../components/Select';
 import {
+  deleteAnEnquiry,
   getAllEnquiries,
   updateAnEnquiry,
 } from '../../../redux/features/enquirySlice';
@@ -117,11 +118,37 @@ export default function EnquiryList() {
     setValidateEnquiry(false);
   };
 
+  const handleClose = () => {
+    setEnquiryId(null);
+    setUsername(null);
+    onClose();
+  };
+
+  const handleDeleteEnquiry = async () => {
+    try {
+      const response = await dispatch(
+        deleteAnEnquiry({ enquiry: { id: enquiryId }, jwtToken }),
+      );
+      if (response.payload?.statusCode === 200) {
+        toast.success(`Enquiry by ${username} deleted successfully`);
+      } else {
+        toast.success('Something went wrong');
+      }
+    } catch (err) {
+      toast.error('Something went wrong!', {
+        toastId: 'enquiry-deleting-error',
+      });
+    }
+    setEnquiryId(null);
+    setUsername(null);
+    onClose();
+  };
+
   return (
     <Box pt={{ base: '130px', md: '80px', xl: '80px' }} width="100%">
-      <Table caption="All Available Enquiries by users" cols={columns}>
-        {allEnquiries.length > 0 &&
-          allEnquiries?.map(
+      {allEnquiries.length > 0 ? (
+        <Table caption="All Available Enquiries by users" cols={columns}>
+          {allEnquiries?.map(
             ({ _id, name, email, mobile, comment, status }, i) => {
               return (
                 <Tr key={_id.toString()} className="table-end">
@@ -183,7 +210,18 @@ export default function EnquiryList() {
               );
             },
           )}
-      </Table>
+        </Table>
+      ) : (
+        ''
+      )}
+      <Modal
+        modalTitle="Delete Color?"
+        modalBody={`Are you sure you want to delete enquiry by ${username}`}
+        isOpen={isOpen}
+        onClose={handleClose}
+        onDelete={handleDeleteEnquiry}
+        isLoading={isLoading}
+      />
     </Box>
   );
 }
