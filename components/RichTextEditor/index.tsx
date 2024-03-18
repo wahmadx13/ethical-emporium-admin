@@ -20,7 +20,6 @@ export default function RichTextEditor(props: IRichTextEditor) {
   } = props;
   const textColor = useColorModeValue('navy.700', 'white');
   const brandStars = useColorModeValue('brand.500', 'brand.400');
-
   const editorRef = useRef(null);
 
   const handleBlur = () => {
@@ -30,10 +29,7 @@ export default function RichTextEditor(props: IRichTextEditor) {
   };
 
   const handleDescription = (newValue: string, editor: any) => {
-    setDescription((prevState: any) => ({
-      ...prevState,
-      productDescription: newValue,
-    }));
+    setDescription(newValue);
     setValidationError && setValidationError(false);
   };
 
@@ -67,7 +63,7 @@ export default function RichTextEditor(props: IRichTextEditor) {
         />
         {validationError && (
           <Text mb="10px" color="red.500" fontSize="1rem">
-            Product&apos;s description is required.
+            Description is required.
           </Text>
         )}
       </Box>

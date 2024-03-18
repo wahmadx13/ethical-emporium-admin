@@ -54,7 +54,7 @@ const initialEditState = {
   images: false,
 };
 
-export default function UpdateProduct(props: { params: { id: string } }) {
+export default function ProductDetails(props: { params: { id: string } }) {
   const { id } = props.params;
   const { colorMode } = useColorMode();
   const bg = useColorModeValue('white', 'navy.700');
@@ -846,7 +846,7 @@ export default function UpdateProduct(props: { params: { id: string } }) {
                   Cancel
                 </Button>
               </Flex>
-            ) : (
+            ) : product.images.length ? (
               <Card bg={bg} marginBottom="1rem">
                 <ReactCarousel
                   images={product?.images}
@@ -856,9 +856,29 @@ export default function UpdateProduct(props: { params: { id: string } }) {
                       images: true,
                     }))
                   }
-                  path="product"
+                  path="blog"
                   targetId={id}
                 />
+              </Card>
+            ) : (
+              <Card bg={bg} textAlign="center">
+                <Text
+                  color={textColorPrimary}
+                  fontWeight="bold"
+                  fontSize="sm"
+                  mt="10px"
+                  mb="4px"
+                  cursor="pointer"
+                  onClick={() =>
+                    setEditState((prevState: IEditState) => ({
+                      ...prevState,
+                      images: true,
+                    }))
+                  }
+                >
+                  This Product do not have any images to preview. Want to
+                  upload? Click here
+                </Text>
               </Card>
             )}
             <Information

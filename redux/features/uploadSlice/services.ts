@@ -1,5 +1,5 @@
 //Upload Images
-const uploadTargetImages = async (imageData: File[], jwtToken: string, prodId: string, path: string) => {
+const uploadTargetImages = async (imageData: File[], jwtToken: string, targetId: string, path: string) => {
     try {
         const formData = new FormData();
         imageData.forEach(file => {
@@ -14,11 +14,11 @@ const uploadTargetImages = async (imageData: File[], jwtToken: string, prodId: s
             body: formData,
         };
 
-        const response = await fetch(`${process.env.NEXT_BACKEND_BASE_URL}/${path}/upload-${path}-images/${prodId}`, requestOptions);
+        const response = await fetch(`${process.env.NEXT_BACKEND_BASE_URL}/${path}/upload-${path}-images/${targetId}`, requestOptions);
         const data = await response.json();
         return data
     } catch (err) {
-        console.log('error in adding product Images: ', err);
+        console.log('error in adding images: ', err);
     }
 };
 
@@ -40,7 +40,7 @@ const deleteTargetImages = async (imageId: string, jwtToken: string, prodId: str
         const data = await response.json();
         return data
     } catch (err) {
-        console.log('error in deleting product images: ', err);
+        console.log('error in deleting images: ', err);
     }
 };
 

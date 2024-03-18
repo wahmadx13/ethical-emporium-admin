@@ -84,6 +84,8 @@ const deleteAProduct = async (product: { id: Object, imageIds: string[] }, jwtTo
         }
 
         const response = await fetch(`${process.env.NEXT_BACKEND_BASE_URL}/product/${id}`, requestOptions)
+        const data = await response.json();
+        return data;
     } catch (err) {
         console.log('error in deleting product: ', err)
     }
