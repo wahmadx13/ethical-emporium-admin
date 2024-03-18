@@ -22,12 +22,29 @@ interface IEnquirySlice {
     isError: boolean;
 };
 
+interface IEnquiryUpdate {
+    id: string;
+    status: string;
+}
+
 //Getting All Enquiries
 export const getAllEnquiries = createAsyncThunk(
     'enquiry/get-all-enquiries',
     async (_, thunkApi) => {
         try {
             return await enquiryServices.getEnquiries()
+        } catch (err) {
+            thunkApi.rejectWithValue(err);
+        }
+    }
+);
+
+//Updating An Enquiry
+export const updateAnEnquiry = createAsyncThunk(
+    'enquiry/update-enquiry',
+    async ({ enquiryData, jwtToken }: { enquiryData: IEnquiryUpdate, jwtToken: string }, thunkApi) => {
+        try {
+            return await enquiryServices.updateEnquiry(enquiryData, jwtToken);
         } catch (err) {
             thunkApi.rejectWithValue(err);
         }
@@ -62,6 +79,21 @@ export const enquirySlice = createSlice({
                 state.allEnquiries = action.payload;
             })
             .addCase(getAllEnquiries.rejected, (state, action: PayloadAction<IEnquirySlice | any>) => {
+                state.isLoading = false;
+                state.isSuccess = false;
+                state.isError = true;
+                state.allEnquiries = action.payload;
+            })
+            //Cases for updating a enquiry
+            .addCase(updateAnEnquiry.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(updateAnEnquiry.fulfilled, (state, action: PayloadAction<IEnquirySlice | any>) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.allEnquiries = action.payload;
+            })
+            .addCase(updateAnEnquiry.rejected, (state, action: PayloadAction<any>) => {
                 state.isLoading = false;
                 state.isSuccess = false;
                 state.isError = true;
