@@ -15,8 +15,9 @@ import { RiListIndefinite } from 'react-icons/ri';
 import { SiBrandfolder } from 'react-icons/si';
 import { CgList, CgColorBucket } from 'react-icons/cg';
 import { HiOutlineClipboardDocumentList } from 'react-icons/hi2';
-import { PiTrademarkLight } from 'react-icons/pi';
-import { RiCoupon3Line, RiCouponLine } from 'react-icons/ri';
+// import { PiTrademarkLight } from 'react-icons/pi';
+// import { RiCoupon3Line, RiCouponLine } from 'react-icons/ri';
+import { FaUsers } from 'react-icons/fa';
 import { TbBrandBlogger } from 'react-icons/tb';
 import { ImBlog } from 'react-icons/im';
 import { IoDuplicateOutline } from 'react-icons/io5';
@@ -155,34 +156,40 @@ const routes: IRoute[] = [
       />
     ),
   },
-  {
-    name: 'Marketing',
-    layout: '/admin/marketing',
-    icon: (
-      <Icon as={PiTrademarkLight} width="20px" height="20px" color="inherit" />
-    ),
-    subRoutes: [
-      {
-        name: 'Add Coupon',
-        icon: (
-          <Icon as={RiCoupon3Line} width="20px" height="20px" color="inherit" />
-        ),
-        path: '/add-coupon',
-      },
-      {
-        name: 'Coupon List',
-        icon: (
-          <Icon as={RiCouponLine} width="20px" height="20px" color="inherit" />
-        ),
-        path: '/coupon-list',
-      },
-    ],
-  },
+  // {
+  //   name: 'Marketing',
+  //   layout: '/admin/marketing',
+  //   icon: (
+  //     <Icon as={PiTrademarkLight} width="20px" height="20px" color="inherit" />
+  //   ),
+  //   subRoutes: [
+  //     {
+  //       name: 'Add Coupon',
+  //       icon: (
+  //         <Icon as={RiCoupon3Line} width="20px" height="20px" color="inherit" />
+  //       ),
+  //       path: '/add-coupon',
+  //     },
+  //     {
+  //       name: 'Coupon List',
+  //       icon: (
+  //         <Icon as={RiCouponLine} width="20px" height="20px" color="inherit" />
+  //       ),
+  //       path: '/coupon-list',
+  //     },
+  //   ],
+  // },
   {
     name: 'Enquiries',
     layout: '/admin',
     path: '/enquiries',
     icon: <Icon as={TfiHelpAlt} width="20px" height="20px" color="inherit" />,
+  },
+  {
+    name: 'Users',
+    layout: '/admin',
+    path: '/users',
+    icon: <Icon as={FaUsers} width="20px" height="20px" color="inherit" />,
   },
   {
     name: 'Blogs',

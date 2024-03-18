@@ -3,7 +3,7 @@ import { Box, Flex, Stack } from '@chakra-ui/react';
 //   Custom components
 import Brand from './Brand';
 import Links from './Links';
-import { IRoute } from 'types/navigation';
+import { IRoute } from '../../../types/navigation';
 
 // FUNCTIONS
 
