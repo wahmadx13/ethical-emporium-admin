@@ -6,6 +6,7 @@ import colorReducer from '../features/colorSlice';
 import blogCategoryReducer from '../features/blogCategorySlice';
 import productReducer from '../features/productSlice';
 import blogReducer from '../features/blogSlice';
+import enquiryReducer from '../features/enquirySlice';
 import uploadReducer from '../features/uploadSlice';
 
 export const makeStore = () => {
@@ -18,6 +19,7 @@ export const makeStore = () => {
             blogCategoryReducer,
             productReducer,
             blogReducer,
+            enquiryReducer,
             uploadReducer,
         },
     })
