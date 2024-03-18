@@ -8,6 +8,7 @@ import productReducer from '../features/productSlice';
 import blogReducer from '../features/blogSlice';
 import enquiryReducer from '../features/enquirySlice';
 import uploadReducer from '../features/uploadSlice';
+import userReducer from '../features/userSlice';
 
 export const makeStore = () => {
     return configureStore({
@@ -21,6 +22,7 @@ export const makeStore = () => {
             blogReducer,
             enquiryReducer,
             uploadReducer,
+            userReducer,
         },
     })
 }
