@@ -24,11 +24,9 @@ import CheckTable from '../../../views/admin/dashboard/components/CheckTable';
 import ComplexTable from '../../../views/admin/dashboard/components/ComplexTable';
 import DailyTraffic from '../../../views/admin/dashboard/components/DailyTraffic';
 import PieCard from '../../../views/admin/dashboard/components/PieCard';
-import Tasks from '../../../views/admin/dashboard/components/Tasks';
 import TotalSpent from '../../../views/admin/dashboard/components/TotalSpent';
 import WeeklyRevenue from '../../../views/admin/dashboard/components/WeeklyRevenue';
 import tableDataCheck from '../../../views/admin/dashboard/variables/tableDataCheck';
-import tableDataComplex from '../../../views/admin/dashboard/variables/tableDataComplex';
 // Assets
 import Usa from '../../../img/dashboards/usa.png';
 import { useAppSelector } from '../../../redux/hooks';
@@ -147,7 +145,7 @@ export default function Dashboard() {
       </SimpleGrid>
       <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px" mb="20px">
         <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px" mb="20px">
-          <ComplexTable tableData={tableDataComplex} />
+          <ComplexTable />
           <SimpleGrid columns={{ base: 1, md: 1, xl: 4 }} gap="20px" mb="20px">
             <MiniCalendar h="100%" minW="100%" selectRange={false} />
           </SimpleGrid>

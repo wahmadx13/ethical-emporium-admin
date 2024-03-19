@@ -10,7 +10,6 @@ import {
 // Custom components
 import Card from '../../../../components/card/Card';
 import IconBox from '../../../../components/icons/IconBox';
-import Menu from '../../../../components/menu/MainMenu';
 import React from 'react';
 // Assets
 import { MdOutlineCloudDone } from 'react-icons/md';
@@ -27,10 +26,7 @@ export default function Banner(props: {
   const textColorSecondary = 'gray.400';
   const box = useColorModeValue('secondaryGray.300', 'whiteAlpha.100');
   return (
-    <Card mb={{ base: '0px', lg: '20px' }} alignItems="center">
-      <Flex w="100%">
-        <Menu ms="auto" />
-      </Flex>
+    <Card mb={{ base: '0px', lg: '20px' }} alignItems="center" h="93%">
       <IconBox
         mx="auto"
         h="100px"

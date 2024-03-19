@@ -1,11 +1,10 @@
 // Chakra imports
 import { Box, Flex, Text, useColorModeValue } from '@chakra-ui/react';
 import Card from '../../../../components/card/Card';
-import { NextAvatar } from '../../../../components/image/Avatar';
 
 export default function Banner(props: {
-  banner: string;
-  avatar: string;
+  banner: any;
+  avatar: any;
   name: string;
   job: string;
   posts: number | string;
@@ -31,7 +30,7 @@ export default function Banner(props: {
         h="131px"
         w="100%"
       />
-      <NextAvatar
+      {/* <NextAvatar
         mx="auto"
         src={avatar}
         h="87px"
@@ -39,7 +38,7 @@ export default function Banner(props: {
         mt="-43px"
         border="4px solid"
         borderColor={borderColor}
-      />
+      /> */}
       <Text color={textColorPrimary} fontWeight="bold" fontSize="xl" mt="10px">
         {name}
       </Text>
@@ -52,7 +51,7 @@ export default function Banner(props: {
             {posts}
           </Text>
           <Text color={textColorSecondary} fontSize="sm" fontWeight="400">
-            Posts
+            Blogs
           </Text>
         </Flex>
         <Flex mx="auto" me="60px" alignItems="center" flexDirection="column">
@@ -60,7 +59,7 @@ export default function Banner(props: {
             {followers}
           </Text>
           <Text color={textColorSecondary} fontSize="sm" fontWeight="400">
-            Followers
+            Likes
           </Text>
         </Flex>
         <Flex mx="auto" alignItems="center" flexDirection="column">
@@ -68,7 +67,7 @@ export default function Banner(props: {
             {following}
           </Text>
           <Text color={textColorSecondary} fontSize="sm" fontWeight="400">
-            Following
+            Dislikes
           </Text>
         </Flex>
       </Flex>

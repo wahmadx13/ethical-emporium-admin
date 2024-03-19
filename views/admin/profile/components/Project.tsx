@@ -9,7 +9,7 @@ import {
 } from '@chakra-ui/react';
 // Custom components
 import Card from '../../../../components/card/Card';
-import { Image } from '../../../../components/image/Image';
+import Image from 'next/image';
 // Assets
 import { MdEdit } from 'react-icons/md';
 
@@ -17,7 +17,7 @@ export default function Project(props: {
   title: string;
   ranking: number | string;
   link: string;
-  image: string;
+  image: any;
   [x: string]: any;
 }) {
   const { title, ranking, link, image, ...rest } = props;
@@ -31,11 +31,15 @@ export default function Project(props: {
       <Flex align="center" direction={{ base: 'column', md: 'row' }}>
         <Image
           alt=""
-          h="80px"
-          w="80px"
+          height={80}
+          width={80}
           src={image}
-          borderRadius="8px"
-          me="20px"
+          style={{
+            height: '80px',
+            width: '80px',
+            borderRadius: '8px',
+            margin: '20px',
+          }}
         />
         <Box mt={{ base: '10px', md: '0' }}>
           <Text

@@ -24,7 +24,6 @@ import {
 } from '@tanstack/react-table';
 // Custom components
 import Card from '../../../../components/card/Card';
-import Menu from '../../../../components/menu/MainMenu';
 import { useAppSelector, useAppDispatch } from '../../../../redux/hooks';
 // Assets
 import { MdCancel, MdCheckCircle, MdOutlineError } from 'react-icons/md';
@@ -39,8 +38,6 @@ type RowObj = {
   date: string;
   progress: number;
 };
-
-const columnHelper = createColumnHelper<RowObj>();
 
 // const columns = columnsDataCheck;
 const columns = [
@@ -65,8 +62,7 @@ const columns = [
     dataIndex: 'actions',
   },
 ];
-export default function ComplexTable(props: { tableData: any }) {
-  const { tableData } = props;
+export default function ComplexTable() {
   const textColor = useColorModeValue('secondaryGray.900', 'white');
   const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
 
