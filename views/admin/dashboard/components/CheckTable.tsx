@@ -150,12 +150,12 @@ export default function CheckTable(props: { tableData: any }) {
           fontWeight="700"
           lineHeight="100%"
         >
-          Check Table
+          Recent Orders
         </Text>
-        <Menu />
+        {/* <Menu /> */}
       </Flex>
       <Box>
-        <Table variant="simple" color="gray.500" mb="24px" mt="12px">
+        {/* <Table variant="simple" color="gray.500" mb="24px" mt="12px">
           <Thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <Tr key={headerGroup.id}>
@@ -216,7 +216,7 @@ export default function CheckTable(props: { tableData: any }) {
                 );
               })}
           </Tbody>
-        </Table>
+        </Table> */}
       </Box>
     </Card>
   );
