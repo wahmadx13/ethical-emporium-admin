@@ -1,9 +1,10 @@
+import { useCallback, useEffect } from 'react';
 import {
   Box,
+  Checkbox,
   Flex,
   Icon,
   Progress,
-  Table,
   Tbody,
   Td,
   Text,
@@ -12,6 +13,7 @@ import {
   Tr,
   useColorModeValue,
 } from '@chakra-ui/react';
+import Table from '../../../../components/Table';
 import {
   createColumnHelper,
   flexRender,
@@ -23,9 +25,13 @@ import {
 // Custom components
 import Card from '../../../../components/card/Card';
 import Menu from '../../../../components/menu/MainMenu';
-import * as React from 'react';
+import { useAppSelector, useAppDispatch } from '../../../../redux/hooks';
 // Assets
 import { MdCancel, MdCheckCircle, MdOutlineError } from 'react-icons/md';
+import {
+  getAllUsers,
+  restrictUser,
+} from '../../../../redux/features/userSlice';
 
 type RowObj = {
   name: string;
@@ -37,131 +43,56 @@ type RowObj = {
 const columnHelper = createColumnHelper<RowObj>();
 
 // const columns = columnsDataCheck;
+const columns = [
+  {
+    title: 'Serial',
+    dataIndex: 'serial',
+  },
+  {
+    title: 'Name',
+    dataIndex: 'name',
+  },
+  {
+    title: 'Email',
+    dataIndex: 'email',
+  },
+  {
+    title: 'Phone Number',
+    dataIndex: 'phoneNumber',
+  },
+  {
+    title: 'Actions',
+    dataIndex: 'actions',
+  },
+];
 export default function ComplexTable(props: { tableData: any }) {
   const { tableData } = props;
-  const [sorting, setSorting] = React.useState<SortingState>([]);
   const textColor = useColorModeValue('secondaryGray.900', 'white');
   const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
-  let defaultData = tableData;
-  const columns = [
-    columnHelper.accessor('name', {
-      id: 'name',
-      header: () => (
-        <Text
-          justifyContent="space-between"
-          align="center"
-          fontSize={{ sm: '10px', lg: '12px' }}
-          color="gray.400"
-        >
-          NAME
-        </Text>
-      ),
-      cell: (info: any) => (
-        <Flex align="center">
-          <Text color={textColor} fontSize="sm" fontWeight="700">
-            {info.getValue()}
-          </Text>
-        </Flex>
-      ),
-    }),
-    columnHelper.accessor('status', {
-      id: 'status',
-      header: () => (
-        <Text
-          justifyContent="space-between"
-          align="center"
-          fontSize={{ sm: '10px', lg: '12px' }}
-          color="gray.400"
-        >
-          STATUS
-        </Text>
-      ),
-      cell: (info) => (
-        <Flex align="center">
-          <Icon
-            w="24px"
-            h="24px"
-            me="5px"
-            color={
-              info.getValue() === 'Approved'
-                ? 'green.500'
-                : info.getValue() === 'Disable'
-                ? 'red.500'
-                : info.getValue() === 'Error'
-                ? 'orange.500'
-                : null
-            }
-            as={
-              info.getValue() === 'Approved'
-                ? MdCheckCircle
-                : info.getValue() === 'Disable'
-                ? MdCancel
-                : info.getValue() === 'Error'
-                ? MdOutlineError
-                : null
-            }
-          />
-          <Text color={textColor} fontSize="sm" fontWeight="700">
-            {info.getValue()}
-          </Text>
-        </Flex>
-      ),
-    }),
-    columnHelper.accessor('date', {
-      id: 'date',
-      header: () => (
-        <Text
-          justifyContent="space-between"
-          align="center"
-          fontSize={{ sm: '10px', lg: '12px' }}
-          color="gray.400"
-        >
-          DATE
-        </Text>
-      ),
-      cell: (info) => (
-        <Text color={textColor} fontSize="sm" fontWeight="700">
-          {info.getValue()}
-        </Text>
-      ),
-    }),
-    columnHelper.accessor('progress', {
-      id: 'progress',
-      header: () => (
-        <Text
-          justifyContent="space-between"
-          align="center"
-          fontSize={{ sm: '10px', lg: '12px' }}
-          color="gray.400"
-        >
-          PROGRESS
-        </Text>
-      ),
-      cell: (info) => (
-        <Flex align="center">
-          <Progress
-            variant="table"
-            colorScheme="brandScheme"
-            h="8px"
-            w="108px"
-            value={info.getValue()}
-          />
-        </Flex>
-      ),
-    }),
-  ];
-  const [data, setData] = React.useState(() => [...defaultData]);
-  const table = useReactTable({
-    data,
-    columns,
-    state: {
-      sorting,
-    },
-    onSortingChange: setSorting,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    debugTable: true,
-  });
+
+  const dispatch = useAppDispatch();
+
+  const { allUsers } = useAppSelector((state) => state.userReducer);
+  const { jwtToken } = useAppSelector((state) => state.authReducer);
+
+  const getUsers = useCallback(async () => {
+    if (!allUsers?.length) {
+      await dispatch(getAllUsers(jwtToken));
+      allUsers?.sort(
+        (prevUser, nextUser) =>
+          new Date(nextUser.createdAt).getTime() -
+          new Date(prevUser.createdAt).getTime(),
+      );
+    }
+  }, [allUsers, dispatch, jwtToken]);
+
+  useEffect(() => {
+    getUsers();
+    console.log('AllUsers', allUsers);
+  }, [allUsers, getUsers]);
+
+  const recentlyCreatedUsers = allUsers.slice(0, 10);
+
   return (
     <Card
       flexDirection="column"
@@ -176,73 +107,57 @@ export default function ComplexTable(props: { tableData: any }) {
           fontWeight="700"
           lineHeight="100%"
         >
-          Complex Table
+          Recently Registered Users
         </Text>
-        <Menu />
+        {/* <Menu /> */}
       </Flex>
       <Box>
-        <Table variant="simple" color="gray.500" mb="24px" mt="12px">
-          <Thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <Tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <Th
-                      key={header.id}
-                      colSpan={header.colSpan}
-                      pe="10px"
-                      borderColor={borderColor}
-                      cursor="pointer"
-                      onClick={header.column.getToggleSortingHandler()}
-                    >
-                      <Flex
-                        justifyContent="space-between"
-                        align="center"
-                        fontSize={{ sm: '10px', lg: '12px' }}
-                        color="gray.400"
-                      >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                        {{
-                          asc: '',
-                          desc: '',
-                        }[header.column.getIsSorted() as string] ?? null}
-                      </Flex>
-                    </Th>
-                  );
-                })}
-              </Tr>
-            ))}
-          </Thead>
-          <Tbody>
-            {table
-              .getRowModel()
-              .rows.slice(0, 5)
-              .map((row) => {
+        {recentlyCreatedUsers?.length ? (
+          <Table caption="Recently Registered Users" cols={columns}>
+            {allUsers?.map(
+              ({ _id, name, email, phoneNumber, isBlocked }, i) => {
                 return (
-                  <Tr key={row.id}>
-                    {row.getVisibleCells().map((cell) => {
-                      return (
-                        <Td
-                          key={cell.id}
-                          fontSize={{ sm: '14px' }}
-                          minW={{ sm: '150px', md: '200px', lg: 'auto' }}
-                          borderColor="transparent"
+                  <Tr key={_id.toString()} className="table-end">
+                    <Td>{i + 1}</Td>
+                    <Td>{name}</Td>
+                    <Td>{email}</Td>
+                    <Td>{phoneNumber}</Td>
+                    <Td>
+                      <Flex alignContent="center" justify="flex-end" gap={6}>
+                        <Text
+                          fontWeight="bold"
+                          color={textColor}
+                          fontSize="md"
+                          textAlign="center"
                         >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
-                        </Td>
-                      );
-                    })}
+                          Block User?
+                        </Text>
+                        <Checkbox
+                          me="16px"
+                          colorScheme="brandScheme"
+                          defaultChecked={isBlocked}
+                          onChange={(e) =>
+                            dispatch(
+                              restrictUser({
+                                userData: {
+                                  id: _id.toString(),
+                                  isBlocked: e.target.checked,
+                                },
+                                jwtToken,
+                              }),
+                            )
+                          }
+                        />
+                      </Flex>
+                    </Td>
                   </Tr>
                 );
-              })}
-          </Tbody>
-        </Table>
+              },
+            )}
+          </Table>
+        ) : (
+          ''
+        )}
       </Box>
     </Card>
   );
