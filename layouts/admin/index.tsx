@@ -1,3 +1,4 @@
+import { PropsWithChildren, useState } from 'react';
 // Chakra imports
 import { Portal, Box, useDisclosure } from '@chakra-ui/react';
 import Footer from '../../components/footer/FooterAdmin';
@@ -5,13 +6,11 @@ import Footer from '../../components/footer/FooterAdmin';
 import Navbar from '../../components/navbar/NavbarAdmin';
 import Sidebar from '../../components/sidebar/Sidebar';
 import { SidebarContext } from '../../contexts/SidebarContext';
-import { PropsWithChildren, useEffect, useState } from 'react';
 import routes from '../../routes';
 import {
   getActiveNavbar,
   getActiveNavbarText,
   getActiveRoute,
-  isWindowAvailable,
 } from '../../utils/navigation';
 
 interface DashboardLayoutProps extends PropsWithChildren {

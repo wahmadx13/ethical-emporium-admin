@@ -1,21 +1,8 @@
-import {
-  Flex,
-  Box,
-  Table,
-  Checkbox,
-  Tbody,
-  Td,
-  Text,
-  Th,
-  Thead,
-  Tr,
-  useColorModeValue,
-} from '@chakra-ui/react';
+import { Flex, Box, Checkbox, Text, useColorModeValue } from '@chakra-ui/react';
 import * as React from 'react';
 
 import {
   createColumnHelper,
-  flexRender,
   getCoreRowModel,
   getSortedRowModel,
   SortingState,

@@ -8,13 +8,13 @@ import * as yup from 'yup';
 import { toast } from 'react-toastify';
 import { MdKeyboardArrowLeft } from 'react-icons/md';
 import FormControl from '../../../../../../components/FormControl';
-import { IAddBlogCategory } from '../../../../../../types/blogCategory';
 import { useAppSelector, useAppDispatch } from '../../../../../../redux/hooks';
 import {
   getABlogCategory,
   updateABlogCategory,
   resetState,
 } from '../../../../../../redux/features/blogCategorySlice';
+import { IAddBlogCategory } from '../../../../../../types/blogCategory';
 
 export default function UpdateBlogCategory(props: { params: { id: string } }) {
   const { id } = props.params;

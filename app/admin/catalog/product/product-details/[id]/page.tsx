@@ -12,31 +12,31 @@ import {
 } from '@chakra-ui/react';
 import { toast } from 'react-toastify';
 import slugify from 'slugify';
-import FormControl from '../../../../../../components/FormControl';
-import { useAppSelector, useAppDispatch } from '../../../../../../redux/hooks';
-import { getAllColors } from '../../../../../../redux/features/colorSlice';
+import { FiEdit } from 'react-icons/fi';
 import RichTextEditor from '../../../../../../components/RichTextEditor';
+import FormControl from '../../../../../../components/FormControl';
 import Select from '../../../../../../components/Select';
 import ReactDropzone from '../../../../../../components/ReactDropzone';
+import Card from '../../../../../../components/card/Card';
+import UpdateDocumentButtons from '../../../../../../components/UpdateDocumentButtons';
+import Information from '../../../../../../views/admin/profile/components/Information';
+import ReactCarousel from '../../../../../../components/ReactCarousel';
+import Checkbox from '../../../../../../components/Checkbox';
+import { useAppSelector, useAppDispatch } from '../../../../../../redux/hooks';
+import { getAllColors } from '../../../../../../redux/features/colorSlice';
 import { uploadImages } from '../../../../../../redux/features/uploadSlice';
-import {
-  ISelectColorProps,
-  ISelectProps,
-} from '../../../../../../types/addProduct';
 import { getAllBrands } from '../../../../../../redux/features/brandSlice';
 import { getAllProductCategories } from '../../../../../../redux/features/productCategorySlice';
-import { capitalizeFirstLetter } from '../../../../../../utils/helper';
 import {
   updateAProduct,
   getAProduct,
 } from '../../../../../../redux/features/productSlice';
+import { capitalizeFirstLetter } from '../../../../../../utils/helper';
 import { tagSelect } from '../../../../../../utils/constants';
-import Card from '../../../../../../components/card/Card';
-import UpdateDocumentButtons from '../../../../../../components/UpdateDocumentButtons';
-import Information from '../../../../../../views/admin/profile/components/Information';
-import { FiEdit } from 'react-icons/fi';
-import ReactCarousel from '../../../../../../components/ReactCarousel';
-import Checkbox from '../../../../../../components/Checkbox';
+import {
+  ISelectColorProps,
+  ISelectProps,
+} from '../../../../../../types/addProduct';
 import {
   IUpdateProductState,
   IEditState,

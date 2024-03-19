@@ -5,12 +5,12 @@ import Image from 'next/image';
 import { CiTrash } from 'react-icons/ci';
 import { FiEdit } from 'react-icons/fi';
 import { Carousel } from 'react-responsive-carousel';
+import { toast } from 'react-toastify';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
-import { IReactCarouselProps } from '../../types/reactCarousel';
+import Modal from '../Modal';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { deleteImages } from '../../redux/features/uploadSlice';
-import Modal from '../Modal';
-import { toast } from 'react-toastify';
+import { IReactCarouselProps } from '../../types/reactCarousel';
 
 export default function ReactCarousel(props: IReactCarouselProps) {
   const { images, edit, path, targetId } = props;

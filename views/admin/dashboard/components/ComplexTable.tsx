@@ -3,41 +3,21 @@ import {
   Box,
   Checkbox,
   Flex,
-  Icon,
-  Progress,
-  Tbody,
   Td,
   Text,
-  Th,
-  Thead,
   Tr,
   useColorModeValue,
 } from '@chakra-ui/react';
 import Table from '../../../../components/Table';
-import {
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
-  SortingState,
-  useReactTable,
-} from '@tanstack/react-table';
 // Custom components
 import Card from '../../../../components/card/Card';
 import { useAppSelector, useAppDispatch } from '../../../../redux/hooks';
 // Assets
-import { MdCancel, MdCheckCircle, MdOutlineError } from 'react-icons/md';
 import {
   getAllUsers,
   restrictUser,
 } from '../../../../redux/features/userSlice';
 
-type RowObj = {
-  name: string;
-  status: string;
-  date: string;
-  progress: number;
-};
 
 // const columns = columnsDataCheck;
 const columns = [

@@ -12,16 +12,16 @@ import {
 import { toast } from 'react-toastify';
 import { FiEdit } from 'react-icons/fi';
 import { CiTrash } from 'react-icons/ci';
-import { useAppSelector, useAppDispatch } from '../../../redux/hooks';
 import Table from '../../../components/Table';
 import Select from '../../../components/Select';
+import Modal from '../../../components/Modal';
+import { useAppSelector, useAppDispatch } from '../../../redux/hooks';
 import {
   deleteAnEnquiry,
   getAllEnquiries,
   updateAnEnquiry,
 } from '../../../redux/features/enquirySlice';
 import { ISelectProps } from '../../../types/addProduct';
-import Modal from '../../../components/Modal';
 
 const columns = [
   {

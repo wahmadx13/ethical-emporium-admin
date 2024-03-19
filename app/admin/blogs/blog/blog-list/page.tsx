@@ -2,14 +2,14 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Box, useDisclosure, Grid, GridItem } from '@chakra-ui/react';
 import { toast } from 'react-toastify';
-import { useAppSelector, useAppDispatch } from '../../../../../redux/hooks';
+import ItemCard from '../../../../../components/ItemCard';
 import Modal from '../../../../../components/Modal';
+import { useAppSelector, useAppDispatch } from '../../../../../redux/hooks';
 import {
   getAllBlogs,
   deleteABlog,
   resetBlogState,
 } from '../../../../../redux/features/blogSlice';
-import ItemCard from '../../../../../components/ItemCard';
 
 export default function BlogList() {
   const [blogId, setBlogId] = useState<Object>(null);

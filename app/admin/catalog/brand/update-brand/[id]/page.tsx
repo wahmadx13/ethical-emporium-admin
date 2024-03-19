@@ -8,13 +8,13 @@ import * as yup from 'yup';
 import { toast } from 'react-toastify';
 import { MdKeyboardArrowLeft } from 'react-icons/md';
 import FormControl from '../../../../../../components/FormControl';
-import { IAddBrand } from '../../../../../../types/brand';
 import { useAppSelector, useAppDispatch } from '../../../../../../redux/hooks';
 import {
   getABrand,
   updateABrand,
   resetState,
 } from '../../../../../../redux/features/brandSlice';
+import { IAddBrand } from '../../../../../../types/brand';
 
 export default function UpdateBrand(props: { params: { id: string } }) {
   const { id } = props.params;

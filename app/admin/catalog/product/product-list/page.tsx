@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Box, useDisclosure, Grid, GridItem } from '@chakra-ui/react';
 import { toast } from 'react-toastify';
+import ItemCard from '../../../../../components/ItemCard';
 import { useAppSelector, useAppDispatch } from '../../../../../redux/hooks';
 import Modal from '../../../../../components/Modal';
 import {
@@ -9,7 +10,6 @@ import {
   deleteAProduct,
   resetProductState,
 } from '../../../../../redux/features/productSlice';
-import ItemCard from '../../../../../components/ItemCard';
 
 export default function ProductList() {
   const [productId, setProductId] = useState<Object>(null);

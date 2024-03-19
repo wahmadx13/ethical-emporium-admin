@@ -5,9 +5,9 @@ import { Box, Icon, SimpleGrid, Td, Tr, useDisclosure } from '@chakra-ui/react';
 import { toast } from 'react-toastify';
 import { FiEdit } from 'react-icons/fi';
 import { CiTrash } from 'react-icons/ci';
-import { useAppSelector, useAppDispatch } from '../../../../../redux/hooks';
 import Table from '../../../../../components/Table';
 import Modal from '../../../../../components/Modal';
+import { useAppSelector, useAppDispatch } from '../../../../../redux/hooks';
 import {
   getAllColors,
   deleteAColor,
@@ -42,15 +42,20 @@ export default function ColorList() {
     }
   }, []);
 
-  useEffect(() => {
-    dispatch(resetState());
-    dispatch(getAllColors());
-  }, [dispatch]);
-
   const { allColors, isLoading } = useAppSelector(
     (state) => state.colorReducer,
   );
   const { jwtToken } = useAppSelector((state) => state.authReducer);
+
+  const getColors = useCallback(() => {
+    if (!allColors.length) {
+      dispatch(getAllColors());
+    }
+  }, [allColors.length, dispatch]);
+
+  useEffect(() => {
+    getColors();
+  }, [getColors]);
 
   const handleModalOpen = (id: Object, title: string) => {
     setColorId(id);
@@ -84,37 +89,41 @@ export default function ColorList() {
         justifyContent="center"
         flexDirection="column"
       >
-        <Table caption="All Available Colors" cols={columns}>
-          {allColors?.map(({ _id, title }, i) => {
-            return (
-              <Tr key={_id.toString()} className="table-end">
-                <Td>{i + 1}</Td>
-                <Td>{title}</Td>
-                <Td>
-                  <Link
-                    href={`/admin/catalog/color/update-color/${_id.toString()}`}
-                  >
+        {allColors ? (
+          <Table caption="All Available Colors" cols={columns}>
+            {allColors?.map(({ _id, title }, i) => {
+              return (
+                <Tr key={_id.toString()} className="table-end">
+                  <Td>{i + 1}</Td>
+                  <Td>{title}</Td>
+                  <Td>
+                    <Link
+                      href={`/admin/catalog/color/update-color/${_id.toString()}`}
+                    >
+                      <Icon
+                        as={FiEdit}
+                        width="20px"
+                        height="20px"
+                        color="inherit"
+                        style={{ cursor: 'pointer' }}
+                      />
+                    </Link>
                     <Icon
-                      as={FiEdit}
+                      as={CiTrash}
                       width="20px"
                       height="20px"
                       color="inherit"
                       style={{ cursor: 'pointer' }}
+                      onClick={() => handleModalOpen(_id, title)}
                     />
-                  </Link>
-                  <Icon
-                    as={CiTrash}
-                    width="20px"
-                    height="20px"
-                    color="inherit"
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => handleModalOpen(_id, title)}
-                  />
-                </Td>
-              </Tr>
-            );
-          })}
-        </Table>
+                  </Td>
+                </Tr>
+              );
+            })}
+          </Table>
+        ) : (
+          ''
+        )}
         <Modal
           modalTitle="Delete Color?"
           modalBody={`Are you sure you want to delete ${colorTitle} color`}

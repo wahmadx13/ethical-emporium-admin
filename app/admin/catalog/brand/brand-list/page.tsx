@@ -5,9 +5,9 @@ import { Box, Icon, SimpleGrid, Td, Tr, useDisclosure } from '@chakra-ui/react';
 import { toast } from 'react-toastify';
 import { FiEdit } from 'react-icons/fi';
 import { CiTrash } from 'react-icons/ci';
-import { useAppSelector, useAppDispatch } from '../../../../../redux/hooks';
 import Table from '../../../../../components/Table';
 import Modal from '../../../../../components/Modal';
+import { useAppSelector, useAppDispatch } from '../../../../../redux/hooks';
 import {
   getAllBrands,
   deleteABrand,
@@ -42,15 +42,20 @@ export default function BrandList() {
     }
   }, []);
 
-  useEffect(() => {
-    dispatch(resetState());
-    dispatch(getAllBrands());
-  }, [dispatch]);
-
   const { allBrands, isLoading } = useAppSelector(
     (state) => state.brandReducer,
   );
   const { jwtToken } = useAppSelector((state) => state.authReducer);
+
+  const getBrands = useCallback(() => {
+    if (!allBrands.length) {
+      dispatch(getAllBrands());
+    }
+  }, [allBrands.length, dispatch]);
+
+  useEffect(() => {
+    getBrands();
+  }, [getBrands]);
 
   const handleModalOpen = (id: Object, title: string) => {
     setBrandId(id);
@@ -84,37 +89,41 @@ export default function BrandList() {
         justifyContent="center"
         flexDirection="column"
       >
-        <Table caption="All Available Brands" cols={columns}>
-          {allBrands?.map(({ _id, title }, i) => {
-            return (
-              <Tr key={_id.toString()} className="table-end">
-                <Td>{i + 1}</Td>
-                <Td>{title}</Td>
-                <Td>
-                  <Link
-                    href={`/admin/catalog/brand/update-brand/${_id.toString()}`}
-                  >
+        {allBrands ? (
+          <Table caption="All Available Brands" cols={columns}>
+            {allBrands?.map(({ _id, title }, i) => {
+              return (
+                <Tr key={_id.toString()} className="table-end">
+                  <Td>{i + 1}</Td>
+                  <Td>{title}</Td>
+                  <Td>
+                    <Link
+                      href={`/admin/catalog/brand/update-brand/${_id.toString()}`}
+                    >
+                      <Icon
+                        as={FiEdit}
+                        width="20px"
+                        height="20px"
+                        color="inherit"
+                        style={{ cursor: 'pointer' }}
+                      />
+                    </Link>
                     <Icon
-                      as={FiEdit}
+                      as={CiTrash}
                       width="20px"
                       height="20px"
                       color="inherit"
                       style={{ cursor: 'pointer' }}
+                      onClick={() => handleModalOpen(_id, title)}
                     />
-                  </Link>
-                  <Icon
-                    as={CiTrash}
-                    width="20px"
-                    height="20px"
-                    color="inherit"
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => handleModalOpen(_id, title)}
-                  />
-                </Td>
-              </Tr>
-            );
-          })}
-        </Table>
+                  </Td>
+                </Tr>
+              );
+            })}
+          </Table>
+        ) : (
+          ''
+        )}
         <Modal
           modalTitle="Delete Brand?"
           modalBody={`Are you sure you want to delete ${brandTitle} brand`}

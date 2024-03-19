@@ -5,12 +5,12 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { toast } from 'react-toastify';
 import FormControl from '../../../../../components/FormControl';
-import { IAddBrand } from '../../../../../types/brand';
 import { useAppSelector, useAppDispatch } from '../../../../../redux/hooks';
 import {
   createBrand,
   resetState,
 } from '../../../../../redux/features/brandSlice';
+import { IAddBrand } from '../../../../../types/brand';
 
 export default function AddBrand() {
   const dispatch = useAppDispatch();

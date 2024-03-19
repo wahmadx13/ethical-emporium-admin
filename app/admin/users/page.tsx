@@ -10,8 +10,8 @@ import {
   Flex,
   useColorModeValue,
 } from '@chakra-ui/react';
-import { useAppSelector, useAppDispatch } from '../../../redux/hooks';
 import Table from '../../../components/Table';
+import { useAppSelector, useAppDispatch } from '../../../redux/hooks';
 import { getAllUsers, restrictUser } from '../../../redux/features/userSlice';
 
 const columns = [

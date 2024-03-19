@@ -17,15 +17,13 @@ import {
   Text,
   useColorModeValue,
 } from '@chakra-ui/react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-// Custom components
-import DefaultAuthLayout from '../../../layouts/auth/Default';
-// Assets
-import Link from 'next/link';
 import { MdOutlineRemoveRedEye } from 'react-icons/md';
 import { RiEyeCloseLine } from 'react-icons/ri';
+import DefaultAuthLayout from '../../../layouts/auth/Default';
 import { ILoginProps } from '../../../types/signin';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 import { login } from '../../../redux/features/authSlice';

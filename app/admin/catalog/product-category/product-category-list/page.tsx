@@ -11,7 +11,6 @@ import Modal from '../../../../../components/Modal';
 import {
   getAllProductCategories,
   deleteAProductCategory,
-  resetState,
 } from '../../../../../redux/features/productCategorySlice';
 
 const columns = [
@@ -42,15 +41,20 @@ export default function ProductCategoryList() {
     }
   }, []);
 
-  useEffect(() => {
-    dispatch(resetState());
-    dispatch(getAllProductCategories());
-  }, [dispatch]);
-
   const { allProductCategories, isLoading } = useAppSelector(
     (state) => state.productCategoryReducer,
   );
   const { jwtToken } = useAppSelector((state) => state.authReducer);
+
+  const getProductCategories = useCallback(() => {
+    if (!allProductCategories.length) {
+      dispatch(getAllProductCategories());
+    }
+  }, [allProductCategories.length, dispatch]);
+
+  useEffect(() => {
+    getProductCategories();
+  }, [getProductCategories]);
 
   const handleModalOpen = (id: Object, title: string) => {
     setProductCategoryId(id);
@@ -87,37 +91,41 @@ export default function ProductCategoryList() {
         justifyContent="center"
         flexDirection="column"
       >
-        <Table caption="All Available Product Categories" cols={columns}>
-          {allProductCategories?.map(({ _id, title }, i) => {
-            return (
-              <Tr key={_id.toString()} className="table-end">
-                <Td>{i + 1}</Td>
-                <Td>{title}</Td>
-                <Td>
-                  <Link
-                    href={`/admin/catalog/product-category/update-product-category/${_id.toString()}`}
-                  >
+        {allProductCategories ? (
+          <Table caption="All Available Product Categories" cols={columns}>
+            {allProductCategories?.map(({ _id, title }, i) => {
+              return (
+                <Tr key={_id.toString()} className="table-end">
+                  <Td>{i + 1}</Td>
+                  <Td>{title}</Td>
+                  <Td>
+                    <Link
+                      href={`/admin/catalog/product-category/update-product-category/${_id.toString()}`}
+                    >
+                      <Icon
+                        as={FiEdit}
+                        width="20px"
+                        height="20px"
+                        color="inherit"
+                        style={{ cursor: 'pointer' }}
+                      />
+                    </Link>
                     <Icon
-                      as={FiEdit}
+                      as={CiTrash}
                       width="20px"
                       height="20px"
                       color="inherit"
                       style={{ cursor: 'pointer' }}
+                      onClick={() => handleModalOpen(_id, title)}
                     />
-                  </Link>
-                  <Icon
-                    as={CiTrash}
-                    width="20px"
-                    height="20px"
-                    color="inherit"
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => handleModalOpen(_id, title)}
-                  />
-                </Td>
-              </Tr>
-            );
-          })}
-        </Table>
+                  </Td>
+                </Tr>
+              );
+            })}
+          </Table>
+        ) : (
+          ''
+        )}
         <Modal
           modalTitle="Delete Product Category?"
           modalBody={`Are you sure you want to delete ${productCategoryTitle} product category`}

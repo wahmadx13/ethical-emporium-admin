@@ -8,13 +8,13 @@ import * as yup from 'yup';
 import { toast } from 'react-toastify';
 import { MdKeyboardArrowLeft } from 'react-icons/md';
 import FormControl from '../../../../../../components/FormControl';
-import { IAddColor } from '../../../../../../types/color';
 import { useAppSelector, useAppDispatch } from '../../../../../../redux/hooks';
 import {
   getAColor,
   updateAColor,
   resetState,
 } from '../../../../../../redux/features/colorSlice';
+import { IAddColor } from '../../../../../../types/color';
 
 export default function UpdateColor(props: { params: { id: string } }) {
   const { id } = props.params;
@@ -51,7 +51,6 @@ export default function UpdateColor(props: { params: { id: string } }) {
   useEffect(() => {
     getColor();
     setColorTitle(color?.title);
-    // console.log('colorTitle', colorTitle);
   }, [color?.title, getColor]);
 
   const formik = useFormik({

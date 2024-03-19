@@ -6,7 +6,6 @@ import {
   Tfoot,
   Tr,
   Th,
-  Td,
   TableCaption,
   TableContainer,
 } from '@chakra-ui/react';
@@ -21,7 +20,7 @@ export default function Table(props: {
   children: ReactNode;
   caption: string;
 }) {
-  const { cols, children, caption } = props;
+  const { cols, children, caption, ...rest } = props;
 
   return (
     <TableContainer border="1px" borderRadius="1rem" padding="1rem">

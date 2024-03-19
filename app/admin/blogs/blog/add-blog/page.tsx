@@ -9,8 +9,6 @@ import FormControl from '../../../../../components/FormControl';
 import RichTextEditor from '../../../../../components/RichTextEditor';
 import Select from '../../../../../components/Select';
 import ReactDropzone from '../../../../../components/ReactDropzone';
-import { capitalizeFirstLetter } from '../../../../../utils/helper';
-import { IBlog } from '../../../../../redux/types/blog';
 import { useAppSelector, useAppDispatch } from '../../../../../redux/hooks';
 import { getAllBlogCategories } from '../../../../../redux/features/blogCategorySlice';
 import {
@@ -21,8 +19,10 @@ import {
   uploadImages,
   resetUploadState,
 } from '../../../../../redux/features/uploadSlice';
+import { capitalizeFirstLetter } from '../../../../../utils/helper';
 import { tagSelect } from '../../../../../utils/constants';
 import { ISelectProps } from '../../../../../types/addProduct';
+import { IBlog } from '../../../../../redux/types/blog';
 
 export default function AddBlog() {
   //React States

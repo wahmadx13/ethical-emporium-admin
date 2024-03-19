@@ -5,12 +5,12 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { toast } from 'react-toastify';
 import FormControl from '../../../../../components/FormControl';
-import { IAddBlogCategory } from '../../../../../types/blogCategory';
 import { useAppSelector, useAppDispatch } from '../../../../../redux/hooks';
 import {
   createABlogCategory,
   resetState,
 } from '../../../../../redux/features/blogCategorySlice';
+import { IAddBlogCategory } from '../../../../../types/blogCategory';
 
 export default function AddBlogCategory() {
   const dispatch = useAppDispatch();

@@ -16,14 +16,12 @@ import {
 } from '@chakra-ui/react';
 import { useRouter } from 'next/navigation';
 import { signOut } from 'aws-amplify/auth';
-// Custom Components
-import { SearchBar } from '../../components/navbar/searchBar/SearchBar';
-import { SidebarResponsive } from '../../components/sidebar/Sidebar';
-import { useAppSelector, useAppDispatch } from '../../redux/hooks';
-// Assets
 import { IoMdMoon, IoMdSunny } from 'react-icons/io';
 import { MdLock } from 'react-icons/md';
 import { BsPersonGear } from 'react-icons/bs';
+import { SearchBar } from '../../components/navbar/searchBar/SearchBar';
+import { SidebarResponsive } from '../../components/sidebar/Sidebar';
+import { useAppSelector, useAppDispatch } from '../../redux/hooks';
 import routes from '../../routes';
 import { setUser, setJwtToken } from '../../redux/features/authSlice';
 

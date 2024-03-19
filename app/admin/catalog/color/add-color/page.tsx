@@ -5,12 +5,12 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { toast } from 'react-toastify';
 import FormControl from '../../../../../components/FormControl';
-import { IAddColor } from '../../../../../types/color';
 import { useAppSelector, useAppDispatch } from '../../../../../redux/hooks';
 import {
   createColor,
   resetState,
 } from '../../../../../redux/features/colorSlice';
+import { IAddColor } from '../../../../../types/color';
 
 export default function AddColor() {
   const dispatch = useAppDispatch();

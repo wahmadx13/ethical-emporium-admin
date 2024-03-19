@@ -1,6 +1,6 @@
 'use client';
 import { useCallback, useEffect, useState } from 'react';
-import { Box, Button, SimpleGrid, Text, color } from '@chakra-ui/react';
+import { Box, Button, SimpleGrid, Text } from '@chakra-ui/react';
 import slugify from 'slugify';
 import { toast } from 'react-toastify';
 import { useFormik } from 'formik';
@@ -9,8 +9,6 @@ import FormControl from '../../../../../components/FormControl';
 import RichTextEditor from '../../../../../components/RichTextEditor';
 import Select from '../../../../../components/Select';
 import ReactDropzone from '../../../../../components/ReactDropzone';
-import { capitalizeFirstLetter } from '../../../../../utils/helper';
-import { IProduct } from '../../../../../types/addProduct';
 import { useAppSelector, useAppDispatch } from '../../../../../redux/hooks';
 import { getAllBrands } from '../../../../../redux/features/brandSlice';
 import { getAllProductCategories } from '../../../../../redux/features/productCategorySlice';
@@ -23,6 +21,8 @@ import {
   uploadImages,
   resetUploadState,
 } from '../../../../../redux/features/uploadSlice';
+import { capitalizeFirstLetter } from '../../../../../utils/helper';
+import { IProduct } from '../../../../../types/addProduct';
 import { tagSelect } from '../../../../../utils/constants';
 import {
   ISelectProps,

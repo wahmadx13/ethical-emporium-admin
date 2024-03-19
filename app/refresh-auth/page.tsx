@@ -1,6 +1,7 @@
 'use client';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { Box } from '@chakra-ui/react';
 import { getCurrentUser } from 'aws-amplify/auth';
 import dynamic from 'next/dynamic';
 
@@ -45,5 +46,9 @@ export default function RefreshAuth() {
     console.log('In Refresh Auth');
     checkAuth();
   }, [router]);
-  return <ScreenLoader />;
+  return (
+    <Box pt={{ base: '130px', md: '80px', xl: '80px' }} width="100%">
+      <ScreenLoader />
+    </Box>
+  );
 }
