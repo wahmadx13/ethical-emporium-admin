@@ -23,7 +23,7 @@ export default function RichTextEditor(props: IRichTextEditor) {
   const editorRef = useRef(null);
 
   const handleBlur = () => {
-    if (!value.trim()) {
+    if (!value.trim() && setValidationError) {
       setValidationError(true);
     }
   };

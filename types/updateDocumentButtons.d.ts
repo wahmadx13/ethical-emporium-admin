@@ -3,4 +3,5 @@ export interface IUpdateDocumentButtonsProps {
     name?: string;
     onClickCancel?: any;
     onClickUpdate?: () => void;
+    isDisabled?: boolean;
 }

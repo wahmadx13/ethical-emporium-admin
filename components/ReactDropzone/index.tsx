@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import { useState } from 'react';
 import {
   Box,
   Card,
@@ -60,10 +60,7 @@ export default function ReactDropzone(props: IReactDropzoneProps) {
         setTargetId(null);
       }
       if (setEditImage) {
-        setEditImage((prevState: any) => ({
-          ...prevState,
-          images: false,
-        }));
+        setEditImage(false);
       }
     } else {
       toast.error('Something went wrong. Please try again!');

@@ -2,7 +2,7 @@ import { Button, Box, useColorMode } from '@chakra-ui/react';
 import { IUpdateDocumentButtonsProps } from '../../types/updateDocumentButtons';
 
 function UpdateDocumentButtons(props: IUpdateDocumentButtonsProps) {
-  const { isLoading, name, onClickCancel, onClickUpdate } = props;
+  const { isLoading, name, onClickCancel, onClickUpdate, isDisabled } = props;
   const { colorMode } = useColorMode();
   return (
     <Box
@@ -24,6 +24,7 @@ function UpdateDocumentButtons(props: IUpdateDocumentButtonsProps) {
         Cancel
       </Button>
       <Button
+        isDisabled={isDisabled}
         isLoading={isLoading}
         variant="brand"
         fontWeight="500"

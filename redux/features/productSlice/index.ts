@@ -75,9 +75,9 @@ export const createAProduct = createAsyncThunk(
 //Updating a product
 export const updateAProduct = createAsyncThunk(
     'product/update-product',
-    async ({ productData, jwtToken }: { productData: IUpdateProductFieldTypes, jwtToken: string }, thunkApi) => {
+    async ({ projectData, jwtToken }: { projectData: IUpdateProductFieldTypes, jwtToken: string }, thunkApi) => {
         try {
-            return await productServices.updateProduct(productData, jwtToken);
+            return await productServices.updateProduct(projectData, jwtToken);
         } catch (err) {
             thunkApi.rejectWithValue(err);
         }

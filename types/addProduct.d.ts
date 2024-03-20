@@ -12,7 +12,7 @@ export interface IProduct {
 }
 
 export interface IRichTextEditor {
-    onChange: any;
+    onChange?: any;
     formLabel: string;
     placeholder: string;
     value: string;

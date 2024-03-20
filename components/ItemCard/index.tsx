@@ -15,7 +15,7 @@ import {
 import Card from '../card/Card';
 import RatingStars from '../RatingStars';
 // Assets
-import { MdOutlineThumbUp, MdOutlineThumbDown } from 'react-icons/md';
+import { TbThumbUp, TbThumbDown } from 'react-icons/tb';
 import { CiTrash } from 'react-icons/ci';
 import { capitalizeFirstLetter } from '../../utils/helper';
 import { IItemCardProps } from '../../types/itemCard';
@@ -171,7 +171,7 @@ export default function ItemCard(props: IItemCardProps) {
                     transition="0.2s linear"
                     w="20px"
                     h="20px"
-                    as={MdOutlineThumbUp}
+                    as={TbThumbUp}
                     color="brand.500"
                   />
                   <Text
@@ -195,7 +195,7 @@ export default function ItemCard(props: IItemCardProps) {
                     transition="0.2s linear"
                     w="20px"
                     h="20px"
-                    as={MdOutlineThumbDown}
+                    as={TbThumbDown}
                     color="brand.500"
                   />
                   <Text

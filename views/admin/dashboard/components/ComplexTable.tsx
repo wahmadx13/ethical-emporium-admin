@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   Box,
   Checkbox,
@@ -17,7 +17,6 @@ import {
   getAllUsers,
   restrictUser,
 } from '../../../../redux/features/userSlice';
-
 
 // const columns = columnsDataCheck;
 const columns = [
@@ -43,6 +42,7 @@ const columns = [
   },
 ];
 export default function ComplexTable() {
+  const [recentUsers, setRecentUsers] = useState(null);
   const textColor = useColorModeValue('secondaryGray.900', 'white');
   const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
 
@@ -65,9 +65,10 @@ export default function ComplexTable() {
   useEffect(() => {
     getUsers();
     console.log('AllUsers', allUsers);
+    if (allUsers) {
+      setRecentUsers(allUsers.slice(0, 10));
+    }
   }, [allUsers, getUsers]);
-
-  const recentlyCreatedUsers = allUsers.slice(0, 10);
 
   return (
     <Card
@@ -88,7 +89,7 @@ export default function ComplexTable() {
         {/* <Menu /> */}
       </Flex>
       <Box>
-        {recentlyCreatedUsers?.length ? (
+        {recentUsers?.length ? (
           <Table caption="Recently Registered Users" cols={columns}>
             {allUsers?.map(
               ({ _id, name, email, phoneNumber, isBlocked }, i) => {

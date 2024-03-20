@@ -25,7 +25,7 @@ export default function Select(props: IFormControlSelectProps) {
 
   const onBlur = () => {
     if (!value?.length || (Array.isArray(value) && !value.length)) {
-      setValidationError(true);
+      setValidationError && setValidationError(true);
     } else {
       setValidationError && setValidationError(false);
     }

@@ -72,9 +72,9 @@ export const createABlog = createAsyncThunk(
 //Updating a Blog
 export const updateABlog = createAsyncThunk(
     'blog/update-blog',
-    async ({ blogData, jwtToken }: { blogData: IUpdateBlogFieldTypes, jwtToken: string }, thunkApi) => {
+    async ({ projectData, jwtToken }: { projectData: IUpdateBlogFieldTypes, jwtToken: string }, thunkApi) => {
         try {
-            return await blogServices.updateBlog(blogData, jwtToken);
+            return await blogServices.updateBlog(projectData, jwtToken);
         } catch (err) {
             thunkApi.rejectWithValue(err);
         }
