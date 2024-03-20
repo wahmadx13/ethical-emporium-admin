@@ -1,15 +1,21 @@
 // Chakra imports
 import { Text, useColorModeValue } from '@chakra-ui/react';
-// Assets
-import Project1 from '../../../../img/profile/Project1.png';
-import Project2 from '../../../../img/profile/Project2.png';
-import Project3 from '../../../../img/profile/Project3.png';
 // Custom components
 import Card from '../../../../components/card/Card';
 import Project from '../../../../views/admin/profile/components/Project';
 
-export default function Blogs(props: { [x: string]: any }) {
-  const { ...rest } = props;
+export default function Blogs(props: {
+  [x: string]: any;
+  title: string;
+  description: string;
+  imgSrc: string;
+  projectTitle: string;
+  link: string;
+  index: number | string;
+}) {
+  const { title, description, imgSrc, projectTitle, link, index, ...rest } =
+    props;
+
   // Chakra Color Mode
   const textColorPrimary = useColorModeValue('secondaryGray.900', 'white');
   const textColorSecondary = 'gray.400';
@@ -17,6 +23,7 @@ export default function Blogs(props: { [x: string]: any }) {
     '0px 18px 40px rgba(112, 144, 176, 0.12)',
     'unset',
   );
+
   return (
     <Card mb={{ base: '0px', '2xl': '20px' }} {...rest}>
       <Text
@@ -26,34 +33,18 @@ export default function Blogs(props: { [x: string]: any }) {
         mt="10px"
         mb="4px"
       >
-        All Blogs
+        {title}
       </Text>
       <Text color={textColorSecondary} fontSize="md" me="26px" mb="40px">
-        Here you can find more details about your projects. Keep you user
-        engaged by providing meaningful information.
+        {description}
       </Text>
       <Project
         boxShadow={cardShadow}
         mb="20px"
-        image={Project1}
-        ranking="1"
-        link="#"
-        title="Technology behind the Blockchain"
-      />
-      <Project
-        boxShadow={cardShadow}
-        mb="20px"
-        image={Project2}
-        ranking="2"
-        link="#"
-        title="Greatest way to a good Economy"
-      />
-      <Project
-        boxShadow={cardShadow}
-        image={Project3}
-        ranking="3"
-        link="#"
-        title="Most essential tips for Burnout"
+        image={imgSrc}
+        ranking={index}
+        link={link}
+        title={projectTitle}
       />
     </Card>
   );

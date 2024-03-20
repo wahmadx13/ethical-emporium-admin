@@ -17,7 +17,7 @@ export default function Project(props: {
   title: string;
   ranking: number | string;
   link: string;
-  image: any;
+  image: string;
   [x: string]: any;
 }) {
   const { title, ranking, link, image, ...rest } = props;

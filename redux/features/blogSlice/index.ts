@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk, createAction, PayloadAction } from "@red
 import blogServices from "./services";
 import { IBlog, IUpdateBlogFieldTypes } from '../../types/blog';
 
-interface IAddBlog extends IBlog {
+export interface IAddBlog extends IBlog {
     _id: Object;
     images?: {
         asset_id: string;
@@ -14,6 +14,8 @@ interface IAddBlog extends IBlog {
     dislikes: [];
     author: string;
     statusCode: number;
+    createdAt: Date;
+    updatedAt: Date;
     message: string;
 };
 

@@ -1,19 +1,28 @@
 // Chakra imports
-import { Box, Flex, Text, useColorModeValue } from '@chakra-ui/react';
+import { Box, Flex, Text, useColorModeValue, Avatar } from '@chakra-ui/react';
 import Card from '../../../../components/card/Card';
+import { useAppSelector } from '../../../../redux/hooks';
 
 export default function Banner(props: {
   banner: any;
   avatar: any;
-  name: string;
   job: string;
-  posts: number | string;
-  followers: number | string;
-  following: number | string;
+  blogs: number | string;
+  likes: number;
+  dislikes: number;
   [x: string]: any;
 }) {
-  const { banner, avatar, name, job, posts, followers, following, ...rest } =
-    props;
+  const {
+    banner,
+    avatar,
+    job,
+    blogs,
+    followers,
+    following,
+    likes,
+    dislikes,
+    ...rest
+  } = props;
   // Chakra Color Mode
   const textColorPrimary = useColorModeValue('secondaryGray.900', 'white');
   const textColorSecondary = 'gray.400';
@@ -21,6 +30,11 @@ export default function Banner(props: {
     'white !important',
     '#111C44 !important',
   );
+  const { user } = useAppSelector((state) => state.authReducer);
+  //Extracting initials from name
+  const nameArray = user?.name.split(' ');
+  const initials = nameArray?.map((name: string) => name.charAt(0));
+  const combinedInitials = initials?.join('');
   return (
     <Card mb={{ base: '0px', lg: '20px' }} alignItems="center" {...rest}>
       <Box
@@ -30,17 +44,9 @@ export default function Banner(props: {
         h="131px"
         w="100%"
       />
-      {/* <NextAvatar
-        mx="auto"
-        src={avatar}
-        h="87px"
-        w="87px"
-        mt="-43px"
-        border="4px solid"
-        borderColor={borderColor}
-      /> */}
+      <Avatar size="xl" name={user?.name} src={combinedInitials} />
       <Text color={textColorPrimary} fontWeight="bold" fontSize="xl" mt="10px">
-        {name}
+        {user?.name}
       </Text>
       <Text color={textColorSecondary} fontSize="sm">
         {job}
@@ -48,7 +54,7 @@ export default function Banner(props: {
       <Flex w="max-content" mx="auto" mt="26px">
         <Flex mx="auto" me="60px" alignItems="center" flexDirection="column">
           <Text color={textColorPrimary} fontSize="2xl" fontWeight="700">
-            {posts}
+            {blogs}
           </Text>
           <Text color={textColorSecondary} fontSize="sm" fontWeight="400">
             Blogs
@@ -56,7 +62,7 @@ export default function Banner(props: {
         </Flex>
         <Flex mx="auto" me="60px" alignItems="center" flexDirection="column">
           <Text color={textColorPrimary} fontSize="2xl" fontWeight="700">
-            {followers}
+            {likes}
           </Text>
           <Text color={textColorSecondary} fontSize="sm" fontWeight="400">
             Likes
@@ -64,7 +70,7 @@ export default function Banner(props: {
         </Flex>
         <Flex mx="auto" alignItems="center" flexDirection="column">
           <Text color={textColorPrimary} fontSize="2xl" fontWeight="700">
-            {following}
+            {dislikes}
           </Text>
           <Text color={textColorSecondary} fontSize="sm" fontWeight="400">
             Dislikes

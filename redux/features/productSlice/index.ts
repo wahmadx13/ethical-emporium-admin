@@ -3,7 +3,7 @@ import productServices from "./services";
 import { IProduct } from '../../../types/addProduct'
 import { IUpdateProductFieldTypes } from "../../types/product";
 
-interface IAddProduct extends IProduct {
+export interface IAddProduct extends IProduct {
     _id: Object;
     images?: {
         asset_id: string;
