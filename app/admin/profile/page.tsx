@@ -52,10 +52,10 @@ export default function ProfileOverview() {
   useEffect(() => {
     getProducts();
     getBlogs();
-    if (allProducts.length) {
+    if (allProducts?.length) {
       setRecentProducts(allProducts.slice(0, 3));
     }
-    if (allBlogs.length) {
+    if (allBlogs?.length) {
       setRecentBlogs(allBlogs.slice(0, 3));
     }
   }, [allBlogs, allProducts, getBlogs, getProducts]);
@@ -69,10 +69,10 @@ export default function ProfileOverview() {
             avatar={avatar}
             job="Product Designer"
             blogs={allBlogs?.length}
-            likes={allBlogs.reduce((accumulator, currentBlog) => {
+            likes={allBlogs?.reduce((accumulator, currentBlog) => {
               return accumulator + currentBlog.likes.length;
             }, 0)}
-            dislikes={allBlogs.reduce((accumulator, currentBlog) => {
+            dislikes={allBlogs?.reduce((accumulator, currentBlog) => {
               return accumulator + currentBlog.dislikes.length;
             }, 0)}
           />
@@ -103,8 +103,10 @@ export default function ProfileOverview() {
             link={`/admin/catalog/product/product-details/${product._id.toString()}`}
             projectTitle={product.title}
             index={index + 1}
+            name="product"
             description="Here is the list of recently added products. To view the details of each
             product visit the respective detailed view"
+            allProjectLink="/admin/catalog/product-list"
           />
         ))}
         <General
@@ -120,8 +122,10 @@ export default function ProfileOverview() {
             link={`/admin//blogs/blog/blog-details/${blog._id.toString()}`}
             projectTitle={blog.title}
             index={index + 1}
+            name="blog"
             description="Here is the list of recently added blogs. To view the details of each
             product visit the respective detailed view"
+            allProjectLink="/admin/blogs/blog-list"
           />
         ))}
       </Grid>

@@ -12,9 +12,20 @@ export default function Blogs(props: {
   projectTitle: string;
   link: string;
   index: number | string;
+  name: string;
+  allProjectLink: string;
 }) {
-  const { title, description, imgSrc, projectTitle, link, index, ...rest } =
-    props;
+  const {
+    title,
+    description,
+    imgSrc,
+    projectTitle,
+    link,
+    index,
+    name,
+    allProjectLink,
+    ...rest
+  } = props;
 
   // Chakra Color Mode
   const textColorPrimary = useColorModeValue('secondaryGray.900', 'white');
@@ -44,7 +55,9 @@ export default function Blogs(props: {
         image={imgSrc}
         ranking={index}
         link={link}
+        name={name}
         title={projectTitle}
+        allLinks={allProjectLink}
       />
     </Card>
   );

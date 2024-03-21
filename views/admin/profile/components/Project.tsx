@@ -18,9 +18,11 @@ export default function Project(props: {
   ranking: number | string;
   link: string;
   image: string;
+  name: string;
+  allLinks: string;
   [x: string]: any;
 }) {
-  const { title, ranking, link, image, ...rest } = props;
+  const { title, ranking, link, image, name, allLinks, ...rest } = props;
   // Chakra Color Mode
   const textColorPrimary = useColorModeValue('secondaryGray.900', 'white');
   const textColorSecondary = 'gray.400';
@@ -57,10 +59,25 @@ export default function Project(props: {
               fontSize="sm"
               me="4px"
             >
-              Project #{ranking} •{' '}
+              {`${name} #${ranking}`} •{' '}
             </Text>
             <Link fontWeight="500" color={brandColor} href={link} fontSize="sm">
-              See project details
+              {`See ${name} details`}
+            </Link>
+            <Link
+              fontWeight="500"
+              color={brandColor}
+              href={allLinks}
+              fontSize="sm"
+            >
+              <Text
+                fontWeight="500"
+                color={textColorSecondary}
+                fontSize="sm"
+                me="4px"
+              >
+                {`See all ${name}s`}
+              </Text>
             </Link>
           </Flex>
         </Box>
