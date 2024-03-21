@@ -64,9 +64,8 @@ export default function ComplexTable() {
 
   useEffect(() => {
     getUsers();
-    console.log('AllUsers', allUsers);
-    if (allUsers.length) {
-      setRecentUsers(allUsers.slice(0, 10));
+    if (allUsers?.length) {
+      setRecentUsers(allUsers?.slice(0, 10));
     }
   }, [allUsers, getUsers]);
 
